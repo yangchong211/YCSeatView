@@ -1,12 +1,25 @@
 package com.yc.ycseatview.lib;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
+import android.support.annotation.IdRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.util.Linkify;
 import android.util.SparseArray;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.Checkable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
+
+import java.lang.reflect.Field;
 
 
 /**
@@ -19,96 +32,285 @@ import android.widget.TextView;
  */
 public class SeatViewHolder extends RecyclerView.ViewHolder {
 
-    private SparseArray<View> mViews;
+    // SparseArray 比 HashMap 更省内存，在某些条件下性能更好，只能存储 key 为 int 类型的数据，
+    // 用来存放 View 以减少 findViewById 的次数
+    private SparseArray<View> viewSparseArray;
+    //这个是item的对象
+    private View mItemView;
 
     public SeatViewHolder(View itemView) {
         super(itemView);
-        mViews = new SparseArray<>();
+        this.mItemView = itemView;
+        viewSparseArray = new SparseArray<>();
     }
 
     /**
-     * 根据View Id 获取对应的View
-     *
-     * @param viewId
-     * @param <T>
-     * @return
+     * 根据 ID 来获取 View
+     * @param viewId viewID
+     * @param <T>    泛型
+     * @return 将结果强转为 View 或 View 的子类型
      */
-    public <T extends View> T get(int viewId) {
-        View view = mViews.get(viewId);
+    public <T extends View> T getView(int viewId) {
+        // 先从缓存中找，找打的话则直接返回
+        // 如果找不到则 findViewById ，再把结果存入缓存中
+        View view = viewSparseArray.get(viewId);
         if (view == null) {
-            view = this.itemView.findViewById(viewId);
-            mViews.put(viewId, view);
+            view = itemView.findViewById(viewId);
+            viewSparseArray.put(viewId, view);
         }
         return (T) view;
     }
 
-    //******** 提供对View、TextView、ImageView的常用设置方法 ******//
+    /**
+     * 获取item的对象
+     */
+    @Nullable
+    public View getItemView(){
+        return mItemView;
+    }
 
+
+    /**
+     * 获取数据索引的位置
+     * @return          position
+     */
+    protected int getDataPosition(){
+        RecyclerView.Adapter adapter = getOwnerAdapter();
+        if (adapter!=null && adapter instanceof AbsSeatAdapter){
+            return ((AbsSeatAdapter) adapter).getViewPosition();
+        }
+        return getAdapterPosition();
+    }
+
+
+
+    /**
+     * 获取adapter对象
+     * @param <T>
+     * @return                  adapter
+     */
+
+    private  <T extends RecyclerView.Adapter> T getOwnerAdapter(){
+        RecyclerView recyclerView = getOwnerRecyclerView();
+        //noinspection unchecked
+        return recyclerView != null ? (T) recyclerView.getAdapter() : null;
+    }
+
+
+    @Nullable
+    private RecyclerView getOwnerRecyclerView(){
+        try {
+            Field field = RecyclerView.ViewHolder.class.getDeclaredField("mOwnerRecyclerView");
+            field.setAccessible(true);
+            return (RecyclerView) field.get(this);
+        } catch (NoSuchFieldException ignored) {
+        } catch (IllegalAccessException ignored) {
+        }
+        return null;
+    }
+
+
+    /**
+     * 添加子控件的点击事件
+     * @param viewId                        控件id
+     */
+    protected void addOnClickListener(@IdRes final int viewId) {
+        final View view = getView(viewId);
+        if (view != null) {
+            if (!view.isClickable()) {
+                view.setClickable(true);
+            }
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(getOwnerAdapter()!=null){
+
+                    }
+                }
+            });
+        }
+    }
+
+
+
+    /**
+     * 设置TextView的值
+     */
     public SeatViewHolder setText(int viewId, String text) {
-        TextView tv = get(viewId);
+        TextView tv = getView(viewId);
         tv.setText(text);
         return this;
     }
 
-    public SeatViewHolder setText(int viewId, int textRes) {
-        TextView tv = get(viewId);
-        tv.setText(textRes);
-        return this;
-    }
-
-    public SeatViewHolder setTextColor(int viewId, int textColor) {
-        TextView view = get(viewId);
-        view.setTextColor(textColor);
-        return this;
-    }
-
-    public SeatViewHolder setTextSize(int viewId, int size) {
-        TextView view = get(viewId);
-        view.setTextSize(size);
-        return this;
-    }
-
+    /**
+     * 设置imageView图片
+     */
     public SeatViewHolder setImageResource(int viewId, int resId) {
-        ImageView view = get(viewId);
+        ImageView view = getView(viewId);
         view.setImageResource(resId);
         return this;
     }
 
+    /**
+     * 设置imageView图片
+     */
     public SeatViewHolder setImageBitmap(int viewId, Bitmap bitmap) {
-        ImageView view = get(viewId);
+        ImageView view = getView(viewId);
         view.setImageBitmap(bitmap);
         return this;
     }
 
-
+    /**
+     * 设置imageView图片
+     */
     public SeatViewHolder setImageDrawable(int viewId, Drawable drawable) {
-        ImageView view = get(viewId);
+        ImageView view = getView(viewId);
         view.setImageDrawable(drawable);
         return this;
     }
 
-
+    /**
+     * 设置背景颜色
+     */
     public SeatViewHolder setBackgroundColor(int viewId, int color) {
-        View view = get(viewId);
+        View view = getView(viewId);
         view.setBackgroundColor(color);
         return this;
     }
 
+    /**
+     * 设置背景颜色
+     */
     public SeatViewHolder setBackgroundRes(int viewId, int backgroundRes) {
-        View view = get(viewId);
+        View view = getView(viewId);
         view.setBackgroundResource(backgroundRes);
         return this;
     }
 
+    /**
+     * 设置text颜色
+     */
+    public SeatViewHolder setTextColor(int viewId, int textColor) {
+        TextView view = getView(viewId);
+        view.setTextColor(textColor);
+        return this;
+    }
+
+    /**
+     * 设置透明度
+     */
+    @SuppressLint("NewApi")
+    public SeatViewHolder setAlpha(int viewId, float value) {
+        if (Build.VERSION_CODES.HONEYCOMB <= Build.VERSION.SDK_INT) {
+            getView(viewId).setAlpha(value);
+        } else {
+            // Pre-honeycomb hack to set Alpha value
+            AlphaAnimation alpha = new AlphaAnimation(value, value);
+            alpha.setDuration(0);
+            alpha.setFillAfter(true);
+            getView(viewId).startAnimation(alpha);
+        }
+        return this;
+    }
+
+
+    /**
+     * 设置是否可见
+     */
     public SeatViewHolder setVisible(int viewId, boolean visible) {
-        View view = get(viewId);
+        View view = getView(viewId);
         view.setVisibility(visible ? View.VISIBLE : View.GONE);
         return this;
     }
 
-    public SeatViewHolder setVisible(int viewId, int visible) {
-        View view = get(viewId);
-        view.setVisibility(visible);
+    public SeatViewHolder setTypeface(Typeface typeface, int... viewIds) {
+        for (int viewId : viewIds) {
+            TextView view = getView(viewId);
+            view.setTypeface(typeface);
+            view.setPaintFlags(view.getPaintFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+        }
         return this;
     }
+
+    public SeatViewHolder setProgress(int viewId, int progress) {
+        ProgressBar view = getView(viewId);
+        view.setProgress(progress);
+        return this;
+    }
+
+    public SeatViewHolder setProgress(int viewId, int progress, int max) {
+        ProgressBar view = getView(viewId);
+        view.setMax(max);
+        view.setProgress(progress);
+        return this;
+    }
+
+    public SeatViewHolder setMax(int viewId, int max) {
+        ProgressBar view = getView(viewId);
+        view.setMax(max);
+        return this;
+    }
+
+    public SeatViewHolder setRating(int viewId, float rating) {
+        RatingBar view = getView(viewId);
+        view.setRating(rating);
+        return this;
+    }
+
+    public SeatViewHolder setRating(int viewId, float rating, int max) {
+        RatingBar view = getView(viewId);
+        view.setMax(max);
+        view.setRating(rating);
+        return this;
+    }
+
+    public SeatViewHolder setTag(int viewId, Object tag) {
+        View view = getView(viewId);
+        view.setTag(tag);
+        return this;
+    }
+
+    public SeatViewHolder setTag(int viewId, int key, Object tag) {
+        View view = getView(viewId);
+        view.setTag(key, tag);
+        return this;
+    }
+
+    public SeatViewHolder setChecked(int viewId, boolean checked) {
+        Checkable view = (Checkable) getView(viewId);
+        view.setChecked(checked);
+        return this;
+    }
+
+    /**
+     * 关于事件的
+     */
+    public SeatViewHolder setOnClickListener(int viewId, View.OnClickListener listener) {
+        View view = getView(viewId);
+        if(view==null){
+            return null;
+        }
+        view.setOnClickListener(listener);
+        return this;
+    }
+
+    public SeatViewHolder setOnTouchListener(int viewId, View.OnTouchListener listener) {
+        View view = getView(viewId);
+        if(view==null){
+            return null;
+        }
+        view.setOnTouchListener(listener);
+        return this;
+    }
+
+    public SeatViewHolder setOnLongClickListener(int viewId, View.OnLongClickListener listener) {
+        View view = getView(viewId);
+        if(view==null){
+            return null;
+        }
+        view.setOnLongClickListener(listener);
+        return this;
+    }
+
+
 }

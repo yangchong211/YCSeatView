@@ -113,7 +113,7 @@ public class SelectSeatDialog extends Dialog {
     private void setData(int type) {
         mConfig.type = type;
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 15; i++) {
             list.add(i + "");
         }
         if (type==1){

@@ -14,6 +14,9 @@ import java.lang.annotation.RetentionPolicy;
  */
 public final class SeatConstant {
 
+    /**
+     * 添加调课位座位类型
+     */
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
         //左侧增加一列
@@ -22,6 +25,21 @@ public final class SeatConstant {
         int TYPE_2 = 2;
         //后方增加一列
         int TYPE_3 = 3;
+    }
+
+    /**
+     * 座位类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SeatType {
+        //正常
+        int TYPE_1 = 1;
+        //调课位
+        int TYPE_2 = 2;
+        //过道
+        int TYPE_3 = 3;
+        //不可坐
+        int TYPE_4 = 4;
     }
 
 }

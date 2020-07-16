@@ -16,7 +16,6 @@ limitations under the License.
 
 package com.yc.ycseatview.lib;
 
-
 import android.view.View;
 
 /**
@@ -24,14 +23,15 @@ import android.view.View;
  *     @author 杨充
  *     blog  : https://github.com/yangchong211
  *     time  : 2016/4/28
- *     desc  : item中点击监听接口
+ *     desc  : item中长按点击监听接口
  *     revise:
  * </pre>
  */
-public interface OnItemClickListener {
+public interface OnItemLongClickListener {
     /**
-     * item中点击监听接口
-     * @param position          索引
+     * item中长按点击监听接口
+     * @param position              索引
+     * @return
      */
-    void onItemClick(View view , int position);
+    boolean onItemLongClick(View view , int position);
 }

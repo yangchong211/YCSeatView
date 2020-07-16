@@ -1,6 +1,5 @@
 package com.yc.ycseatview.lib;
 
-import android.app.admin.SecurityLog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -15,6 +14,8 @@ import com.yc.ycseatview.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * <pre>
@@ -22,18 +23,18 @@ import java.util.Collections;
  *     email  : yangchong211@163.com
  *     time   : 2020/07/15
  *     desc   : 自定义座位控件
- *     revise:
+ *     revise : Horizontal横向方向
  * </pre>
  */
-public class SeatRecyclerView extends LinearLayout {
+public class SeatHorizontalView extends LinearLayout implements InterSeatView{
 
     private Context mContext;
     private RecyclerView mRecyclerView;
-    private SeatTypeAdapter seatTypeAdapter;
+    private SeatTypeAdapter1 seatTypeAdapter;
     /**
      * 集合数据
      */
-    private ArrayList<SeatBean> list;
+    private ArrayList<SeatBean> mList = new ArrayList<>();
     /**
      * 列数
      */
@@ -43,17 +44,17 @@ public class SeatRecyclerView extends LinearLayout {
      */
     private int mLine;
 
-    public SeatRecyclerView(Context context) {
+    public SeatHorizontalView(Context context) {
         super(context);
         initView(context);
     }
 
-    public SeatRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public SeatHorizontalView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initView(context);
     }
 
-    public SeatRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SeatHorizontalView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context);
     }
@@ -77,10 +78,11 @@ public class SeatRecyclerView extends LinearLayout {
 
     private void initRecyclerView(int column, int line) {
         int total = column * line;
-        list = new ArrayList<>();
+        mList.clear();
         for (int i=0 ; i<total ; i++){
             SeatBean seatBean = new SeatBean();
             seatBean.setCorridor(false);
+            seatBean.setIndex(i);
             //设置第几行第几列中的 列
             int beanColumn = (i+1)%mColumn;
             if (beanColumn==0){
@@ -96,16 +98,22 @@ public class SeatRecyclerView extends LinearLayout {
                 int beanLine = (i+1)/mColumn + 1;
                 seatBean.setLine(beanLine);
             }
+            seatBean.setType(SeatConstant.SeatType.TYPE_1);
             seatBean.setName("学生"+i);
-            list.add(seatBean);
+            mList.add(seatBean);
         }
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext,column,RecyclerView.VERTICAL,false);
+        SeatLogUtils.i("SeatRecyclerView------initRecyclerView----初始化总学生座位数-"+mList.size());
+        setRecyclerView(mLine);
+    }
+
+    private void setRecyclerView(final int line) {
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext,line,RecyclerView.HORIZONTAL,false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                boolean corridor = list.get(i).isCorridor();
+                boolean corridor = mList.get(i).isCorridor();
                 if (corridor){
-                    return mColumn;
+                    return line;
                 } else {
                     return 1;
                 }
@@ -119,7 +127,8 @@ public class SeatRecyclerView extends LinearLayout {
         if (seatTypeAdapter==null){
             initCallBack();
         }
-        seatTypeAdapter = new SeatTypeAdapter(mContext,list);
+        seatTypeAdapter = new SeatTypeAdapter1(mContext,mList);
+        //seatTypeAdapter.setData(mList);
         mRecyclerView.setAdapter(seatTypeAdapter);
     }
 
@@ -147,10 +156,10 @@ public class SeatRecyclerView extends LinearLayout {
                 @Override
                 public void onSwiped(int adapterPosition) {
                     // 滑动删除的时候，从数据库、数据源移除，并刷新UI
-                    if (list != null) {
+                    if (mList != null) {
                         //adapter.remove(adapterPosition);
                         //1、删除数据
-                        list.remove(adapterPosition);
+                        mList.remove(adapterPosition);
                         //2、刷新
                         seatTypeAdapter.notifyItemRemoved(adapterPosition);
                     }
@@ -158,14 +167,14 @@ public class SeatRecyclerView extends LinearLayout {
 
                 @Override
                 public boolean onMove(int srcPosition, int targetPosition) {
-                    if (list != null) {
-                        boolean corridor = list.get(srcPosition).isCorridor();
+                    if (mList != null) {
+                        boolean corridor = mList.get(srcPosition).isCorridor();
                         if (corridor){
                             //是过道
                         } else {
                             //不是过道
                             // 更换数据源中的数据Item的位置
-                            Collections.swap(list, srcPosition, targetPosition);
+                            Collections.swap(mList, srcPosition, targetPosition);
                             // 更新UI中的Item的位置，主要是给用户看到交互效果
                             seatTypeAdapter.notifyItemMoved(srcPosition, targetPosition);
                         }
@@ -185,6 +194,7 @@ public class SeatRecyclerView extends LinearLayout {
     /**
      * 恢复自动排座
      */
+    @Override
     public void restoreSeat() {
         initRecyclerView(mColumn,mLine);
     }
@@ -192,15 +202,32 @@ public class SeatRecyclerView extends LinearLayout {
     /**
      * 更改座位布局
      */
+    @Override
     public void changeSeat() {
 
+    }
+
+    /**
+     * 添加过道
+     */
+    public void addCorridor() {
+        SeatBean seatBean = new SeatBean();
+        seatBean.setCorridor(true);
+        seatBean.setType(SeatConstant.SeatType.TYPE_3);
+        mList.add(mLine,seatBean);
+        seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
      * 添加调课位
      * @param type                  类型
      */
-    public void addClass(@SeatConstant.Type int type) {
+    @Override
+    public void addTypeClass(int type) {
+        boolean fastDoubleClick = WidgetsUtils.isFastDoubleClick();
+        if (fastDoubleClick){
+            return;
+        }
         switch (type){
             case SeatConstant.Type.TYPE_1:
                 //左侧增加一列
@@ -218,50 +245,122 @@ public class SeatRecyclerView extends LinearLayout {
     }
 
     /**
-     * 左侧增加一列
+     * 左侧增加一列。找到第一列的学生座位，然后添加座位即可
      */
     private void addLeftClass() {
-        for (int i=0 ; i<mLine ; i++){
-            int index = i*mColumn;
-            SeatBean seatBean = new SeatBean();
-            list.add(index,seatBean);
+        removePreClass();
+        int size = mList.size();
+        SeatLogUtils.i("SeatRecyclerView------添加座位----左侧增加一列-"+size);
+        for (int i=0 ; i<size ; i++){
+            int column = mList.get(i).getColumn();
+            SeatLogUtils.i("SeatRecyclerView------左侧增加一列----------------"+column);
+            if (column==1){
+                SeatBean seatBean = new SeatBean();
+                seatBean.setType(SeatConstant.SeatType.TYPE_2);
+                seatBean.setIndex(i);
+                mList.add(seatBean);
+                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位1--"+i);
+            } else {
+                mList.get(i).setIndex(i);
+                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位2--"+(i+0));
+            }
         }
+        //重排位置
+        Collections.sort(mList, new Comparator<SeatBean>() {
+            @Override
+            public int compare(SeatBean o1, SeatBean o2) {
+                long start1 = o1.getIndex();
+                long start2 = o2.getIndex();
+                if(start1 < start2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        SeatLogUtils.i("SeatRecyclerView------左侧增加一列-----"+mList.toString());
         seatTypeAdapter.notifyDataSetChanged();
+        //setRecyclerView(mColumn+1);
     }
 
     /**
-     * 右侧增加一列
+     * 右侧增加一列。找到最后一列的学生座位，然后添加座位即可
      */
     private void addRightClass() {
-        for (int i=0 ; i<mLine ; i++){
-            int index = i*mColumn + mLine;
-            SeatBean seatBean = new SeatBean();
-            list.add(index,seatBean);
+        removePreClass();
+        int size = mList.size();
+        SeatLogUtils.i("SeatRecyclerView------添加座位----右侧增加一列-"+size);
+        for (int i=0 ; i<size ; i++){
+            int column = mList.get(i).getColumn();
+            if (column == mColumn){
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+i);
+                SeatBean seatBean = new SeatBean();
+                seatBean.setIndex(i+1);
+                seatBean.setType(SeatConstant.SeatType.TYPE_2);
+                mList.add(seatBean);
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位1--"+i);
+            }  else {
+                mList.get(i).setIndex(i);
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位2--"+(i+0));
+            }
         }
+        //重排位置
+        Collections.sort(mList, new Comparator<SeatBean>() {
+            @Override
+            public int compare(SeatBean o1, SeatBean o2) {
+                long start1 = o1.getIndex();
+                long start2 = o2.getIndex();
+                if(start1 < start2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
+        SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+mList.toString());
+        //setRecyclerView(mColumn+1);
         seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
-     * 后方增加一列
+     * 后方增加一列。找到最后一排的学生座位，然后添加座位即可
      */
     private void addLastClass() {
-        int start = list.size();
-        for (int i=0 ; i<mColumn ; i++){
-            SeatBean seatBean = new SeatBean();
-            list.add(seatBean);
+        removePreClass();
+        int size = mList.size();
+        SeatLogUtils.i("SeatRecyclerView------添加座位----后方增加一列-"+size);
+        for (int i=0 ; i<size ; i++){
+            int line = mList.get(i).getLine();
+            if (line == mLine){
+                SeatLogUtils.i("SeatRecyclerView------后方增加一列-----"+i);
+                SeatBean seatBean = new SeatBean();
+                seatBean.setType(SeatConstant.SeatType.TYPE_2);
+                mList.add(seatBean);
+            }
         }
-        int end = list.size();
-        //seatTypeAdapter.notifyItemRangeChanged(start,(end-start));
         seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
-     * 添加过道
+     * 删除之前的调课位
      */
-    public void addCorridor() {
-        SeatBean seatBean = new SeatBean();
-        seatBean.setCorridor(true);
-        list.add(mColumn*1,seatBean);
-        seatTypeAdapter.notifyDataSetChanged();
+    private void removePreClass(){
+        SeatLogUtils.i("SeatRecyclerView------添加座位----删除之前的调课位-");
+        Iterator<SeatBean> iterator = mList.iterator();
+        boolean isChange = false;
+        int index = 0;
+        while (iterator.hasNext()){
+            SeatBean bean = iterator.next();
+            int type = bean.getType();
+            if (type == SeatConstant.SeatType.TYPE_2){
+                iterator.remove();
+                isChange = true;
+            } else {
+                bean.setIndex(index++);
+            }
+        }
+        if (isChange){
+            seatTypeAdapter.notifyDataSetChanged();
+        }
     }
 }

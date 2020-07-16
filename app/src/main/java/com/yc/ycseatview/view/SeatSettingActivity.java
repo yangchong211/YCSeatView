@@ -33,11 +33,13 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout mLlLine;
     private TextView mTvLineNum;
     private TextView mTvSure;
+    private int type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_setting);
+        type = getIntent().getIntExtra("type",1);
         //横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         findViewById();
@@ -115,10 +117,19 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         }
         int column = NumberUtils.parse(textColumn.toString());
         int line = NumberUtils.parse(textLine.toString());
-        Intent intent = new Intent(this, SeatInfoActivity.class);
-        intent.putExtra("column",column);
-        intent.putExtra("line",line);
-        this.startActivity(intent);
+        if (type==1){
+            //Vertical方向recyclerView
+            Intent intent = new Intent(this, SeatInfoVerticalActivity.class);
+            intent.putExtra("column",column);
+            intent.putExtra("line",line);
+            this.startActivity(intent);
+        } else {
+            //Horizontal方向recyclerView
+            Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
+            intent.putExtra("column",column);
+            intent.putExtra("line",line);
+            this.startActivity(intent);
+        }
     }
 
 

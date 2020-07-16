@@ -13,8 +13,7 @@ import android.widget.Toast;
 
 import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.SeatConstant;
-import com.yc.ycseatview.lib.SeatRecyclerView;
-
+import com.yc.ycseatview.lib.SeatHorizontalView;
 
 /**
  * <pre>
@@ -22,10 +21,10 @@ import com.yc.ycseatview.lib.SeatRecyclerView;
  *     email  : yangchong211@163.com
  *     time   : 2020/07/14
  *     desc   : 座位设置调动页面
- *     revise:
+ *     revise : Horizontal方向recyclerView
  * </pre>
  */
-public class SeatInfoActivity extends AppCompatActivity implements View.OnClickListener {
+public class SeatInfoHorizontalActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView mIvBack;
     private TextView mTvTitle;
@@ -34,7 +33,7 @@ public class SeatInfoActivity extends AppCompatActivity implements View.OnClickL
     private TextView mTvAddCorridor;
     private TextView mTvRestore;
     private TextView mTvChange;
-    private SeatRecyclerView mSeatView;
+    private SeatHorizontalView mSeatView;
     /**
      * 行数
      */
@@ -47,7 +46,7 @@ public class SeatInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seat_info);
+        setContentView(R.layout.activity_seat_hor_info);
         //判断是否是横屏，如果不是则调整为横屏
         /*if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
             //横屏
@@ -110,7 +109,7 @@ public class SeatInfoActivity extends AppCompatActivity implements View.OnClickL
         }
         column = getIntent().getIntExtra("column",0);
         line = getIntent().getIntExtra("line",0);
-        mTvTitle.setText(column+"列"+line+"行");
+        mTvTitle.setText("Horizontal方向recyclerView----" +column+"列"+line+"行");
     }
 
     private void initRecyclerView() {
@@ -128,24 +127,33 @@ public class SeatInfoActivity extends AppCompatActivity implements View.OnClickL
                 switch (type){
                     case SelectClassDialog.Type.TYPE_1:
                         //左侧增加一列
-                        mSeatView.addClass(SeatConstant.Type.TYPE_1);
+                        addTypeClass(SeatConstant.Type.TYPE_1);
                         break;
                     case SelectClassDialog.Type.TYPE_2:
                         //右侧增加一列
-                        mSeatView.addClass(SeatConstant.Type.TYPE_2);
+                        addTypeClass(SeatConstant.Type.TYPE_2);
                         break;
                     case SelectClassDialog.Type.TYPE_3:
                         //后方增加一列
-                        mSeatView.addClass(SeatConstant.Type.TYPE_3);
+                        addTypeClass(SeatConstant.Type.TYPE_3);
                         break;
                     case SelectClassDialog.Type.TYPE_4:
-                        Toast.makeText(SeatInfoActivity.this,"取消",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SeatInfoHorizontalActivity.this,"取消",Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
         classDialog.show();
     }
+
+    /**
+     * 添加调课位
+     * @param type                          类型
+     */
+    private void addTypeClass(@SeatConstant.SeatType int type) {
+        mSeatView.addTypeClass(type);
+    }
+
 
     /**
      * 添加过道

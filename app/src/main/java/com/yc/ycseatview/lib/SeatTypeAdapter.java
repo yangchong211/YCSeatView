@@ -3,17 +3,12 @@ package com.yc.ycseatview.lib;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.yc.ycseatview.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,76 +20,55 @@ import java.util.List;
  *     revise:
  * </pre>
  */
-public class SeatTypeAdapter extends RecyclerView.Adapter<SeatTypeAdapter.MyViewHolder> {
+public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
 
-    private Context mContext;
-    private OnItemClickListener listener;
-    private List<SeatBean> data;
-
-    public SeatTypeAdapter(Context context, ArrayList<SeatBean> list) {
-        this.mContext = context;
-        this.data = list;
-    }
-
-    public void setOnClickListener(OnItemClickListener listener) {
-        this.listener = listener;
-    }
-
-    @NonNull
-    @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_seat_view, parent, false);
-        return new MyViewHolder(view);
+    public SeatTypeAdapter(Context context){
+        super(context,R.layout.item_seat_view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        if (data!=null && data.size()>0){
-            SeatBean seatBean = data.get(position);
-            if (seatBean.getName()!=null){
-                holder.tvName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
-                //holder.tvName.setText(seatBean.getName());
-            } else {
-                holder.tvName.setText("");
+    protected void bindData(SeatViewHolder holder, SeatBean seatBean) {
+        TextView tvStudentName = holder.getView(R.id.tv_student_name);
+        if (seatBean!=null){
+            int type = seatBean.getType();
+            switch (type){
+                //正常座位
+                case SeatConstant.SeatType.TYPE_1:
+                    if (seatBean.getName()!=null){
+                        tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                        //holder.tvName.setText(seatBean.getName());
+                    } else {
+                        tvStudentName.setText("");
+                    }
+                    break;
+                //调课位
+                case SeatConstant.SeatType.TYPE_2:
+                    tvStudentName.setText("");
+                    break;
+                //过道
+                case SeatConstant.SeatType.TYPE_3:
+                    tvStudentName.setText("过道");
+                    break;
+                //不可坐
+                case SeatConstant.SeatType.TYPE_4:
+                    tvStudentName.setText("不可坐");
+                    break;
             }
             if (seatBean.isCorridor()){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
                 layoutParams.width = 80;
+                holder.itemView.setBackgroundResource(R.color.colorAccent);
                 holder.itemView.setLayoutParams(layoutParams);
             } else {
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 layoutParams.width = 250;
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
                 holder.itemView.setLayoutParams(layoutParams);
             }
         }
     }
-
-
-    class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView tvName;
-
-        MyViewHolder(final View itemView) {
-            super(itemView);
-            tvName = itemView.findViewById(R.id.tv_student_name);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(getAdapterPosition());
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    public int getItemCount() {
-        return data == null ? 0 : data.size();
-    }
-
 
 }

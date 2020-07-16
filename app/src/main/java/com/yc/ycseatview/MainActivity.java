@@ -17,7 +17,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SeatSettingActivity.class));
+                //Vertical方向recyclerView
+                Intent intent = new Intent(MainActivity.this, SeatSettingActivity.class);
+                intent.putExtra("type",1);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.tv_2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Horizontal方向recyclerView
+                Intent intent = new Intent(MainActivity.this, SeatSettingActivity.class);
+                intent.putExtra("type",2);
+                startActivity(intent);
             }
         });
     }

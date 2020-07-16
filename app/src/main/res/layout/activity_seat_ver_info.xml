@@ -110,23 +110,24 @@
                 android:textSize="18sp"
                 android:background="@drawable/shape_seat_info_r10"/>
 
-            <android.support.v4.widget.NestedScrollView
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp">
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
                     android:orientation="vertical">
-                    <com.yc.ycseatview.lib.SeatRecyclerView
+                    <com.yc.ycseatview.lib.SeatVerticalView
                         android:id="@+id/seat_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_gravity="center"/>
                 </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
+            </HorizontalScrollView>
         </LinearLayout>
 
     </LinearLayout>
