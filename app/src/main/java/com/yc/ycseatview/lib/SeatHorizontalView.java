@@ -84,19 +84,19 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
             seatBean.setCorridor(false);
             seatBean.setIndex(i);
             //设置第几行第几列中的 列
-            int beanColumn = (i+1)%mColumn;
-            if (beanColumn==0){
-                seatBean.setColumn(column);
+            int beanLine = (i+1)%mLine;
+            if (beanLine==0){
+                seatBean.setLine(column);
             } else {
-                seatBean.setColumn(beanColumn);
+                seatBean.setLine(beanLine);
             }
             //设置第几行第几列中的 行
-            if (beanColumn==0){
-                int beanLine = (i+1)/mColumn;
-                seatBean.setLine(beanLine);
+            if (beanLine==0){
+                int beanColumn = (i+1)/mColumn;
+                seatBean.setColumn(beanColumn);
             } else {
-                int beanLine = (i+1)/mColumn + 1;
-                seatBean.setLine(beanLine);
+                int beanColumn = (i+1)/mColumn + 1;
+                seatBean.setColumn(beanColumn);
             }
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
             seatBean.setName("学生"+i);
@@ -120,16 +120,18 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
             }
         });
         mRecyclerView.setLayoutManager(layoutManager);
-        SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
-        itemDecoration.setPaddingEdgeSide(true);
-        itemDecoration.setPaddingStart(true);
-        mRecyclerView.addItemDecoration(itemDecoration);
         if (seatTypeAdapter==null){
+            SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
+            itemDecoration.setPaddingEdgeSide(true);
+            itemDecoration.setPaddingStart(true);
+            mRecyclerView.addItemDecoration(itemDecoration);
             initCallBack();
+            seatTypeAdapter = new SeatTypeAdapter1(mContext,mList);
+            //seatTypeAdapter.setData(mList);
+            mRecyclerView.setAdapter(seatTypeAdapter);
+        } else {
+            seatTypeAdapter.notifyDataSetChanged();
         }
-        seatTypeAdapter = new SeatTypeAdapter1(mContext,mList);
-        //seatTypeAdapter.setData(mList);
-        mRecyclerView.setAdapter(seatTypeAdapter);
     }
 
     /**
@@ -169,15 +171,34 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
                 public boolean onMove(int srcPosition, int targetPosition) {
                     if (mList != null) {
                         boolean corridor = mList.get(srcPosition).isCorridor();
-                        if (corridor){
-                            //是过道
-                        } else {
+                        int mTargetPosition;
+                        if (srcPosition<targetPosition){
+                            //往后移
+                            if (corridor){
+                                //是过道
+                                int column = mList.get(targetPosition).getColumn();
+                                //int line = mList.get(targetPosition).getLine();
+                                mTargetPosition = column * mLine;
+                            } else {
+                                mTargetPosition = targetPosition;
+                            }
                             //不是过道
-                            // 更换数据源中的数据Item的位置
-                            Collections.swap(mList, srcPosition, targetPosition);
-                            // 更新UI中的Item的位置，主要是给用户看到交互效果
-                            seatTypeAdapter.notifyItemMoved(srcPosition, targetPosition);
+                        } else {
+                            //往前移动
+                            if (corridor){
+                                //是过道
+                                int column = mList.get(targetPosition).getColumn();
+                                //int line = mList.get(targetPosition).getLine();
+                                mTargetPosition = (column-1) * mLine;
+                            } else {
+                                mTargetPosition = targetPosition;
+                            }
                         }
+                        // 更换数据源中的数据Item的位置
+                        Collections.swap(mList, srcPosition, mTargetPosition);
+                        // 更新UI中的Item的位置，主要是给用户看到交互效果
+                        seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
+                        //seatTypeAdapter.notifyDataSetChanged();
                         return true;
                     }
                     return true;
@@ -248,13 +269,14 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
      * 左侧增加一列。找到第一列的学生座位，然后添加座位即可
      */
     private void addLeftClass() {
-        removePreClass();
+        restoreSeat();
+        //removePreClass();
         int size = mList.size();
         SeatLogUtils.i("SeatRecyclerView------添加座位----左侧增加一列-"+size);
         for (int i=0 ; i<size ; i++){
-            int column = mList.get(i).getColumn();
-            SeatLogUtils.i("SeatRecyclerView------左侧增加一列----------------"+column);
-            if (column==1){
+            int line = mList.get(i).getLine();
+            SeatLogUtils.i("SeatRecyclerView------左侧增加一列----------------"+line);
+            if (line==1){
                 SeatBean seatBean = new SeatBean();
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
                 seatBean.setIndex(i);
@@ -287,12 +309,13 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
      * 右侧增加一列。找到最后一列的学生座位，然后添加座位即可
      */
     private void addRightClass() {
-        removePreClass();
+        restoreSeat();
+        //removePreClass();
         int size = mList.size();
         SeatLogUtils.i("SeatRecyclerView------添加座位----右侧增加一列-"+size);
         for (int i=0 ; i<size ; i++){
-            int column = mList.get(i).getColumn();
-            if (column == mColumn){
+            int line = mList.get(i).getLine();
+            if (line == mLine){
                 SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+i);
                 SeatBean seatBean = new SeatBean();
                 seatBean.setIndex(i+1);
@@ -319,14 +342,16 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
         });
         SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+mList.toString());
         //setRecyclerView(mColumn+1);
-        seatTypeAdapter.notifyDataSetChanged();
+        //seatTypeAdapter.notifyDataSetChanged();
+        setRecyclerView(mLine+1);
     }
 
     /**
      * 后方增加一列。找到最后一排的学生座位，然后添加座位即可
      */
     private void addLastClass() {
-        removePreClass();
+        restoreSeat();
+        //removePreClass();
         int size = mList.size();
         SeatLogUtils.i("SeatRecyclerView------添加座位----后方增加一列-"+size);
         for (int i=0 ; i<size ; i++){
@@ -338,7 +363,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
                 mList.add(seatBean);
             }
         }
-        seatTypeAdapter.notifyDataSetChanged();
+        //seatTypeAdapter.notifyDataSetChanged();
+        setRecyclerView(mLine+1);
     }
 
     /**

@@ -51,11 +51,13 @@ public class SeatTypeAdapter1 extends RecyclerView.Adapter<SeatTypeAdapter1.MyVi
         if (data!=null && data.size()>0){
             SeatBean seatBean = data.get(position);
             if (seatBean.getName()!=null){
-                holder.tvName.setText(seatBean.getName());
+                holder.tvName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                //holder.tvName.setText(seatBean.getName());
             } else {
                 holder.tvName.setText("");
             }
             if (seatBean.isCorridor()){
+                holder.tvName.setText("过道"+position);
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
                 layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
