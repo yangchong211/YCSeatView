@@ -23,6 +23,7 @@ import java.util.List;
  *     revise:
  * </pre>
  */
+@Deprecated
 public class SeatTypeAdapter1 extends RecyclerView.Adapter<SeatTypeAdapter1.MyViewHolder> {
 
     private Context mContext;
