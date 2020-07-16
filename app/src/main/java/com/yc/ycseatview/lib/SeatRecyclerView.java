@@ -1,5 +1,6 @@
 package com.yc.ycseatview.lib;
 
+import android.app.admin.SecurityLog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -81,9 +82,20 @@ public class SeatRecyclerView extends LinearLayout {
             SeatBean seatBean = new SeatBean();
             seatBean.setCorridor(false);
             //设置第几行第几列中的 列
-            seatBean.setColumn(i/line);
+            int beanColumn = (i+1)%mColumn;
+            if (beanColumn==0){
+                seatBean.setColumn(column);
+            } else {
+                seatBean.setColumn(beanColumn);
+            }
             //设置第几行第几列中的 行
-            seatBean.setLine(i%line);
+            if (beanColumn==0){
+                int beanLine = (i+1)/mColumn;
+                seatBean.setLine(beanLine);
+            } else {
+                int beanLine = (i+1)/mColumn + 1;
+                seatBean.setLine(beanLine);
+            }
             seatBean.setName("学生"+i);
             list.add(seatBean);
         }
@@ -125,6 +137,7 @@ public class SeatRecyclerView extends LinearLayout {
         }
         this.mColumn = column;
         this.mLine = line;
+        SeatLogUtils.i("SeatRecyclerView------setColumnAndLine----mColumn-"+mColumn+"-----mLine-"+mLine);
         initRecyclerView(column,line);
     }
 

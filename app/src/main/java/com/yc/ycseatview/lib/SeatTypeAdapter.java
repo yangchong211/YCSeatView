@@ -53,8 +53,8 @@ public class SeatTypeAdapter extends RecyclerView.Adapter<SeatTypeAdapter.MyView
         if (data!=null && data.size()>0){
             SeatBean seatBean = data.get(position);
             if (seatBean.getName()!=null){
-                //holder.tvName.setText(seatBean.getName()+"/n"+ seatBean.getColumn()+"/"+seatBean.getLine());
-                holder.tvName.setText(seatBean.getName());
+                holder.tvName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                //holder.tvName.setText(seatBean.getName());
             } else {
                 holder.tvName.setText("");
             }
