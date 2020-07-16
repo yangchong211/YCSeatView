@@ -16,9 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SeatSettingActivity"
+        <activity android:name=".view.SeatSettingActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".SeatInfoActivity"
+        <activity android:name=".view.SeatInfoActivity"
             android:screenOrientation="landscape"/>
     </application>
 

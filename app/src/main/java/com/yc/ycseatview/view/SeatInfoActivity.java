@@ -1,4 +1,4 @@
-package com.yc.ycseatview;
+package com.yc.ycseatview.view;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatRecyclerView;
 

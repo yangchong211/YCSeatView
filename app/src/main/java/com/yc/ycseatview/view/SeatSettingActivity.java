@@ -1,4 +1,4 @@
-package com.yc.ycseatview;
+package com.yc.ycseatview.view;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yc.ycseatview.R;
 import com.yc.ycseatview.utils.NumberUtils;
 
 /**

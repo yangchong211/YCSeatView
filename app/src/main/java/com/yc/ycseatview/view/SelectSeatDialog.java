@@ -1,4 +1,4 @@
-package com.yc.ycseatview;
+package com.yc.ycseatview.view;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -13,10 +13,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+
+import com.yc.ycseatview.R;
 import com.yc.ycseatview.pickerview.WheelView;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +25,13 @@ import java.util.List;
  *     @author  yangchong
  *     email  : yangchong211@163.com
  *     time   : 2020/07/14
- *     desc   : 选择调课位弹窗
+ *     desc   : 选择行数和列数弹窗
  *     revise:
  * </pre>
  */
-public class SelectClassDialog extends Dialog {
+public class SelectSeatDialog extends Dialog {
 
-    private static final String TAG = "SelectClassDialog";
+    private static final String TAG = "SelectSeatDialog";
     private Context context;
     private Config mConfig;
     private TextView mTvCancel;
@@ -39,10 +39,9 @@ public class SelectClassDialog extends Dialog {
     private TextView mTvSure;
     private WheelView<String> mWheelView;
     private String select = "";
-    private int type;
 
-    public SelectClassDialog(@NonNull Context context) {
-        super(context,R.style.customDialog);
+    public SelectSeatDialog(@NonNull Context context) {
+        super(context, R.style.customDialog);
         this.context = context;
         this.mConfig = new Config();
     }
@@ -55,7 +54,7 @@ public class SelectClassDialog extends Dialog {
         initListener();
         setCancelable(mConfig.canCancel);
         setCanceledOnTouchOutside(mConfig.canCancelOnTouchOutside);
-        setData();
+        setData(mConfig.type);
     }
 
     @Override
@@ -87,6 +86,7 @@ public class SelectClassDialog extends Dialog {
         mTvContent = findViewById(R.id.tv_content);
         mTvSure = findViewById(R.id.tv_sure);
         mWheelView = findViewById(R.id.wheel_view);
+
     }
 
     private void initListener() {
@@ -95,7 +95,7 @@ public class SelectClassDialog extends Dialog {
             public void onClick(View v) {
                 dismiss();
                 if (mListener!=null){
-                    mListener.listener(Type.TYPE_4,null);
+                    mListener.listener(mConfig.type,null);
                 }
             }
         });
@@ -104,36 +104,29 @@ public class SelectClassDialog extends Dialog {
             public void onClick(View v) {
                 dismiss();
                 if (mListener!=null){
-                    mListener.listener(type,select);
+                    mListener.listener(mConfig.type,select);
                 }
             }
         });
     }
 
-    private void setData() {
+    private void setData(int type) {
+        mConfig.type = type;
         List<String> list = new ArrayList<>();
-        list.add("左侧增加一列");
-        list.add("右侧增加一列");
-        list.add("后方增加一列");
-        mTvContent.setText("新增调课位");
+        for (int i = 0; i < 10; i++) {
+            list.add(i + "");
+        }
+        if (type==1){
+            mTvContent.setText("列数");
+        } else {
+            mTvContent.setText("行数");
+        }
         mWheelView.setOnItemSelectedListener(new WheelView.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(WheelView<String> wheelView, String data, int position) {
                 Log.i(TAG, "onItemSelected: data=" + data + ",position=" + position);
                 mTvContent.setText(data);
                 select = data;
-                switch (position){
-                    case 0:
-                        type = Type.TYPE_1;
-                        break;
-                    case 1:
-                        type = Type.TYPE_2;
-                        break;
-                    case 2:
-                    default:
-                        type = Type.TYPE_3;
-                        break;
-                }
             }
         });
         mWheelView.setOnWheelChangedListener(new WheelView.OnWheelChangedListener() {
@@ -163,7 +156,7 @@ public class SelectClassDialog extends Dialog {
     /**
      * 点击外部是否可以取消
      */
-    public SelectClassDialog shouldCancelOnTouchOutside(boolean flag) {
+    public SelectSeatDialog shouldCancelOnTouchOutside(boolean flag) {
         mConfig.canCancelOnTouchOutside = flag;
         return this;
     }
@@ -171,8 +164,16 @@ public class SelectClassDialog extends Dialog {
     /**
      * 点击返回键是否可以取消
      */
-    public SelectClassDialog shouldCancelOnBackKeyDown(boolean flag) {
+    public SelectSeatDialog shouldCancelOnBackKeyDown(boolean flag) {
         mConfig.canCancel = flag;
+        return this;
+    }
+
+    /**
+     * 设置数据
+     */
+    public SelectSeatDialog setDataBean(int type) {
+        mConfig.type = type;
         return this;
     }
 
@@ -180,11 +181,14 @@ public class SelectClassDialog extends Dialog {
      * 配置类
      */
     private static class Config {
+        //弹窗类型
+        int type = 1;
         //是否可以取消
         boolean canCancel = true;
         //点击外部是否可以取消
         boolean canCancelOnTouchOutside = true;
     }
+
 
     @Override
     public void show() {
@@ -220,6 +224,7 @@ public class SelectClassDialog extends Dialog {
         }
     }
 
+
     private onFinishListener mListener;
 
     /**
@@ -236,16 +241,6 @@ public class SelectClassDialog extends Dialog {
         void listener(int type, String select);
     }
 
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface Type {
-        //左侧增加一列
-        int TYPE_1 = 1;
-        //右侧增加一列
-        int TYPE_2 = 2;
-        //后方增加一列
-        int TYPE_3 = 3;
-        //取消
-        int TYPE_4 = 4;
-    }
+
 
 }
