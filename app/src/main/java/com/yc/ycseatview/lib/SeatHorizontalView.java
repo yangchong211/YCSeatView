@@ -199,11 +199,11 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
 //
                         // 更新UI中的Item的位置，主要是给用户看到交互效果
                         seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
-                        if (srcPosition < targetPosition) {
-                            seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-                        } else {
-                            seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-                        }
+//                        if (srcPosition < targetPosition) {
+//                            seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+//                        } else {
+//                            seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+//                        }
 
                         //先把目标数据移除
 //                        mList.remove(mTargetPosition);
