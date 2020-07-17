@@ -1,7 +1,9 @@
 package com.yc.ycseatview.view;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
+import com.yc.ycseatview.lib.SeatImageActivity;
+import com.yc.ycseatview.lib.ModelStorage;
 import com.yc.ycseatview.lib.SeatConstant;
+import com.yc.ycseatview.lib.SeatPictureUtils;
 import com.yc.ycseatview.lib.SeatVerticalView;
 
 
@@ -34,6 +39,9 @@ public class SeatInfoVerticalActivity extends AppCompatActivity implements View.
     private TextView mTvAddCorridor;
     private TextView mTvRestore;
     private TextView mTvChange;
+    private TextView mTvPicture;
+    private TextView mTvCommit;
+    private LinearLayout mLlSeatView;
     private SeatVerticalView mSeatView;
     /**
      * 行数
@@ -69,6 +77,9 @@ public class SeatInfoVerticalActivity extends AppCompatActivity implements View.
         mTvRestore = findViewById(R.id.tv_restore);
         mTvChange = findViewById(R.id.tv_change);
         mSeatView = findViewById(R.id.seat_view);
+        mTvPicture = findViewById(R.id.tv_picture);
+        mTvCommit = findViewById(R.id.tv_commit);
+        mLlSeatView = findViewById(R.id.ll_seat_view);
     }
 
     private void setListener() {
@@ -77,6 +88,8 @@ public class SeatInfoVerticalActivity extends AppCompatActivity implements View.
         mTvAddCorridor.setOnClickListener(this);
         mTvRestore.setOnClickListener(this);
         mTvChange.setOnClickListener(this);
+        mTvPicture.setOnClickListener(this);
+        mTvCommit.setOnClickListener(this);
     }
 
     private void initData() {
@@ -100,8 +113,16 @@ public class SeatInfoVerticalActivity extends AppCompatActivity implements View.
         } else if (v == mTvChange){
             //更改座位布局
             changeSeat();
+        } else if (v == mTvCommit){
+            //提交数据
+        } else if (v == mTvPicture){
+            //生成图片
+            Bitmap bitmap = SeatPictureUtils.measureSize(this, mLlSeatView);
+            ModelStorage.getInstance().setBitmap(bitmap);
+            startActivity(new Intent(this, SeatImageActivity.class));
         }
     }
+
     @SuppressLint("SetTextI18n")
     private void initIntentData() {
         if (getIntent()==null){

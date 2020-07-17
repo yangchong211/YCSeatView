@@ -195,6 +195,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
                         }
                         // 更换数据源中的数据Item的位置
                         Collections.swap(mList, srcPosition, mTargetPosition);
+
+
 //                        SeatBean bean = mList.get(mTargetPosition);
 //                        seatTypeAdapter.notifyItemChanged(srcPosition);
 //                        seatTypeAdapter.notifyItemChanged(mTargetPosition);
