@@ -1,16 +1,13 @@
 package com.yc.ycseatview.lib;
 
-import android.app.admin.SecurityLog;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.yc.ycseatview.R;
 
@@ -191,7 +188,7 @@ public class SeatVerticalView extends LinearLayout implements InterSeatView{
         callback.setDragEnable(true);
         callback.setSwipeEnable(true);
         //创建helper对象，callback监听recyclerView item 的各种状态
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper2 itemTouchHelper = new ItemTouchHelper2(callback);
         //关联recyclerView，一个helper对象只能对应一个recyclerView
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }

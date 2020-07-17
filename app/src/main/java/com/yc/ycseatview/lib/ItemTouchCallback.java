@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.yc.ycseatview.R;
 
@@ -31,12 +30,12 @@ import com.yc.ycseatview.R;
  *     @author 杨充
  *     blog  : https://github.com/yangchong211
  *     time  : 2017/5/2
- *     desc  : 自定义ItemTouchHelper
+ *     desc  : 自定义ItemTouchHelper2
  *     revise: 参考严正杰大神博客：https://blog.csdn.net/yanzhenjie1003/article/details/51935982
  *             开源项目：https://github.com/yangchong211/YCRefreshView
  * </pre>
  */
-public class ItemTouchCallback extends ItemTouchHelper.Callback {
+public class ItemTouchCallback extends ItemTouchHelper2.Callback {
 
     /**
      * Item操作的回调，去更新UI和数据源
@@ -121,8 +120,8 @@ public class ItemTouchCallback extends ItemTouchHelper.Callback {
         RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             // flag如果值是0，相当于这个功能被关闭
-            int dragFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
-                    | ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+            int dragFlag = ItemTouchHelper2.LEFT | ItemTouchHelper2.RIGHT
+                    | ItemTouchHelper2.UP | ItemTouchHelper2.DOWN;
             int swipeFlag = 0;
             return makeMovementFlags(dragFlag, swipeFlag);
         } else if (layoutManager instanceof LinearLayoutManager) {
@@ -135,12 +134,12 @@ public class ItemTouchCallback extends ItemTouchHelper.Callback {
             // 为了方便理解，相当于分为横着的ListView和竖着的ListView
             // 如果是横向的布局
             if (orientation == LinearLayoutManager.HORIZONTAL) {
-                swipeFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                dragFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                swipeFlag = ItemTouchHelper2.UP | ItemTouchHelper2.DOWN;
+                dragFlag = ItemTouchHelper2.LEFT | ItemTouchHelper2.RIGHT;
             } else if (orientation == LinearLayoutManager.VERTICAL) {
                 // 如果是竖向的布局，相当于ListView
-                dragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                dragFlag = ItemTouchHelper2.UP | ItemTouchHelper2.DOWN;
+                swipeFlag = ItemTouchHelper2.LEFT | ItemTouchHelper2.RIGHT;
             }
             //第一个参数是拖拽flag，第二个是滑动的flag
             return makeMovementFlags(dragFlag, swipeFlag);
@@ -193,7 +192,7 @@ public class ItemTouchCallback extends ItemTouchHelper.Callback {
     public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
         super.onSelectedChanged(viewHolder, actionState);
         //不管是拖拽或是侧滑，背景色都要变化
-        if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+        if (actionState != ItemTouchHelper2.ACTION_STATE_IDLE) {
             if (color==0){
                 viewHolder.itemView.setBackgroundColor(viewHolder.itemView.getContext()
                         .getResources().getColor(android.R.color.darker_gray));
@@ -224,7 +223,7 @@ public class ItemTouchCallback extends ItemTouchHelper.Callback {
                             @NonNull RecyclerView.ViewHolder viewHolder,
                             float dX, float dY, int actionState, boolean isCurrentlyActive) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-        if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+        if (actionState == ItemTouchHelper2.ACTION_STATE_SWIPE) {
             float value = 1 - Math.abs(dX) / viewHolder.itemView.getWidth();
             viewHolder.itemView.setAlpha(value);
             viewHolder.itemView.setScaleY(value);

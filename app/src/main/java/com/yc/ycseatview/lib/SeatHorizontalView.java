@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +18,14 @@ import java.util.Iterator;
 
 /**
  * <pre>
- *     @author  yangchong
+ *     @author yangchong
  *     email  : yangchong211@163.com
  *     time   : 2020/07/15
  *     desc   : 自定义座位控件
  *     revise : Horizontal横向方向
  * </pre>
  */
-public class SeatHorizontalView extends LinearLayout implements InterSeatView{
+public class SeatHorizontalView extends LinearLayout implements InterSeatView {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
@@ -79,40 +78,40 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
     private void initRecyclerView(int column, int line) {
         int total = column * line;
         mList.clear();
-        for (int i=0 ; i<total ; i++){
+        for (int i = 0; i < total; i++) {
             SeatBean seatBean = new SeatBean();
             seatBean.setCorridor(false);
             seatBean.setIndex(i);
             //设置第几行第几列中的 列
-            int beanLine = (i+1)%mLine;
-            if (beanLine==0){
+            int beanLine = (i + 1) % mLine;
+            if (beanLine == 0) {
                 seatBean.setLine(column);
             } else {
                 seatBean.setLine(beanLine);
             }
             //设置第几行第几列中的 行
-            if (beanLine==0){
-                int beanColumn = (i+1)/mColumn;
+            if (beanLine == 0) {
+                int beanColumn = (i + 1) / mColumn;
                 seatBean.setColumn(beanColumn);
             } else {
-                int beanColumn = (i+1)/mColumn + 1;
+                int beanColumn = (i + 1) / mColumn + 1;
                 seatBean.setColumn(beanColumn);
             }
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
-            seatBean.setName("学生"+i);
+            seatBean.setName("学生" + i);
             mList.add(seatBean);
         }
-        SeatLogUtils.i("SeatRecyclerView------initRecyclerView----初始化总学生座位数-"+mList.size());
+        SeatLogUtils.i("SeatRecyclerView------initRecyclerView----初始化总学生座位数-" + mList.size());
         setRecyclerView(mLine);
     }
 
     private void setRecyclerView(final int line) {
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext,line,RecyclerView.HORIZONTAL,false);
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
                 boolean corridor = mList.get(i).isCorridor();
-                if (corridor){
+                if (corridor) {
                     return line;
                 } else {
                     return 1;
@@ -120,13 +119,13 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
             }
         });
         mRecyclerView.setLayoutManager(layoutManager);
-        if (seatTypeAdapter==null){
+        if (seatTypeAdapter == null) {
             SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
             itemDecoration.setPaddingEdgeSide(true);
             itemDecoration.setPaddingStart(true);
             mRecyclerView.addItemDecoration(itemDecoration);
             initCallBack();
-            seatTypeAdapter = new SeatTypeAdapter1(mContext,mList);
+            seatTypeAdapter = new SeatTypeAdapter1(mContext, mList);
             //seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
         } else {
@@ -136,78 +135,100 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
 
     /**
      * 设置行和列
-     * @param column                    列
-     * @param line                      行
+     *
+     * @param column 列
+     * @param line   行
      */
     public void setColumnAndLine(int column, int line) {
-        if (column<=0){
+        if (column <= 0) {
             column = 5;
         }
-        if (line<=0){
+        if (line <= 0) {
             line = 5;
         }
         this.mColumn = column;
         this.mLine = line;
-        SeatLogUtils.i("SeatRecyclerView------setColumnAndLine----mColumn-"+mColumn+"-----mLine-"+mLine);
-        initRecyclerView(column,line);
+        SeatLogUtils.i("SeatRecyclerView------setColumnAndLine----mColumn-" + mColumn + "-----mLine-" + mLine);
+        initRecyclerView(column, line);
     }
 
 
     private void initCallBack() {
         ItemTouchCallback callback = new ItemTouchCallback(new ItemTouchCallback.OnItemTouchCallbackListener() {
-                @Override
-                public void onSwiped(int adapterPosition) {
-                    // 滑动删除的时候，从数据库、数据源移除，并刷新UI
-                    if (mList != null) {
-                        //adapter.remove(adapterPosition);
-                        //1、删除数据
-                        mList.remove(adapterPosition);
-                        //2、刷新
-                        seatTypeAdapter.notifyItemRemoved(adapterPosition);
-                    }
+            @Override
+            public void onSwiped(int adapterPosition) {
+                // 滑动删除的时候，从数据库、数据源移除，并刷新UI
+                if (mList != null) {
+                    //adapter.remove(adapterPosition);
+                    //1、删除数据
+                    mList.remove(adapterPosition);
+                    //2、刷新
+                    seatTypeAdapter.notifyItemRemoved(adapterPosition);
                 }
+            }
 
-                @Override
-                public boolean onMove(int srcPosition, int targetPosition) {
-                    if (mList != null) {
-                        boolean corridor = mList.get(srcPosition).isCorridor();
-                        int mTargetPosition;
-                        if (srcPosition<targetPosition){
-                            //往后移
-                            if (corridor){
-                                //是过道
-                                int column = mList.get(targetPosition).getColumn();
-                                //int line = mList.get(targetPosition).getLine();
-                                mTargetPosition = column * mLine;
-                            } else {
-                                mTargetPosition = targetPosition;
-                            }
-                            //不是过道
+            @Override
+            public boolean onMove(int srcPosition, int targetPosition) {
+                if (mList != null) {
+                    boolean corridor = mList.get(srcPosition).isCorridor();
+                    int mTargetPosition;
+                    if (srcPosition < targetPosition) {
+                        //往后移
+                        if (corridor) {
+                            //是过道
+                            int column = mList.get(targetPosition).getColumn();
+                            //int line = mList.get(targetPosition).getLine();
+                            mTargetPosition = column * mLine;
                         } else {
-                            //往前移动
-                            if (corridor){
-                                //是过道
-                                int column = mList.get(targetPosition).getColumn();
-                                //int line = mList.get(targetPosition).getLine();
-                                mTargetPosition = (column-1) * mLine;
-                            } else {
-                                mTargetPosition = targetPosition;
-                            }
+                            mTargetPosition = targetPosition;
                         }
-                        // 更换数据源中的数据Item的位置
-                        Collections.swap(mList, srcPosition, mTargetPosition);
-                        // 更新UI中的Item的位置，主要是给用户看到交互效果
-                        seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
-                        //seatTypeAdapter.notifyDataSetChanged();
-                        return true;
+                        //不是过道
+                    } else {
+                        //往前移动
+                        if (corridor) {
+                            //是过道
+                            int column = mList.get(targetPosition).getColumn();
+                            //int line = mList.get(targetPosition).getLine();
+                            mTargetPosition = (column - 1) * mLine;
+                        } else {
+                            mTargetPosition = targetPosition;
+                        }
                     }
+                    // 更换数据源中的数据Item的位置
+                    Collections.swap(mList, srcPosition, mTargetPosition);
+//                        SeatBean bean = mList.get(mTargetPosition);
+//                        seatTypeAdapter.notifyItemChanged(srcPosition);
+//                        seatTypeAdapter.notifyItemChanged(mTargetPosition);
+//
+                    // 更新UI中的Item的位置，主要是给用户看到交互效果
+                    seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
+                    if (srcPosition < targetPosition) {
+                        seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+                    } else {
+                        seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+                    }
+
+                    //先把目标数据移除
+//                        mList.remove(mTargetPosition);
+//                        seatTypeAdapter.notifyItemRemoved(mTargetPosition);
+//                        //将当前数据移动到目标位置
+//                        mList.remove(srcPosition);
+//                        seatTypeAdapter
+//                        mList.add(srcPosition,bean);
+//                        seatTypeAdapter.notifyItemInserted(srcPosition);
+                    //当目标数据移动到当前位置
+
+
+                    //seatTypeAdapter.notifyDataSetChanged();
                     return true;
                 }
-            });
+                return true;
+            }
+        });
         callback.setDragEnable(true);
         callback.setSwipeEnable(true);
         //创建helper对象，callback监听recyclerView item 的各种状态
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        ItemTouchHelper2 itemTouchHelper = new ItemTouchHelper2(callback);
         //关联recyclerView，一个helper对象只能对应一个recyclerView
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
@@ -217,7 +238,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
      */
     @Override
     public void restoreSeat() {
-        initRecyclerView(mColumn,mLine);
+        initRecyclerView(mColumn, mLine);
     }
 
     /**
@@ -235,21 +256,22 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
         SeatBean seatBean = new SeatBean();
         seatBean.setCorridor(true);
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
-        mList.add(mLine,seatBean);
+        mList.add(mLine, seatBean);
         seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
      * 添加调课位
-     * @param type                  类型
+     *
+     * @param type 类型
      */
     @Override
     public void addTypeClass(int type) {
         boolean fastDoubleClick = WidgetsUtils.isFastDoubleClick();
-        if (fastDoubleClick){
+        if (fastDoubleClick) {
             return;
         }
-        switch (type){
+        switch (type) {
             case SeatConstant.Type.TYPE_1:
                 //左侧增加一列
                 addLeftClass();
@@ -272,19 +294,19 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
         restoreSeat();
         //removePreClass();
         int size = mList.size();
-        SeatLogUtils.i("SeatRecyclerView------添加座位----左侧增加一列-"+size);
-        for (int i=0 ; i<size ; i++){
+        SeatLogUtils.i("SeatRecyclerView------添加座位----左侧增加一列-" + size);
+        for (int i = 0; i < size; i++) {
             int line = mList.get(i).getLine();
-            SeatLogUtils.i("SeatRecyclerView------左侧增加一列----------------"+line);
-            if (line==1){
+            SeatLogUtils.i("SeatRecyclerView------左侧增加一列----------------" + line);
+            if (line == 1) {
                 SeatBean seatBean = new SeatBean();
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
                 seatBean.setIndex(i);
                 mList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位1--"+i);
+                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位1--" + i);
             } else {
                 mList.get(i).setIndex(i);
-                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位2--"+(i+0));
+                SeatLogUtils.i("SeatRecyclerView------左侧增加一列---调课位2--" + (i + 0));
             }
         }
         //重排位置
@@ -293,14 +315,14 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
             public int compare(SeatBean o1, SeatBean o2) {
                 long start1 = o1.getIndex();
                 long start2 = o2.getIndex();
-                if(start1 < start2) {
+                if (start1 < start2) {
                     return 1;
                 } else {
                     return -1;
                 }
             }
         });
-        SeatLogUtils.i("SeatRecyclerView------左侧增加一列-----"+mList.toString());
+        SeatLogUtils.i("SeatRecyclerView------左侧增加一列-----" + mList.toString());
         seatTypeAdapter.notifyDataSetChanged();
         //setRecyclerView(mColumn+1);
     }
@@ -312,19 +334,19 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
         restoreSeat();
         //removePreClass();
         int size = mList.size();
-        SeatLogUtils.i("SeatRecyclerView------添加座位----右侧增加一列-"+size);
-        for (int i=0 ; i<size ; i++){
+        SeatLogUtils.i("SeatRecyclerView------添加座位----右侧增加一列-" + size);
+        for (int i = 0; i < size; i++) {
             int line = mList.get(i).getLine();
-            if (line == mLine){
-                SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+i);
+            if (line == mLine) {
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----" + i);
                 SeatBean seatBean = new SeatBean();
-                seatBean.setIndex(i+1);
+                seatBean.setIndex(i + 1);
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
                 mList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位1--"+i);
-            }  else {
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位1--" + i);
+            } else {
                 mList.get(i).setIndex(i);
-                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位2--"+(i+0));
+                SeatLogUtils.i("SeatRecyclerView------右侧增加一列---调课位2--" + (i + 0));
             }
         }
         //重排位置
@@ -333,17 +355,17 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
             public int compare(SeatBean o1, SeatBean o2) {
                 long start1 = o1.getIndex();
                 long start2 = o2.getIndex();
-                if(start1 < start2) {
+                if (start1 < start2) {
                     return 1;
                 } else {
                     return -1;
                 }
             }
         });
-        SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----"+mList.toString());
+        SeatLogUtils.i("SeatRecyclerView------右侧增加一列-----" + mList.toString());
         //setRecyclerView(mColumn+1);
         //seatTypeAdapter.notifyDataSetChanged();
-        setRecyclerView(mLine+1);
+        setRecyclerView(mLine + 1);
     }
 
     /**
@@ -353,39 +375,39 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView{
         restoreSeat();
         //removePreClass();
         int size = mList.size();
-        SeatLogUtils.i("SeatRecyclerView------添加座位----后方增加一列-"+size);
-        for (int i=0 ; i<size ; i++){
+        SeatLogUtils.i("SeatRecyclerView------添加座位----后方增加一列-" + size);
+        for (int i = 0; i < size; i++) {
             int line = mList.get(i).getLine();
-            if (line == mLine){
-                SeatLogUtils.i("SeatRecyclerView------后方增加一列-----"+i);
+            if (line == mLine) {
+                SeatLogUtils.i("SeatRecyclerView------后方增加一列-----" + i);
                 SeatBean seatBean = new SeatBean();
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
                 mList.add(seatBean);
             }
         }
         //seatTypeAdapter.notifyDataSetChanged();
-        setRecyclerView(mLine+1);
+        setRecyclerView(mLine + 1);
     }
 
     /**
      * 删除之前的调课位
      */
-    private void removePreClass(){
+    private void removePreClass() {
         SeatLogUtils.i("SeatRecyclerView------添加座位----删除之前的调课位-");
         Iterator<SeatBean> iterator = mList.iterator();
         boolean isChange = false;
         int index = 0;
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             SeatBean bean = iterator.next();
             int type = bean.getType();
-            if (type == SeatConstant.SeatType.TYPE_2){
+            if (type == SeatConstant.SeatType.TYPE_2) {
                 iterator.remove();
                 isChange = true;
             } else {
                 bean.setIndex(index++);
             }
         }
-        if (isChange){
+        if (isChange) {
             seatTypeAdapter.notifyDataSetChanged();
         }
     }
