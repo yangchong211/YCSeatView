@@ -68,6 +68,7 @@ public class SeatTypeAdapter1 extends RecyclerView.Adapter<SeatTypeAdapter1.MyVi
                 layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
                 holder.itemView.setLayoutParams(layoutParams);
             }
+            seatBean.setIndex(position);
         }
     }
 
