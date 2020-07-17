@@ -173,6 +173,19 @@
         int TYPE_4 = 4;
     }
 
+    /**
+     * 添加调课位座位类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Type {
+        //左侧增加一列
+        int TYPE_1 = 1;
+        //右侧增加一列
+        int TYPE_2 = 2;
+        //后方增加一列
+        int TYPE_3 = 3;
+    }
+
     //左侧增加一列
     addTypeClass(SeatConstant.Type.TYPE_1);
     //右侧增加一列
