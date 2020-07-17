@@ -20,7 +20,7 @@ import android.util.Log;
 /**
  * <pre>
  *     @author yangchong
- *     blog  : https://blog.csdn.net/m0_37700275/article/details/80863685
+ *     blog  :
  *     time  : 2017/4/22
  *     desc  : 日志工具类
  * </pre>

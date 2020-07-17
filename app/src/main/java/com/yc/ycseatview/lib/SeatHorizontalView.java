@@ -319,23 +319,46 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
      */
     private void addLastClass() {
         removePreClass();
-        int size = mList.size();
-        SeatLogUtils.i("SeatRecyclerView------后方增加一列---开始时数据--"+size);
-        for (int i=0 ; i<size ; i++){
-            //找到最后一排，然后添加数据
-            int index = mList.get(i).getIndex();
+        ArrayList<SeatBean> newList = new ArrayList<>();
+        //添加最后一列
+        for (int j=0 ; j<mList.size() ; j++){
+            int index = mList.get(j).getIndex();
             if ((index+1) % mLine == 0){
                 SeatBean seatBean = new SeatBean();
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
-                seatBean.setIndex(i+1);
-                mList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------后方增加一列---排课位1--"+seatBean.getIndex());
-            } else {
-                mList.get(i).setIndex(i);
-                SeatLogUtils.i("SeatRecyclerView------后方增加一列---排课位2--"+mList.get(i).getIndex());
+                int addCount = index / mLine;
+                int pos = index + addCount + 1;
+                seatBean.setIndex(pos);
+                newList.add(seatBean);
+                SeatLogUtils.i("SeatRecyclerView------后方增加一列---添加排课位数据1--"+addCount+"----"+seatBean.getIndex());
             }
         }
-        SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据--"+mList.size());
+        //修改原始数据
+        for (int i=0 ; i<mList.size() ; i++){
+            int index = mList.get(i).getIndex();
+            //数据索引+
+            int addCount = index / mLine;
+            int pos = index + addCount;
+            mList.get(i).setIndex(pos);
+            SeatLogUtils.i("SeatRecyclerView------后方增加一列---修改正常数据索引2--"+mList.get(i).getIndex());
+        }
+        newList.addAll(mList);
+        mList.clear();
+        mList.addAll(newList);
+        SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据3--"+newList.size());
+        //重排位置，从小到大
+        Collections.sort(mList, new Comparator<SeatBean>() {
+            @Override
+            public int compare(SeatBean o1, SeatBean o2) {
+                long start1 = o1.getIndex();
+                long start2 = o2.getIndex();
+                if(start1 > start2) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
         setRecyclerView(mLine+1);
     }
 
@@ -355,7 +378,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             }
         }
         if (isChange) {
-            seatTypeAdapter.notifyDataSetChanged();
+            setRecyclerView(mLine);
+            //seatTypeAdapter.notifyDataSetChanged();
         }
     }
 }
