@@ -133,22 +133,22 @@
 - 这里首先定义一个接口。接口中有这些抽象方法……
     ```
     public interface InterSeatView {
-    
+
         /**
          * 添加过道
          */
         void addCorridor();
-    
+
         /**
          * 恢复自动排座
          */
         void restoreSeat();
-    
+
         /**
          * 更改座位布局
          */
         void changeSeat();
-    
+
         /**
          * 添加调课位
          * @param type                          类型
@@ -172,7 +172,14 @@
         //不可坐
         int TYPE_4 = 4;
     }
-    
+
+    //左侧增加一列
+    addTypeClass(SeatConstant.Type.TYPE_1);
+    //右侧增加一列
+    addTypeClass(SeatConstant.Type.TYPE_2);
+    //后方增加一列
+    addTypeClass(SeatConstant.Type.TYPE_3);
+
     /**
      * 添加调课位
      * @param type                          类型
@@ -180,22 +187,22 @@
     private void addTypeClass(@SeatConstant.SeatType int type) {
         mSeatView.addTypeClass(type);
     }
-    
-    
+
+
     /**
      * 添加过道
      */
     private void addCorridor() {
         mSeatView.addCorridor();
     }
-    
+
     /**
      * 恢复自动排座
      */
     private void restoreSeat() {
         mSeatView.restoreSeat();
     }
-    
+
     /**
      * 更改座位布局
      */
