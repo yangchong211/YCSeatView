@@ -14,10 +14,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
-import com.yc.ycseatview.lib.ModelStorage;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatHorizontalView;
-import com.yc.ycseatview.lib.SeatImageActivity;
 import com.yc.ycseatview.lib.SeatPictureUtils;
 
 /**

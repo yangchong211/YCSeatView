@@ -12,10 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yc.ycseatview.R;
-import com.yc.ycseatview.lib.ModelStorage;
 import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatConstant;
-import com.yc.ycseatview.lib.SeatImageActivity;
 import com.yc.ycseatview.lib.SeatPictureUtils;
 import com.yc.ycseatview.lib.SeatTypeAdapter;
 import com.yc.ycseatview.lib.SpaceViewItemLine;

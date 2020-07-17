@@ -1,12 +1,14 @@
-package com.yc.ycseatview.lib;
+package com.yc.ycseatview.view;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.PhotoView;
 import com.yc.ycseatview.R;
 
 /**
@@ -29,9 +31,10 @@ public class SeatImageActivity extends AppCompatActivity {
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        ImageView imageView = findViewById(R.id.iv_image);
+        PhotoView imageView = findViewById(R.id.iv_image);
         Bitmap bitmap = ModelStorage.getInstance().getBitmap();
-        imageView.setImageBitmap(bitmap);
+        BitmapDrawable drawable = new BitmapDrawable(this.getResources(), bitmap);
+        imageView.setImageDrawable(drawable);
     }
 
     @Override

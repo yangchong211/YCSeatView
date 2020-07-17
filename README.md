@@ -4,6 +4,7 @@
 - 01.如何支持滚动
 - 02.座位控件实现
 - 03.座位拖拽实现
+- 04.座位控件截图
 - 05.如何使用lib
 
 
@@ -142,6 +143,27 @@
     ```
 
 
+
+### 04.座位控件截图
+- 座位控件
+    - LinearLayout + NestedScrollView【竖直方向滚动】 + SeatHorizontalView【横向方向滚动】
+    - 会超出屏幕，上下方向会超出屏幕，左右方向也会超出屏幕
+    - 例如recyclerView展示30行时，此时屏幕绘制可能是10行，在未滑动到底部时，实际上后面的20行是没有draw出来的。【设置recyclerView不缓存，item全部展示出来】
+- 截图思路
+    - 1.先截取recyclerView控件截图。
+        - a.拿到该adapter所有数据的数量
+        - b.for循环遍历数据，然后获取到item。依次对item进行测量，绘制，获取每个item的bitmap存到集合中。注意item的高度是累加的【特别注意gridLayoutManager特殊处理】
+        - c.通过上面循环得到的总高度，总宽度。用Bitmap.createBitmap创建一个大图用于展示控件视图，这个是容器
+        - d.创建Canvas画板，拿到所有item的bitmap集合。然后遍历，依次绘制到容器中，注意摆放的位置
+    - 2.将recyclerView控件截图保存起来
+        - a.创建新activity，比如：LinearLayout【讲台 + ImageView】
+        - b.将recyclerView控件截图填充到ImageView中。然后在针对当前activity的LinearLayout进行截图
+        - c.新的截图应该就是座位图片。实际上这里分了两步操作
+- 存在问题
+
+
+
+
 ### 05.如何使用lib
 - 这里首先定义一个接口。接口中有这些抽象方法……
     ```
@@ -236,6 +258,12 @@
         mSeatView.changeSeat();
     }
     ```
+
+
+
+
+
+
 
 
 

@@ -1,4 +1,4 @@
-package com.yc.ycseatview.lib;
+package com.yc.ycseatview.view;
 
 
 import android.graphics.Bitmap;
