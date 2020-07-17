@@ -4,6 +4,7 @@
 - 01.如何支持滚动
 - 02.座位控件实现
 - 03.座位拖拽实现
+- 05.如何使用lib
 
 
 
@@ -82,7 +83,10 @@
     4   9   14   19    x
     ```
 - 如何添加后边调课位
-    - 思路：
+    - 这个和添加左边一列，右边一列数据有所不同。
+        - 竖直方向添加一列数据，只需要在list中添加数据后，刷新adapter即可。当前设置manager是GridLayoutManager(mContext, line)
+        - 横向方向添加一行数据，需要重新设置manager，则是GridLayoutManager(mContext, line+1)
+    - 思路：重新设置manager，同时修改数据索引
     ```
     0   5   10   15
     1   6   11   16
@@ -125,10 +129,80 @@
     ```
 
 
-
-
-
-
+### 05.如何使用lib
+- 这里首先定义一个接口。接口中有这些抽象方法……
+    ```
+    public interface InterSeatView {
+    
+        /**
+         * 添加过道
+         */
+        void addCorridor();
+    
+        /**
+         * 恢复自动排座
+         */
+        void restoreSeat();
+    
+        /**
+         * 更改座位布局
+         */
+        void changeSeat();
+    
+        /**
+         * 添加调课位
+         * @param type                          类型
+         */
+        void addTypeClass(@SeatConstant.SeatType int type);
+    }
+    ```
+- 一行代码即可设置过道，调课位
+    ```
+    /**
+     * 座位类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SeatType {
+        //正常
+        int TYPE_1 = 1;
+        //调课位
+        int TYPE_2 = 2;
+        //过道
+        int TYPE_3 = 3;
+        //不可坐
+        int TYPE_4 = 4;
+    }
+    
+    /**
+     * 添加调课位
+     * @param type                          类型
+     */
+    private void addTypeClass(@SeatConstant.SeatType int type) {
+        mSeatView.addTypeClass(type);
+    }
+    
+    
+    /**
+     * 添加过道
+     */
+    private void addCorridor() {
+        mSeatView.addCorridor();
+    }
+    
+    /**
+     * 恢复自动排座
+     */
+    private void restoreSeat() {
+        mSeatView.restoreSeat();
+    }
+    
+    /**
+     * 更改座位布局
+     */
+    private void changeSeat() {
+        mSeatView.changeSeat();
+    }
+    ```
 
 
 

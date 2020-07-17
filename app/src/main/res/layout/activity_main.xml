@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:background="@color/colorAccent"
-        android:text="1.跳转座位控件，Vertical方向recyclerView"/>
+        android:text="1.跳转座位控件，Vertical方向recyclerView。暂不用"/>
 
     <TextView
         android:id="@+id/tv_2"
