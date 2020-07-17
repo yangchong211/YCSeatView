@@ -114,13 +114,15 @@ public class SelectSeatDialog extends Dialog {
         mConfig.type = type;
         List<String> list = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
-            list.add(i + "");
+            list.add((i+1) + "");
         }
         if (type==1){
             mTvContent.setText("列数");
         } else {
             mTvContent.setText("行数");
         }
+        //默认取第一个
+        select = list.get(0);
         mWheelView.setOnItemSelectedListener(new WheelView.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(WheelView<String> wheelView, String data, int position) {

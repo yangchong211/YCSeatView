@@ -320,6 +320,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
     private void addLastClass() {
         removePreClass();
         int size = mList.size();
+        SeatLogUtils.i("SeatRecyclerView------后方增加一列---开始时数据--"+size);
         for (int i=0 ; i<size ; i++){
             //找到最后一排，然后添加数据
             int index = mList.get(i).getIndex();
@@ -334,6 +335,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
                 SeatLogUtils.i("SeatRecyclerView------后方增加一列---排课位2--"+mList.get(i).getIndex());
             }
         }
+        SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据--"+mList.size());
         setRecyclerView(mLine+1);
     }
 

@@ -119,6 +119,7 @@ public class SelectClassDialog extends Dialog {
         mTvContent.setText("新增调课位");
         //默认取第一个
         select = list.get(0);
+        type = Type.TYPE_1;
         mWheelView.setOnItemSelectedListener(new WheelView.OnItemSelectedListener<String>() {
             @Override
             public void onItemSelected(WheelView<String> wheelView, String data, int position) {
