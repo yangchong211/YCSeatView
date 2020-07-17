@@ -29,7 +29,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
-    private SeatTypeAdapter1 seatTypeAdapter;
+    private SeatTypeAdapter seatTypeAdapter;
     /**
      * 集合数据
      */
@@ -116,11 +116,13 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             itemDecoration.setPaddingStart(true);
             mRecyclerView.addItemDecoration(itemDecoration);
             initCallBack();
-            seatTypeAdapter = new SeatTypeAdapter1(mContext, mList);
-            //seatTypeAdapter.setData(mList);
+            //seatTypeAdapter = new SeatTypeAdapter1(mContext, mList);
+            seatTypeAdapter = new SeatTypeAdapter(mContext);
+            seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
         } else {
-            seatTypeAdapter.notifyDataSetChanged();
+            //seatTypeAdapter.notifyDataSetChanged();
+            seatTypeAdapter.setData(mList);
         }
     }
 
@@ -254,7 +256,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
         seatBean.setCorridor(true);
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         mList.add(mLine, seatBean);
-        seatTypeAdapter.notifyDataSetChanged();
+        seatTypeAdapter.setData(mList);
+        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -298,7 +301,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
         newList.addAll(mList);
         mList.clear();
         mList.addAll(newList);
-        seatTypeAdapter.notifyDataSetChanged();
+        seatTypeAdapter.setData(mList);
+        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -311,7 +315,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             seatBean.setType(SeatConstant.SeatType.TYPE_2);
             mList.add(seatBean);
         }
-        seatTypeAdapter.notifyDataSetChanged();
+        seatTypeAdapter.setData(mList);
+        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**

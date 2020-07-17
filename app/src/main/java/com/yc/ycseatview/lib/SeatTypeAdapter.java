@@ -48,7 +48,7 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                     break;
                 //过道
                 case SeatConstant.SeatType.TYPE_3:
-                    tvStudentName.setText("过道");
+                    tvStudentName.setText("过"+"\n"+"道");
                     break;
                 //不可坐
                 case SeatConstant.SeatType.TYPE_4:
@@ -58,16 +58,18 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
             if (seatBean.isCorridor()){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-                layoutParams.width = 80;
-                holder.itemView.setBackgroundResource(R.color.colorAccent);
+                layoutParams.width = 100;
+                //holder.itemView.setBackgroundResource(R.color.colorAccent);
                 holder.itemView.setLayoutParams(layoutParams);
             } else {
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
                 layoutParams.width = 250;
-                holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
+                //holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
                 holder.itemView.setLayoutParams(layoutParams);
             }
+            holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
+            seatBean.setIndex(holder.getDataPosition());
         }
     }
 
