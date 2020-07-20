@@ -19,104 +19,6 @@ import java.util.Set;
 public class SeatDataHelper {
 
     /**
-     * 获取座位数据
-     * @param total                     总共的
-     * @param line                      行
-     * @return
-     */
-    public static ArrayList<SeatBean> getListData(int total, int line) {
-        ArrayList<SeatBean> list = new ArrayList<>();
-        for (int i = 0; i < total; i++) {
-            SeatBean seatBean = new SeatBean();
-            seatBean.setIndex(i);
-            //设置第几行第几列中的 列
-            int beanColumn = i / line +1;
-            seatBean.setColumn(beanColumn);
-            //设置第几行第几列中的 行
-            int beanLine = i % line + 1;
-            seatBean.setLine(beanLine);
-            seatBean.setType(SeatConstant.SeatType.TYPE_1);
-            seatBean.setName("学生" + i);
-            list.add(seatBean);
-        }
-        return list;
-    }
-
-    /**
-     * 重新设置座位数据
-     * @param mList                             集合数据
-     * @param line                              行
-     */
-    public static void notifyListAndSet(ArrayList<SeatBean> mList, int line) {
-        if (mList==null || mList.size()==0 || line==0){
-            return;
-        }
-        int mSeatColumn = 1;
-        int mSeatLine = 1;
-        for (int i=0 ; i<mList.size() ; i++){
-            SeatBean bean = mList.get(i);
-            int type = bean.getType();
-            switch (type){
-                //正常
-                case SeatConstant.SeatType.TYPE_1:
-
-                    break;
-                //调课位
-                case SeatConstant.SeatType.TYPE_2:
-
-                    break;
-                //过道
-                case SeatConstant.SeatType.TYPE_3:
-
-                    break;
-                //不可做
-                case SeatConstant.SeatType.TYPE_4:
-
-                    break;
-            }
-        }
-    }
-
-    /**
-     * 添加最后一行的调课位
-     * @param mList
-     * @param mLine
-     * @return
-     */
-    public static ArrayList<SeatBean> addLastClass(ArrayList<SeatBean> mList, int mLine) {
-        if (mList==null || mList.size()==0 || mLine==0){
-            return null;
-        }
-        ArrayList<SeatBean> newList = new ArrayList<>();
-        //获取过道的数量
-        int corridorNum = getCorridorNum(mList);
-        //添加最后一列
-        for (int j=0 ; j<mList.size() ; j++){
-            int index = mList.get(j).getIndex();
-            if ((index+1) % mLine == 0){
-                SeatBean seatBean = new SeatBean();
-                seatBean.setType(SeatConstant.SeatType.TYPE_2);
-                int addCount = index / mLine;
-                int pos = index + addCount + 1;
-                seatBean.setIndex(pos);
-                newList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------后方增加一列---添加排课位数据1--"+addCount+"----"+seatBean.getIndex());
-            }
-        }
-        //修改原始数据
-        for (int i=0 ; i<mList.size() ; i++){
-            int index = mList.get(i).getIndex();
-            //数据索引+
-            int addCount = index / mLine;
-            int pos = index + addCount;
-            mList.get(i).setIndex(pos);
-            SeatLogUtils.i("SeatRecyclerView------后方增加一列---修改正常数据索引2--"+mList.get(i).getIndex());
-        }
-        newList.addAll(mList);
-        return newList;
-    }
-
-    /**
      * 获取过道的数量
      * @param mList                             集合
      * @return
@@ -176,12 +78,6 @@ public class SeatDataHelper {
         });
     }
 
-
-    /*----------------------------------------------------------------------------------------*/
-    /*----------------------------------------------------------------------------------------*/
-    /*----------------------------------------------------------------------------------------*/
-
-
     /**
      * 获取座位排好的map数据
      * @param total                             总共数量
@@ -206,11 +102,11 @@ public class SeatDataHelper {
                 newList.add(seatBean);
                 //最后一列
                 if (i+1 == total){
-                    map.put(xColumn-1,newList);
+                    map.put(xColumn,newList);
                 }
                 SeatLogUtils.i("SeatRecyclerView------initRecyclerView---第" +xColumn+ "列数据"  +newList.size());
             } else {
-                map.put(xColumn-1,newList);
+                map.put(xColumn,newList);
                 SeatLogUtils.i("SeatRecyclerView------initRecyclerView-插入--第" +xColumn+ "列数据"  +newList.size());
                 xColumn++;
                 newList = new ArrayList<>();
@@ -269,16 +165,18 @@ public class SeatDataHelper {
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
         int corridor = 1;
         for (int i=0 ; i<size+1 ; i++){
+            //key从1开始
+            int index = i+1;
             if (i < corridor){
-                map.put(i,mSeatMap.get(i));
+                map.put(index,mSeatMap.get(i));
             } else if (i == corridor){
                 //插入过道
-                map.put(i,list);
+                map.put(index,list);
                 //插入正常数据
-                map.put(i+1,mSeatMap.get(i));
+                map.put(index+1,mSeatMap.get(i));
             } else {
                 //插入正常数据
-                map.put(i+1,mSeatMap.get(i));
+                map.put(index+1,mSeatMap.get(i));
             }
         }
         return map;
@@ -330,13 +228,13 @@ public class SeatDataHelper {
         }
         if (isLeft){
             //在左侧加一列
-            map.put(0,mList);
+            map.put(1,mList);
             //后面依次往后挪动
             Set<Integer> integers = mSeatMap.keySet();
             Iterator<Integer> iterator = integers.iterator();
             while (iterator.hasNext()){
                 Integer next = iterator.next();
-                map.put(next+1,mSeatMap.get(next));
+                map.put(next+2,mSeatMap.get(next));
             }
         } else {
             //在右侧加一列

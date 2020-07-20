@@ -78,7 +78,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
     private void initRecyclerView(int column, int line) {
         int total = column * line;
         mList.clear();
-        ArrayList<SeatBean> list = SeatDataHelper.getListData(total,line);
+        ArrayList<SeatBean> list = SeatDataTool.getListData(total,line);
         mList.addAll(list);
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView----初始化总学生座位数-" + mList.size());
         setRecyclerView(line);
@@ -243,7 +243,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
         SeatBean seatBean = new SeatBean();
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         mList.add(mLine, seatBean);
-        SeatDataHelper.notifyListAndSet(mList,mLine);
+        SeatDataTool.notifyListAndSet(mList,mLine);
         seatTypeAdapter.setData(mList);
         //seatTypeAdapter.notifyDataSetChanged();
     }
@@ -312,12 +312,12 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
      */
     private void addLastClass() {
         removePreClass();
-        ArrayList<SeatBean> newList = SeatDataHelper.addLastClass(mList,mLine);
+        ArrayList<SeatBean> newList = SeatDataTool.addLastClass(mList,mLine);
         if (newList!=null){
             mList.clear();
             mList.addAll(newList);
             SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据3--"+newList.size());
-            SeatDataHelper.sortList(mList);
+            SeatDataTool.sortList(mList);
             setRecyclerView(mLine+1);
         }
     }

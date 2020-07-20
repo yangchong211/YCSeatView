@@ -85,4 +85,16 @@ public class SeatBean implements Serializable {
     public void setSelect(boolean select) {
         this.select = select;
     }
+
+    @Override
+    public String toString() {
+        return "SeatBean{" +
+                "name='" + name + '\'' +
+                ", type=" + type +
+                ", column=" + column +
+                ", line=" + line +
+                ", index=" + index +
+                ", select=" + select +
+                '}';
+    }
 }
