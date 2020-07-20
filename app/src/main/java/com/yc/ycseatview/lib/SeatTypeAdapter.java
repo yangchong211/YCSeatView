@@ -36,7 +36,7 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 //正常座位
                 case SeatConstant.SeatType.TYPE_1:
                     if (seatBean.getName()!=null){
-                        tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                        tvStudentName.setText(holder.getDataPosition()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
                         //holder.tvName.setText(seatBean.getName());
                     } else {
                         tvStudentName.setText("");
@@ -44,16 +44,19 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                     break;
                 //调课位
                 case SeatConstant.SeatType.TYPE_2:
-                    tvStudentName.setText("");
+                    tvStudentName.setText("调课位"+seatBean.getIndex());
                     break;
                 //过道
                 case SeatConstant.SeatType.TYPE_3:
-                    tvStudentName.setText("过"+"\n"+"道"+holder.getDataPosition());
+                    tvStudentName.setText("过"+"\n"+"道"+seatBean.getIndex());
                     break;
                 //不可坐
                 case SeatConstant.SeatType.TYPE_4:
-                    tvStudentName.setText("不可坐"+holder.getDataPosition());
+                    tvStudentName.setText("不可坐"+seatBean.getIndex());
                     break;
+            }
+            if (seatBean.isSelect()){
+                tvStudentName.setText("不可坐"+seatBean.getIndex());
             }
             if (type == SeatConstant.SeatType.TYPE_3){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
@@ -69,7 +72,6 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 holder.itemView.setLayoutParams(layoutParams);
             }
             holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
-            seatBean.setIndex(holder.getDataPosition());
         }
     }
 

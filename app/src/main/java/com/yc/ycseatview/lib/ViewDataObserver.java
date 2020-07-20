@@ -81,6 +81,7 @@ public class ViewDataObserver extends RecyclerView.AdapterDataObserver {
      * 自动更改座位中的索引，以及对应第几行，第几列数据
      */
     private void update() {
+        SeatLogUtils.i("AdapterDataObserver----被调用---");
         if (recyclerView.getAdapter()!=null && recyclerView.getAdapter() instanceof AbsSeatAdapter){
 //            //更新座位表
 //            List<SeatBean> data = adapter.getData();
@@ -89,7 +90,8 @@ public class ViewDataObserver extends RecyclerView.AdapterDataObserver {
 //            for (int i=0 ; i<data.size() ; i++){
 //                SeatBean seatBean = data.get(i);
 //                seatBean.setIndex(i);
-//                if (seatBean.isCorridor()){
+//                int type = seatBean.getType();
+//                if (type == SeatConstant.SeatType.TYPE_3){
 //                    //过道
 //                } else {
 //                    //非过道

@@ -85,6 +85,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
     }
 
     private void setRecyclerView(final int line) {
+        this.mLine = line;
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -114,6 +115,19 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             seatTypeAdapter.setData(mList);
         }
         seatTypeAdapter.setDataLine(line);
+        seatTypeAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                if (mList.size()>position && position>=0){
+                    SeatBean bean = mList.get(position);
+                    int type = bean.getType();
+                    if (type != SeatConstant.SeatType.TYPE_3 ){
+                        bean.setSelect(!bean.isSelect());
+                        seatTypeAdapter.notifyItemChanged(position);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -152,7 +166,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
 
             @Override
             public boolean onMove(int srcPosition, int targetPosition) {
-                if (mList != null) {
+                if (mList != null && !mList.get(srcPosition).isSelect()) {
                     int type = mList.get(srcPosition).getType();
                     int mTargetPosition;
                     if (type == SeatConstant.SeatType.TYPE_3){
@@ -195,7 +209,7 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
                     }
                     return true;
                 }
-                return true;
+                return false;
             }
         });
         callback.setDragEnable(true);
@@ -298,47 +312,14 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
      */
     private void addLastClass() {
         removePreClass();
-        ArrayList<SeatBean> newList = new ArrayList<>();
-        //添加最后一列
-        for (int j=0 ; j<mList.size() ; j++){
-            int index = mList.get(j).getIndex();
-            if ((index+1) % mLine == 0){
-                SeatBean seatBean = new SeatBean();
-                seatBean.setType(SeatConstant.SeatType.TYPE_2);
-                int addCount = index / mLine;
-                int pos = index + addCount + 1;
-                seatBean.setIndex(pos);
-                newList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------后方增加一列---添加排课位数据1--"+addCount+"----"+seatBean.getIndex());
-            }
+        ArrayList<SeatBean> newList = SeatDataHelper.addLastClass(mList,mLine);
+        if (newList!=null){
+            mList.clear();
+            mList.addAll(newList);
+            SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据3--"+newList.size());
+            SeatDataHelper.sortList(mList);
+            setRecyclerView(mLine+1);
         }
-        //修改原始数据
-        for (int i=0 ; i<mList.size() ; i++){
-            int index = mList.get(i).getIndex();
-            //数据索引+
-            int addCount = index / mLine;
-            int pos = index + addCount;
-            mList.get(i).setIndex(pos);
-            SeatLogUtils.i("SeatRecyclerView------后方增加一列---修改正常数据索引2--"+mList.get(i).getIndex());
-        }
-        newList.addAll(mList);
-        mList.clear();
-        mList.addAll(newList);
-        SeatLogUtils.i("SeatRecyclerView------后方增加一列---结束时数据3--"+newList.size());
-        //重排位置，从小到大
-        Collections.sort(mList, new Comparator<SeatBean>() {
-            @Override
-            public int compare(SeatBean o1, SeatBean o2) {
-                long start1 = o1.getIndex();
-                long start2 = o2.getIndex();
-                if(start1 > start2) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            }
-        });
-        setRecyclerView(mLine+1);
     }
 
     /**

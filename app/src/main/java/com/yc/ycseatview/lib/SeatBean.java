@@ -33,6 +33,10 @@ public class SeatBean implements Serializable {
      * 位置
      */
     private int index;
+    /**
+     * 是否选中
+     */
+    private boolean select;
 
     public String getName() {
         return name;
@@ -72,5 +76,13 @@ public class SeatBean implements Serializable {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public boolean isSelect() {
+        return select;
+    }
+
+    public void setSelect(boolean select) {
+        this.select = select;
     }
 }
