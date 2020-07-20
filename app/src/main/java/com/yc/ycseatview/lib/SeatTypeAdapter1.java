@@ -56,7 +56,7 @@ public class SeatTypeAdapter1 extends RecyclerView.Adapter<SeatTypeAdapter1.MyVi
             } else {
                 holder.tvName.setText("");
             }
-            if (seatBean.isCorridor()){
+            if (seatBean.getType() == SeatConstant.SeatType.TYPE_3){
                 holder.tvName.setText("过道"+position);
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;

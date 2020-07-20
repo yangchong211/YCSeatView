@@ -80,7 +80,6 @@ public class SeatVerticalView extends LinearLayout implements InterSeatView{
         mList.clear();
         for (int i=0 ; i<total ; i++){
             SeatBean seatBean = new SeatBean();
-            seatBean.setCorridor(false);
             seatBean.setIndex(i);
             //设置第几行第几列中的 列
             int beanColumn = (i+1)%mColumn;
@@ -110,8 +109,8 @@ public class SeatVerticalView extends LinearLayout implements InterSeatView{
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                boolean corridor = mList.get(i).isCorridor();
-                if (corridor){
+                int type = mList.get(i).getType();
+                if (type == SeatConstant.SeatType.TYPE_3){
                     return mColumn;
                 } else {
                     return 1;
@@ -170,8 +169,8 @@ public class SeatVerticalView extends LinearLayout implements InterSeatView{
                 @Override
                 public boolean onMove(int srcPosition, int targetPosition) {
                     if (mList != null) {
-                        boolean corridor = mList.get(srcPosition).isCorridor();
-                        if (corridor){
+                        int type = mList.get(srcPosition).getType();
+                        if (type == SeatConstant.SeatType.TYPE_3){
                             //是过道
                         } else {
                             //不是过道
@@ -242,7 +241,6 @@ public class SeatVerticalView extends LinearLayout implements InterSeatView{
     @Override
     public void addCorridor() {
         SeatBean seatBean = new SeatBean();
-        seatBean.setCorridor(true);
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         mList.add(1,seatBean);
         //seatTypeAdapter.setData(mList);

@@ -22,10 +22,6 @@ public class SeatBean implements Serializable {
      */
     private int type;
     /**
-     * 是否是过道
-     */
-    private boolean isCorridor;
-    /**
      * 位于第几列
      */
     private int column;
@@ -52,14 +48,6 @@ public class SeatBean implements Serializable {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public boolean isCorridor() {
-        return isCorridor;
-    }
-
-    public void setCorridor(boolean corridor) {
-        isCorridor = corridor;
     }
 
     public int getColumn() {

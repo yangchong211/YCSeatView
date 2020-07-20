@@ -48,14 +48,14 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                     break;
                 //过道
                 case SeatConstant.SeatType.TYPE_3:
-                    tvStudentName.setText("过"+"\n"+"道");
+                    tvStudentName.setText("过"+"\n"+"道"+holder.getDataPosition());
                     break;
                 //不可坐
                 case SeatConstant.SeatType.TYPE_4:
-                    tvStudentName.setText("不可坐");
+                    tvStudentName.setText("不可坐"+holder.getDataPosition());
                     break;
             }
-            if (seatBean.isCorridor()){
+            if (type == SeatConstant.SeatType.TYPE_3){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
                 layoutParams.width = 100;

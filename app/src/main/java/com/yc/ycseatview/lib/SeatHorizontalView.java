@@ -78,22 +78,10 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
     private void initRecyclerView(int column, int line) {
         int total = column * line;
         mList.clear();
-        for (int i = 0; i < total; i++) {
-            SeatBean seatBean = new SeatBean();
-            seatBean.setCorridor(false);
-            seatBean.setIndex(i);
-            //设置第几行第几列中的 列
-            int beanColumn = i / mLine +1;
-            seatBean.setColumn(beanColumn);
-            //设置第几行第几列中的 行
-            int beanLine = i % mLine + 1;
-            seatBean.setLine(beanLine);
-            seatBean.setType(SeatConstant.SeatType.TYPE_1);
-            seatBean.setName("学生" + i);
-            mList.add(seatBean);
-        }
+        ArrayList<SeatBean> list = SeatDataHelper.getListData(total,line);
+        mList.addAll(list);
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView----初始化总学生座位数-" + mList.size());
-        setRecyclerView(mLine);
+        setRecyclerView(line);
     }
 
     private void setRecyclerView(final int line) {
@@ -101,8 +89,8 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                boolean corridor = mList.get(i).isCorridor();
-                if (corridor) {
+                int type = mList.get(i).getType();
+                if (type == SeatConstant.SeatType.TYPE_3){
                     return line;
                 } else {
                     return 1;
@@ -120,10 +108,12 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             seatTypeAdapter = new SeatTypeAdapter(mContext);
             seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
+            seatTypeAdapter.registerAdapterDataObserver(new ViewDataObserver(mRecyclerView));
         } else {
             //seatTypeAdapter.notifyDataSetChanged();
             seatTypeAdapter.setData(mList);
         }
+        seatTypeAdapter.setDataLine(line);
     }
 
     /**
@@ -163,9 +153,9 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             @Override
             public boolean onMove(int srcPosition, int targetPosition) {
                 if (mList != null) {
-                    boolean corridor = mList.get(srcPosition).isCorridor();
+                    int type = mList.get(srcPosition).getType();
                     int mTargetPosition;
-                    if (corridor){
+                    if (type == SeatConstant.SeatType.TYPE_3){
                         //是过道
                         int column = mList.get(targetPosition).getColumn();
                         if (srcPosition < targetPosition) {
@@ -195,31 +185,13 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
                         }
                         // 更换数据源中的数据Item的位置
                         Collections.swap(mList, srcPosition, mTargetPosition);
-
-
-//                        SeatBean bean = mList.get(mTargetPosition);
-//                        seatTypeAdapter.notifyItemChanged(srcPosition);
-//                        seatTypeAdapter.notifyItemChanged(mTargetPosition);
-//
                         // 更新UI中的Item的位置，主要是给用户看到交互效果
                         seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
-//                        if (srcPosition < targetPosition) {
-//                            seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-//                        } else {
-//                            seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-//                        }
-
-                        //先把目标数据移除
-//                        mList.remove(mTargetPosition);
-//                        seatTypeAdapter.notifyItemRemoved(mTargetPosition);
-//                        //将当前数据移动到目标位置
-//                        mList.remove(srcPosition);
-//                        seatTypeAdapter
-//                        mList.add(srcPosition,bean);
-//                        seatTypeAdapter.notifyItemInserted(srcPosition);
-                        //当目标数据移动到当前位置
-
-                        //seatTypeAdapter.notifyDataSetChanged();
+                        if (srcPosition < targetPosition) {
+                            seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+                        } else {
+                            seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
+                        }
                     }
                     return true;
                 }
@@ -255,9 +227,9 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
      */
     public void addCorridor() {
         SeatBean seatBean = new SeatBean();
-        seatBean.setCorridor(true);
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         mList.add(mLine, seatBean);
+        SeatDataHelper.notifyListAndSet(mList,mLine);
         seatTypeAdapter.setData(mList);
         //seatTypeAdapter.notifyDataSetChanged();
     }

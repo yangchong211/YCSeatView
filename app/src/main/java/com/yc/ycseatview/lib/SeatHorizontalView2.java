@@ -77,7 +77,6 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
         View view = inflater.inflate(R.layout.custom_seat_view, this, true);
         initFindViewById(view);
         initListener();
-        //initRecyclerView(0,0);
     }
 
     private void initFindViewById(View view) {
@@ -91,42 +90,12 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
     private void initRecyclerView(int column, int line) {
         int total = column * line;
         mSeatMap.clear();
-        int xColumn = 1;
-        ArrayList<SeatBean> newList = new ArrayList<>();
-        for (int i = 0; i < total; i++) {
-            SeatBean seatBean = new SeatBean();
-            seatBean.setCorridor(false);
-            seatBean.setIndex(i);
-            //设置第几行第几列中的 列
-            int beanColumn = i / mLine +1;
-            seatBean.setColumn(beanColumn);
-            //设置第几行第几列中的 行
-            int beanLine = i % mLine + 1;
-            seatBean.setLine(beanLine);
-            seatBean.setType(SeatConstant.SeatType.TYPE_1);
-            seatBean.setName("学生" + i);
-            if (xColumn==beanColumn){
-                newList.add(seatBean);
-                SeatLogUtils.i("SeatRecyclerView------initRecyclerView---第" +xColumn+ "列数据"  +newList.size());
-            } else {
-                mSeatMap.put(xColumn,newList);
-                SeatLogUtils.i("SeatRecyclerView------initRecyclerView-插入--第" +xColumn+ "列数据"  +newList.size());
-                xColumn++;
-                newList = new ArrayList<>();
-                newList.add(seatBean);
-            }
-        }
-        SeatLogUtils.i("SeatRecyclerView------initRecyclerView--1--初始化总学生座位数-" + mSeatMap.size());
+        LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.getSeatMap(total,line);
+        mSeatMap.putAll(map);
         mList.clear();
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            ArrayList<SeatBean> seatBeans = mSeatMap.get(next);
-            if (seatBeans!=null){
-                mList.addAll(seatBeans);
-            }
-        }
+        //将map集合转化为list数据
+        ArrayList<SeatBean> listToMap = SeatDataHelper.getListToMap(mSeatMap);
+        mList.addAll(listToMap);
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView--2--初始化总学生座位数-" + mList.size());
         setRecyclerView(mLine);
     }
@@ -136,8 +105,8 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
-                boolean corridor = mList.get(i).isCorridor();
-                if (corridor) {
+                int type = mList.get(i).getType();
+                if (type == SeatConstant.SeatType.TYPE_3){
                     return line;
                 } else {
                     return 1;
@@ -198,9 +167,9 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
             @Override
             public boolean onMove(int srcPosition, int targetPosition) {
                 if (mList != null) {
-                    boolean corridor = mList.get(srcPosition).isCorridor();
+                    int type = mList.get(srcPosition).getType();
                     int mTargetPosition;
-                    if (corridor){
+                    if (type == SeatConstant.SeatType.TYPE_3){
                         //是过道
                         int column = mList.get(targetPosition).getColumn();
                         if (srcPosition < targetPosition) {
@@ -232,11 +201,6 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
                         Collections.swap(mList, srcPosition, mTargetPosition);
                         // 更新UI中的Item的位置，主要是给用户看到交互效果
                         seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
-//                        if (srcPosition < targetPosition) {
-//                            seatTypeAdapter.notifyItemRangeChanged(srcPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-//                        } else {
-//                            seatTypeAdapter.notifyItemRangeChanged(targetPosition, Math.abs(mTargetPosition - srcPosition) + 1);
-//                        }
                     }
                     return true;
                 }
@@ -269,14 +233,13 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
 
     /**
      * 添加过道
+     * 默认在左边
      */
     public void addCorridor() {
         SeatBean seatBean = new SeatBean();
-        seatBean.setCorridor(true);
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         mList.add(mLine, seatBean);
         seatTypeAdapter.setData(mList);
-        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -321,7 +284,6 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
         mList.clear();
         mList.addAll(newList);
         seatTypeAdapter.setData(mList);
-        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -335,7 +297,6 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
             mList.add(seatBean);
         }
         seatTypeAdapter.setData(mList);
-        //seatTypeAdapter.notifyDataSetChanged();
     }
 
     /**

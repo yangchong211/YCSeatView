@@ -31,10 +31,27 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
     //默认可以回收
     private boolean isRecycle;
     private int position;
+    private int line;
 
     private AbsSeatAdapter() {
         //默认可以回收
         this.isRecycle = true;
+    }
+
+    /**
+     * 设置座位数据有几行
+     * @param line
+     */
+    public void setDataLine(int line) {
+        this.line = line;
+    }
+
+    /**
+     * 获取座位数据有几行
+     * @return
+     */
+    public int getLine() {
+        return line;
     }
 
     /**
@@ -301,4 +318,5 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
     public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
         this.onItemLongClickListener = onItemLongClickListener;
     }
+
 }
