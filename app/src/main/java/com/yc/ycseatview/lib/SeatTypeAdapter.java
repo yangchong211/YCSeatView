@@ -36,7 +36,7 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 //正常座位
                 case SeatConstant.SeatType.TYPE_1:
                     if (seatBean.getName()!=null){
-                        tvStudentName.setText(holder.getDataPosition()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                        tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
                         //holder.tvName.setText(seatBean.getName());
                     } else {
                         tvStudentName.setText("");

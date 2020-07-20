@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.yc.ycseatview.R;
 
@@ -35,6 +36,7 @@ import java.util.Set;
 public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
 
     private Context mContext;
+    private RecyclerView mRecyclerPicView;
     private RecyclerView mRecyclerView;
     private SeatTypeAdapter seatTypeAdapter;
     /**
@@ -71,6 +73,18 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         initView(context);
     }
 
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        SeatLogUtils.i("SeatHorizontalView2-----onAttachedToWindow--");
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        SeatLogUtils.i("SeatHorizontalView2-----onDetachedFromWindow--");
+    }
+
     private void initView(Context context) {
         this.mContext = context;
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -81,6 +95,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
 
     private void initFindViewById(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerPicView = findViewById(R.id.recycler_pic_view);
         mRecyclerView.post(new Runnable() {
             @Override
             public void run() {
@@ -116,36 +131,66 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
                 }
             }
         });
+        final GridLayoutManager layoutManagerPic = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int i) {
+                int type = mList.get(i).getType();
+                if (type == SeatConstant.SeatType.TYPE_3){
+                    return line;
+                } else {
+                    return 1;
+                }
+            }
+        });
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerPicView.setLayoutManager(layoutManagerPic);
         if (seatTypeAdapter == null) {
             initCallBack();
             seatTypeAdapter = new SeatTypeAdapter(mContext);
             seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
+            mRecyclerPicView.setAdapter(seatTypeAdapter);
             SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
             itemDecoration.setPaddingEdgeSide(true);
             itemDecoration.setPaddingStart(true);
             mRecyclerView.addItemDecoration(itemDecoration);
+            mRecyclerPicView.addItemDecoration(itemDecoration);
             seatTypeAdapter.registerAdapterDataObserver(new ViewDataObserver(mRecyclerView));
             //setCache();
         } else {
             seatTypeAdapter.setData(mList);
         }
-        //计算
-        mRecyclerView.post(new Runnable() {
+        mRecyclerPicView.post(new Runnable() {
             @Override
             public void run() {
-                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerView);
-                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerView);
-                int totalHeight = mLine * recyclerViewItemHeight;
+                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerPicView);
+                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerPicView);
+                int totalHeight = mLine * recyclerViewItemHeight + mLine * SeatPictureUtils.dip2px(mContext,10);
                 int totalWidth = mColumn * recyclerViewItemWidth;
                 SeatLogUtils.i("layoutView---------mRecyclerView计算--"+totalWidth+"----------"+totalHeight);
-                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mRecyclerPicView.getLayoutParams();
                 layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-                layoutParams.height = totalHeight;
-                mRecyclerView.setLayoutParams(layoutParams);
+                layoutParams.height = totalHeight ;
+                mRecyclerPicView.setLayoutParams(layoutParams);
+                mRecyclerPicView.setVisibility(GONE);
             }
         });
+    }
+
+
+    public void setPicRecyclerViewVisible() {
+        if (mRecyclerView.getVisibility() == VISIBLE){
+            mRecyclerView.setVisibility(GONE);
+            mRecyclerPicView.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setRecyclerViewVisible() {
+        if (mRecyclerView.getVisibility() == GONE){
+            mRecyclerView.setVisibility(VISIBLE);
+            mRecyclerPicView.setVisibility(GONE);
+        }
     }
 
     private void setCache() {
@@ -235,10 +280,36 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             //往前移动
             mTargetPosition = targetPosition;
         }
-        // 更换数据源中的数据Item的位置
-        Collections.swap(mList, srcPosition, mTargetPosition);
-        // 更新UI中的Item的位置，主要是给用户看到交互效果
-        seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
+        // 更换map集合中
+        SeatBean srcBean = mList.get(srcPosition);
+        SeatBean targetBean = mList.get(mTargetPosition);
+        int srcColumn = mList.get(srcPosition).getColumn();
+        int targetColumn = mList.get(targetPosition).getColumn();
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == srcColumn){
+                //开始
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null){
+                    continue;
+                }
+                list.set(mTargetPosition,targetBean);
+            } else if (next == targetColumn){
+                //目标
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null){
+                    continue;
+                }
+                list.set(list.size()-1,srcBean);
+            }
+        }
+        ArrayList<SeatBean> listToMap = SeatDataHelper.getListToMap(mSeatMap);
+        mList.clear();
+        mList.addAll(listToMap);
+        SeatDataHelper.sortList(mList);
+        seatTypeAdapter.setData(mList);
     }
 
     /**
@@ -272,32 +343,6 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         Collections.swap(mList, srcPosition, mTargetPosition);
         // 更新UI中的Item的位置，主要是给用户看到交互效果
         seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
-        // 更换map集合中
-        /*SeatBean srcBean = mList.get(srcPosition);
-        SeatBean targetBean = mList.get(mTargetPosition);
-        int srcColumn = mList.get(srcPosition).getColumn();
-        int targetColumn = mList.get(targetPosition).getColumn();
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == srcColumn){
-                //开始
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null){
-                    continue;
-                }
-                list.set(list.size()-1,targetBean);
-            } else if (next == targetColumn){
-                //目标
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null){
-                    continue;
-                }
-                list.set(list.size()-1,srcBean);
-            }
-        }
-        SeatDataHelper.getListToMap(mSeatMap);*/
     }
 
     /**
@@ -425,4 +470,5 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             setRecyclerView(mLine);
         }
     }
+
 }

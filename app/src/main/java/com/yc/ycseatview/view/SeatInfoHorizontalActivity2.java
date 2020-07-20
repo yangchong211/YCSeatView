@@ -55,6 +55,12 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     private int line;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mSeatView.setRecyclerViewVisible();
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_hor_info2);
@@ -140,15 +146,20 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
             //提交数据
         } else if (v == mTvPicture){
             //生成图片
-//            Bitmap bitmap = SeatPictureUtils.layoutView(mLlContentView,width,height);
-            Bitmap bitmap = SeatPictureUtils.measureSize(this,mLlContentView);
-            ModelStorage.getInstance().setBitmap(bitmap);
-            Intent intent = new Intent(this, SeatImageActivity2.class);
-            intent.putExtra("type",1);
-            startActivity(intent);
+            //Bitmap bitmap = SeatPictureUtils.layoutView(mLlContentView,width,height);
+            mSeatView.setPicRecyclerViewVisible();
+            mLlSeatView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Bitmap bitmap = SeatPictureUtils.measureSize(SeatInfoHorizontalActivity2.this,mLlContentView);
+                    ModelStorage.getInstance().setBitmap(bitmap);
+                    Intent intent = new Intent(SeatInfoHorizontalActivity2.this, SeatImageActivity2.class);
+                    intent.putExtra("type",1);
+                    startActivity(intent);
+                }
+            },500);
         }
     }
-
 
     @SuppressLint("SetTextI18n")
     private void initIntentData() {

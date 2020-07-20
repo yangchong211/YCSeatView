@@ -10,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 
 public class ScrollRecyclerViewActivity extends AppCompatActivity {
 
-    private NestedScrollView mScrollView;
+    private HorizontalScrollView mScrollView;
     private TextView mTv;
     private RecyclerView mRecyclerView;
     private LinearLayout mLlMain;
@@ -47,8 +48,8 @@ public class ScrollRecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //生成图片
-                //Bitmap bitmap = SeatPictureUtils.measureSize(ScrollRecyclerViewActivity.this, mScrollView);
-                Bitmap bitmap = SeatPictureUtils.shotRecyclerView(5, mRecyclerView);
+                Bitmap bitmap = SeatPictureUtils.measureSize(ScrollRecyclerViewActivity.this, mScrollView);
+                //Bitmap bitmap = SeatPictureUtils.shotRecyclerView(5, mRecyclerView);
                 ModelStorage.getInstance().setBitmap(bitmap);
                 Intent intent = new Intent(ScrollRecyclerViewActivity.this, SeatImageActivity.class);
                 intent.putExtra("type",2);
@@ -59,16 +60,15 @@ public class ScrollRecyclerViewActivity extends AppCompatActivity {
     }
 
     private void initRecyclerView() {
-        int total = 3 * 50;
         mList.clear();
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < 150; i++) {
             SeatBean seatBean = new SeatBean();
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
             seatBean.setName("学生" + i);
             mList.add(seatBean);
         }
         GridLayoutManager layoutManager = new GridLayoutManager(this,
-                30, RecyclerView.HORIZONTAL, false);
+                5, RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         if (seatTypeAdapter == null) {
             SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
@@ -93,7 +93,8 @@ public class ScrollRecyclerViewActivity extends AppCompatActivity {
 //                int totalWidth = 5 * recyclerViewItemWidth;
 //                SeatLogUtils.i("layoutView---------mRecyclerView计算--"+totalWidth+"----------"+totalHeight);
 //                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
-//                layoutParams.width = totalWidth+300;
+////                layoutParams.width = totalWidth+300;
+//                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
 //                layoutParams.height = totalHeight + 300;
 //                mRecyclerView.setLayoutParams(layoutParams);
 //            }
