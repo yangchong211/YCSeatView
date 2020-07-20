@@ -1,12 +1,16 @@
 package com.yc.ycseatview.lib;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.yc.ycseatview.R;
@@ -28,7 +32,7 @@ import java.util.Set;
  *     revise : Horizontal横向方向
  * </pre>
  */
-public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
+public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
 
     private Context mContext;
     private RecyclerView mRecyclerView;
@@ -77,6 +81,14 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
 
     private void initFindViewById(View view) {
         mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = mRecyclerView.getWidth();
+                int height = mRecyclerView.getHeight();
+                SeatLogUtils.i("layoutView---------mRecyclerView--"+width+"----------"+height);
+            }
+        });
     }
 
     private void initListener() {
@@ -92,7 +104,7 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
     }
 
     private void setRecyclerView(final int line) {
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
+        final GridLayoutManager layoutManager = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int i) {
@@ -106,17 +118,49 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
         });
         mRecyclerView.setLayoutManager(layoutManager);
         if (seatTypeAdapter == null) {
-            SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
-            itemDecoration.setPaddingEdgeSide(true);
-            itemDecoration.setPaddingStart(true);
-            mRecyclerView.addItemDecoration(itemDecoration);
             initCallBack();
             seatTypeAdapter = new SeatTypeAdapter(mContext);
             seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
+            setCache();
         } else {
             seatTypeAdapter.setData(mList);
         }
+        //计算
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerView);
+                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerView);
+                int totalHeight = mLine * recyclerViewItemHeight;
+                int totalWidth = mColumn * recyclerViewItemWidth;
+                SeatLogUtils.i("layoutView---------mRecyclerView计算--"+totalWidth+"----------"+totalHeight);
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
+                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                layoutParams.height = totalHeight;
+                mRecyclerView.setLayoutParams(layoutParams);
+            }
+        });
+    }
+
+    private void setCache() {
+        //屏幕外缓存
+        //当列表滑动出了屏幕时，ViewHolder会被缓存在 mCachedViews ，其大小由mViewCacheMax决定，
+        //默认DEFAULT_CACHE_SIZE为2，可通过Recyclerview.setItemViewCacheSize()动态设置。
+        mRecyclerView.setItemViewCacheSize(225);
+        //缓存池
+        RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
+        recycledViewPool.clear();
+        recycledViewPool.setMaxRecycledViews(seatTypeAdapter.getItemViewType(0),225);
+        mRecyclerView.setRecycledViewPool(recycledViewPool);
+        //自定义缓存
+        mRecyclerView.setViewCacheExtension(new RecyclerView.ViewCacheExtension() {
+            @Nullable
+            @Override
+            public View getViewForPositionAndType(@NonNull RecyclerView.Recycler recycler, int i, int i1) {
+                return null;
+            }
+        });
     }
 
     /**
@@ -223,6 +267,32 @@ public class SeatHorizontalView2 extends LinearLayout implements InterSeatView {
         Collections.swap(mList, srcPosition, mTargetPosition);
         // 更新UI中的Item的位置，主要是给用户看到交互效果
         seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
+        // 更换map集合中
+        /*SeatBean srcBean = mList.get(srcPosition);
+        SeatBean targetBean = mList.get(mTargetPosition);
+        int srcColumn = mList.get(srcPosition).getColumn();
+        int targetColumn = mList.get(targetPosition).getColumn();
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == srcColumn){
+                //开始
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null){
+                    continue;
+                }
+                list.set(list.size()-1,targetBean);
+            } else if (next == targetColumn){
+                //目标
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null){
+                    continue;
+                }
+                list.set(list.size()-1,srcBean);
+            }
+        }
+        SeatDataHelper.getListToMap(mSeatMap);*/
     }
 
     /**

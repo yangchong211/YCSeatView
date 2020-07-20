@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatHorizontalView;
 import com.yc.ycseatview.lib.SeatHorizontalView2;
+import com.yc.ycseatview.lib.SeatLogUtils;
 import com.yc.ycseatview.lib.SeatPictureUtils;
 
 /**
@@ -40,7 +42,9 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     private TextView mTvPicture;
     private TextView mTvCommit;
     private LinearLayout mLlSeatView;
+    private NestedScrollView scrollView;
     private SeatHorizontalView2 mSeatView;
+    private LinearLayout mLlContentView;
     /**
      * 行数
      */
@@ -78,6 +82,9 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         mTvPicture = findViewById(R.id.tv_picture);
         mTvCommit = findViewById(R.id.tv_commit);
         mLlSeatView = findViewById(R.id.ll_seat_view);
+        scrollView = findViewById(R.id.scrollView);
+        mLlContentView = findViewById(R.id.ll_content_view);
+
     }
 
     private void setListener() {
@@ -90,9 +97,27 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         mTvCommit.setOnClickListener(this);
     }
 
+    private int height ;
+    private int width;
     private void initData() {
         initIntentData();
         initRecyclerView();
+        mLlContentView.post(new Runnable() {
+            @Override
+            public void run() {
+                width = mLlContentView.getWidth();
+                height = mLlContentView.getHeight();
+                SeatLogUtils.i("layoutView---------mLlContentView--"+width+"----------"+height);
+            }
+        });
+        mSeatView.post(new Runnable() {
+            @Override
+            public void run() {
+                int width = mLlContentView.getWidth();
+                int height = mLlContentView.getHeight();
+                SeatLogUtils.i("layoutView---------mSeatView--"+width+"----------"+height);
+            }
+        });
     }
 
     @Override
@@ -115,9 +140,10 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
             //提交数据
         } else if (v == mTvPicture){
             //生成图片
-            Bitmap bitmap = SeatPictureUtils.measureSize(this, mLlSeatView);
+//            Bitmap bitmap = SeatPictureUtils.layoutView(mLlContentView,width,height);
+            Bitmap bitmap = SeatPictureUtils.measureSize(this,mLlContentView);
             ModelStorage.getInstance().setBitmap(bitmap);
-            Intent intent = new Intent(this, SeatImageActivity.class);
+            Intent intent = new Intent(this, SeatImageActivity2.class);
             intent.putExtra("type",1);
             startActivity(intent);
         }

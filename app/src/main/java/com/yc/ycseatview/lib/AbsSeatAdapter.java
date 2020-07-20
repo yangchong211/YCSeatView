@@ -90,8 +90,12 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
     @Override
     public void onBindViewHolder(@NonNull SeatViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if(data!=null && data.size()>0){
+            if (!isRecycle) {
+                holder.setIsRecyclable(false);
+            }
             this.position = position;
             bindData(holder, data.get(position));
+            SeatLogUtils.i("onBindViewHolder---------绑定数据--"+position);
         }
     }
 

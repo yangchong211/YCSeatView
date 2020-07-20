@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,8 +43,8 @@ public class RecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //生成图片
-                //Bitmap bitmap = SeatPictureUtils.measureSize(RecyclerViewActivity.this, mLlMain);
-                Bitmap bitmap = SeatPictureUtils.shotRecyclerView(3,mRecyclerView);
+                Bitmap bitmap = SeatPictureUtils.measureSize(RecyclerViewActivity.this, mLlMain);
+                //Bitmap bitmap = SeatPictureUtils.shotRecyclerView(3,mRecyclerView);
                 ModelStorage.getInstance().setBitmap(bitmap);
                 Intent intent = new Intent(RecyclerViewActivity.this, SeatImageActivity.class);
                 intent.putExtra("type",2);
@@ -77,5 +78,18 @@ public class RecyclerViewActivity extends AppCompatActivity {
             //seatTypeAdapter.notifyDataSetChanged();
             seatTypeAdapter.setData(mList);
         }
+
+        //计算
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerView);
+                int totalHeight = 50 * recyclerViewItemHeight;
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
+                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                layoutParams.height = totalHeight;
+                mRecyclerView.setLayoutParams(layoutParams);
+            }
+        });
     }
 }

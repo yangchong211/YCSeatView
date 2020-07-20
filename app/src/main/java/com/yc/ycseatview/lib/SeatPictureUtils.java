@@ -86,14 +86,19 @@ public final class SeatPictureUtils {
      * @param height                高
      * @return
      */
-    private static  Bitmap layoutView(final View viewBitmap, int width, int height) {
+    public static  Bitmap layoutView(final View viewBitmap, int width, int height) {
         // 整个View的大小 参数是左上角 和右下角的坐标
         viewBitmap.layout(0, 0, width, height);
+        SeatLogUtils.i("layoutView------填充布局内容---1--"+width+"----------"+height);
         //宽，父容器已经检测出view所需的精确大小，这时候view的最终大小SpecSize所指定的值，相当于match_parent或指定具体数值。
-        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.UNSPECIFIED);
         //高，表示父容器不对View有任何限制，一般用于系统内部，表示一种测量状态；
         int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED);
+        SeatLogUtils.i("layoutView------填充布局内容---2--"+measuredWidth+"----------"+measuredHeight);
         viewBitmap.measure(measuredWidth, measuredHeight);
+        int measuredWidth1 = viewBitmap.getMeasuredWidth();
+        int measuredHeight1 = viewBitmap.getMeasuredHeight();
+        SeatLogUtils.i("layoutView------填充布局内容---3--"+measuredWidth1+"----------"+measuredHeight1);
         viewBitmap.layout(0, 0, viewBitmap.getMeasuredWidth(), viewBitmap.getMeasuredHeight());
         viewBitmap.setDrawingCacheEnabled(true);
         viewBitmap.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
@@ -137,6 +142,45 @@ public final class SeatPictureUtils {
         v.layout(0, 0, w, h);
         v.draw(c);
         return bmp;
+    }
+
+
+    public static int getRecyclerViewItemHeight(RecyclerView view) {
+        RecyclerView.Adapter adapter = view.getAdapter();
+        if (adapter != null) {
+            int size = adapter.getItemCount();
+            int height = 0;
+            for (int i = 0; i < size; i++) {
+                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
+                adapter.onBindViewHolder(holder, i);
+                //测量
+                holder.itemView.measure(
+                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.AT_MOST),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                height = holder.itemView.getMeasuredHeight();
+                return height;
+            }
+        }
+        return 0;
+    }
+
+    public static int getRecyclerViewItemWidth(RecyclerView view) {
+        RecyclerView.Adapter adapter = view.getAdapter();
+        if (adapter != null) {
+            int size = adapter.getItemCount();
+            int width = 0;
+            for (int i = 0; i < size; i++) {
+                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
+                adapter.onBindViewHolder(holder, i);
+                //测量
+                holder.itemView.measure(
+                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.AT_MOST));
+                width = holder.itemView.getMeasuredWidth();
+                return width;
+            }
+        }
+        return 0;
     }
 
     public static Bitmap shotRecyclerView(int column , RecyclerView view) {

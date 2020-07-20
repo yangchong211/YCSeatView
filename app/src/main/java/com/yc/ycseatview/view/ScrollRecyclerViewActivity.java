@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatConstant;
+import com.yc.ycseatview.lib.SeatLogUtils;
 import com.yc.ycseatview.lib.SeatPictureUtils;
 import com.yc.ycseatview.lib.SeatTypeAdapter;
 import com.yc.ycseatview.lib.SpaceViewItemLine;
@@ -45,7 +47,7 @@ public class ScrollRecyclerViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //生成图片
-               //Bitmap bitmap = SeatPictureUtils.measureSize(ScrollRecyclerViewActivity.this, mScrollView);
+                //Bitmap bitmap = SeatPictureUtils.measureSize(ScrollRecyclerViewActivity.this, mScrollView);
                 Bitmap bitmap = SeatPictureUtils.shotRecyclerView(5, mRecyclerView);
                 ModelStorage.getInstance().setBitmap(bitmap);
                 Intent intent = new Intent(ScrollRecyclerViewActivity.this, SeatImageActivity.class);
@@ -80,5 +82,21 @@ public class ScrollRecyclerViewActivity extends AppCompatActivity {
             //seatTypeAdapter.notifyDataSetChanged();
             seatTypeAdapter.setData(mList);
         }
+
+        //计算
+//        mRecyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerView);
+//                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerView);
+//                int totalHeight = 30 * recyclerViewItemHeight;
+//                int totalWidth = 5 * recyclerViewItemWidth;
+//                SeatLogUtils.i("layoutView---------mRecyclerView计算--"+totalWidth+"----------"+totalHeight);
+//                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mRecyclerView.getLayoutParams();
+//                layoutParams.width = totalWidth+300;
+//                layoutParams.height = totalHeight + 300;
+//                mRecyclerView.setLayoutParams(layoutParams);
+//            }
+//        });
     }
 }

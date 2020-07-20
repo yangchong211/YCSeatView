@@ -24,7 +24,10 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".view.SeatInfoVerticalActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".view.SeatImageActivity"/>
+        <activity android:name=".view.SeatImageActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".view.SeatImageActivity2"
+            android:screenOrientation="landscape"/>
         <activity android:name=".view.RecyclerViewActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".view.ScrollRecyclerViewActivity"

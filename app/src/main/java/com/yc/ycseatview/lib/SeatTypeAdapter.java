@@ -48,7 +48,7 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                     break;
                 //过道
                 case SeatConstant.SeatType.TYPE_3:
-                    tvStudentName.setText("过"+"\n"+"道"+seatBean.getIndex());
+                    tvStudentName.setText("过"+"\n"+"道"+"\n"+seatBean.getIndex()+"\n"+seatBean.getColumn()+ "列" +"\n/"+seatBean.getLine()+"行");
                     break;
                 //不可坐
                 case SeatConstant.SeatType.TYPE_4:
@@ -61,7 +61,7 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
             if (type == SeatConstant.SeatType.TYPE_3){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-                layoutParams.width = 100;
+                layoutParams.width = 150;
                 //holder.itemView.setBackgroundResource(R.color.colorAccent);
                 holder.itemView.setLayoutParams(layoutParams);
             } else {
