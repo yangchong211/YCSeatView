@@ -122,7 +122,12 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             seatTypeAdapter = new SeatTypeAdapter(mContext);
             seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
-            setCache();
+            SpaceViewItemLine itemDecoration = new SpaceViewItemLine(10);
+            itemDecoration.setPaddingEdgeSide(true);
+            itemDecoration.setPaddingStart(true);
+            mRecyclerView.addItemDecoration(itemDecoration);
+            seatTypeAdapter.registerAdapterDataObserver(new ViewDataObserver(mRecyclerView));
+            //setCache();
         } else {
             seatTypeAdapter.setData(mList);
         }
