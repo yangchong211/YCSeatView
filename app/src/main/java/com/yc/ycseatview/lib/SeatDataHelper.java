@@ -234,13 +234,26 @@ public class SeatDataHelper {
             Iterator<Integer> iterator = integers.iterator();
             while (iterator.hasNext()){
                 Integer next = iterator.next();
-                map.put(next+2,mSeatMap.get(next));
+                map.put(next+1,mSeatMap.get(next));
             }
         } else {
             //在右侧加一列
             map.putAll(mSeatMap);
-            map.put(mSeatMap.size()+1,mList);
+            map.put(mSeatMap.size()+2,mList);
         }
+        //setMap(map);
         return map;
     }
+
+    private static void setMap(LinkedHashMap<Integer, ArrayList<SeatBean>> map){
+        Set<Integer> integers = map.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        int index = 1;
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            map.put(index,map.get(next));
+            index++;
+        }
+    }
+
 }
