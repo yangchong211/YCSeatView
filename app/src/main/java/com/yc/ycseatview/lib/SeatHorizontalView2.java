@@ -213,6 +213,14 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         //todo 给座位安排学生
     }
 
+    /**
+     * 获取座位数据
+     * @return                              二维数组
+     */
+    public LinkedHashMap<Integer , ArrayList<SeatBean>> getAllData() {
+        return mSeatMap;
+    }
+
     private void setCache() {
         //屏幕外缓存
         //当列表滑动出了屏幕时，ViewHolder会被缓存在 mCachedViews ，其大小由mViewCacheMax决定，

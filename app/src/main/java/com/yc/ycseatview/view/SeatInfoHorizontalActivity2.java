@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,11 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
+import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatHorizontalView;
 import com.yc.ycseatview.lib.SeatHorizontalView2;
 import com.yc.ycseatview.lib.SeatLogUtils;
 import com.yc.ycseatview.lib.SeatPictureUtils;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * <pre>
@@ -62,6 +67,46 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         super.onResume();
         mSeatView.setRecyclerViewVisible();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
+    /**
+     * 返回键退回到登陆页面
+     **/
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            showSaveDialog();
+            return true;
+        }
+        return false;
+    }
+
+    private void showSaveDialog() {
+        final BackFinishDialog dialog = new BackFinishDialog(this);
+        dialog.shouldCancelOnBackKeyDown(false);
+        dialog.shouldCancelOnTouchOutside(false);
+        dialog.setClickListener(new BackFinishDialog.OnClickListener() {
+            @Override
+            public void listener(boolean type) {
+                if (type){
+                    //确定保存
+                    LinkedHashMap<Integer, ArrayList<SeatBean>> allData = mSeatView.getAllData();
+                    SeatLogUtils.i("保存后关闭页面"+allData);
+                    Toast.makeText(SeatInfoHorizontalActivity2.this,"保存后关闭页面",Toast.LENGTH_SHORT).show();
+                } else {
+                    //取消
+                    dialog.dismiss();
+                }
+                finish();
+            }
+        });
+        dialog.show();
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,7 +180,9 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     @Override
     public void onClick(View v) {
         if (v == mIvBack){
-            finish();
+            //finish();
+            //onBackPressed();
+            showSaveDialog();
         } else if (v == mTvStartSeat){
             //开始调课
             setSeatClass();
