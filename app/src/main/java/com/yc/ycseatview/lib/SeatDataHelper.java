@@ -119,6 +119,8 @@ public class SeatDataHelper {
 
     /**
      * 将map数据添加到list集合中
+     * 设置坐标【列/行】
+     * 给数据标记索引
      * @param mSeatMap                      map集合
      * @return
      */

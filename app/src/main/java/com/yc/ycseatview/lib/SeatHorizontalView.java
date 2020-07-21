@@ -25,6 +25,7 @@ import java.util.Iterator;
  *     revise : Horizontal横向方向
  * </pre>
  */
+@Deprecated
 public class SeatHorizontalView extends LinearLayout implements InterSeatView {
 
     private Context mContext;
