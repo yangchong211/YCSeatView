@@ -321,15 +321,8 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
      * 添加过道
      */
     private void addCorridor() {
-        boolean isHaveCorridor = mSeatView.getIsHaveCorridor();
-        if (isHaveCorridor){
-            //删除过道
-            mSeatView.removeCorridor();
-        } else {
-            //添加过道
-            mSeatView.addCorridor();
-
-        }
+        //添加过道
+        mSeatView.addCorridor();
     }
 
     /**
