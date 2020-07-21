@@ -304,11 +304,16 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
                         Toast.makeText(mContext,"不可坐不可挪动",Toast.LENGTH_SHORT).show();
                         return false;
                     }
+                    //如果目标是过道，则不可交换
+                    if (mList.get(targetPosition).getType() == SeatConstant.SeatType.TYPE_3){
+                        Toast.makeText(mContext,"座位不可和过道交换",Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     int type = mList.get(srcPosition).getType();
                     if (type == SeatConstant.SeatType.TYPE_3){
                         doCorridorData(srcPosition,targetPosition);
                     } else {
-                        doNormalData(srcPosition,targetPosition);
+                        setChangePosition(srcPosition,targetPosition);
                     }
                     return true;
                 }
@@ -322,21 +327,6 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         ItemTouchHelper2 itemTouchHelper = new ItemTouchHelper2(callback);
         //关联recyclerView，一个helper对象只能对应一个recyclerView
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
-    }
-
-    private void doNormalData(int srcPosition, int targetPosition) {
-        int mTargetPosition;
-        //不是过道
-        if (srcPosition < targetPosition) {
-            //往后移
-            mTargetPosition = targetPosition;
-            //不是过道
-        } else {
-            //往前移动
-            mTargetPosition = targetPosition;
-        }
-        // 更换map集合中
-        setChangePosition(srcPosition,mTargetPosition);
     }
 
     private void setChangePosition(int srcPosition, int mTargetPosition) {

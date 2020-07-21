@@ -185,8 +185,7 @@ public class SeatDataHelper {
     public static LinkedHashMap<Integer, ArrayList<SeatBean>> addLastDataClass(
             LinkedHashMap<Integer, ArrayList<SeatBean>> mSeatMap) {
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
+        Iterator<Integer> iterator = mSeatMap.keySet().iterator();
         while (iterator.hasNext()){
             Integer next = iterator.next();
             ArrayList<SeatBean> seatBeans = mSeatMap.get(next);
@@ -225,8 +224,7 @@ public class SeatDataHelper {
             //在左侧加一列
             map.put(1,mList);
             //后面依次往后挪动
-            Set<Integer> integers = mSeatMap.keySet();
-            Iterator<Integer> iterator = integers.iterator();
+            Iterator<Integer> iterator = mSeatMap.keySet().iterator();
             while (iterator.hasNext()){
                 Integer next = iterator.next();
                 map.put(next+1,mSeatMap.get(next));
