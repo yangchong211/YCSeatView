@@ -119,32 +119,6 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     }
 
     private void setRecyclerView(final int line) {
-        final GridLayoutManager layoutManager = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int i) {
-                int type = mList.get(i).getType();
-                if (type == SeatConstant.SeatType.TYPE_3){
-                    return line;
-                } else {
-                    return 1;
-                }
-            }
-        });
-        final GridLayoutManager layoutManagerPic = new GridLayoutManager(mContext, line, RecyclerView.HORIZONTAL, false);
-        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int i) {
-                int type = mList.get(i).getType();
-                if (type == SeatConstant.SeatType.TYPE_3){
-                    return line;
-                } else {
-                    return 1;
-                }
-            }
-        });
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerPicView.setLayoutManager(layoutManagerPic);
         if (seatTypeAdapter == null) {
             initCallBack();
             seatTypeAdapter = new SeatTypeAdapter(mContext);
@@ -161,6 +135,10 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         } else {
             seatTypeAdapter.setData(mList);
         }
+        final SeatLayoutManager layoutManager = new SeatLayoutManager(mContext, line,seatTypeAdapter);
+        final SeatLayoutManager layoutManagerPic = new SeatLayoutManager(mContext, line,seatTypeAdapter);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerPicView.setLayoutManager(layoutManagerPic);
         mRecyclerPicView.post(new Runnable() {
             @Override
             public void run() {
