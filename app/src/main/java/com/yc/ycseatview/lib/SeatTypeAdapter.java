@@ -3,6 +3,7 @@ package com.yc.ycseatview.lib;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -95,7 +96,14 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 holder.itemView.setBackgroundResource(R.drawable.shape_seat_not_set_r6);
             } else {
                 //其他
-                holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
+                int type = seatBean.getType();
+                if (type == SeatConstant.SeatType.TYPE_2){
+                    tvStudentName.setTextColor(Color.parseColor("#44A3F2"));
+                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_class_data_r6);
+                } else {
+                    tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
+                }
             }
 
         }

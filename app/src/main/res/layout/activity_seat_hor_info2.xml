@@ -109,7 +109,7 @@
 
             <RelativeLayout
                 android:id="@+id/rl_set_class"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -164,7 +164,7 @@
             <!--调课位-->
             <LinearLayout
                 android:id="@+id/ll_change_class"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">

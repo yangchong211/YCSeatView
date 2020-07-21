@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
+import com.yc.ycseatview.lib.OnRestoreListener;
 import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatHorizontalView;
@@ -151,6 +152,18 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         mTvPicture.setOnClickListener(this);
         mTvCommit.setOnClickListener(this);
         mTvStartSeat.setOnClickListener(this);
+        mSeatView.setRestoreListener(new OnRestoreListener() {
+            @Override
+            public void OnRestore(int type) {
+                switch (type){
+                    //恢复自动排座
+                    case OnRestoreListener.RESTORE:
+                        mTvAddClass.setText("+调课位");
+                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+                        break;
+                }
+            }
+        });
     }
 
     private int height ;
@@ -250,6 +263,19 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
      * 添加调课位
      */
     private void addClass() {
+        boolean isHaveClass = mSeatView.getIsHaveClass();
+        if (isHaveClass){
+            //有调课位
+            mSeatView.removeTypeClass();
+            mTvAddClass.setText("+调课位");
+            mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+        } else {
+            //没有调课位
+            showAddClassDialog();
+        }
+    }
+
+    private void showAddClassDialog() {
         SelectClassDialog classDialog = new SelectClassDialog(this);
         classDialog.setFinishListener(new SelectClassDialog.onFinishListener() {
             @Override
@@ -258,14 +284,20 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                     case SelectClassDialog.Type.TYPE_1:
                         //左侧增加一列
                         addTypeClass(SeatConstant.Type.TYPE_1);
+                        mTvAddClass.setText("删除调课位");
+                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;
                     case SelectClassDialog.Type.TYPE_2:
                         //右侧增加一列
                         addTypeClass(SeatConstant.Type.TYPE_2);
+                        mTvAddClass.setText("删除调课位");
+                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;
                     case SelectClassDialog.Type.TYPE_3:
                         //后方增加一列
                         addTypeClass(SeatConstant.Type.TYPE_3);
+                        mTvAddClass.setText("删除调课位");
+                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;
                     case SelectClassDialog.Type.TYPE_4:
                         Toast.makeText(SeatInfoHorizontalActivity2.this,"取消",Toast.LENGTH_SHORT).show();
@@ -281,15 +313,23 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
      * @param type                          类型
      */
     private void addTypeClass(@SeatConstant.SeatType int type) {
+        //没有调课位
         mSeatView.addTypeClass(type);
     }
-
 
     /**
      * 添加过道
      */
     private void addCorridor() {
-        mSeatView.addCorridor();
+        boolean isHaveCorridor = mSeatView.getIsHaveCorridor();
+        if (isHaveCorridor){
+            //删除过道
+            mSeatView.removeCorridor();
+        } else {
+            //添加过道
+            mSeatView.addCorridor();
+
+        }
     }
 
     /**

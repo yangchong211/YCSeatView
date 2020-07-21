@@ -221,6 +221,27 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         return mSeatMap;
     }
 
+    /**
+     * 判断是否有过道
+     * @return
+     */
+    public boolean getIsHaveCorridor() {
+        int corridorNum = SeatDataHelper.getCorridorNum(mList);
+        if (corridorNum>0){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 判断是否有调课位
+     * @return
+     */
+    public boolean getIsHaveClass() {
+        return SeatDataHelper.isHaveClass(mList);
+    }
+
     private void setCache() {
         //屏幕外缓存
         //当列表滑动出了屏幕时，ViewHolder会被缓存在 mCachedViews ，其大小由mViewCacheMax决定，
@@ -296,6 +317,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         });
         callback.setDragEnable(true);
         callback.setSwipeEnable(true);
+        callback.setColor(R.drawable.shape_seat_view_drag_r6);
         //创建helper对象，callback监听recyclerView item 的各种状态
         ItemTouchHelper2 itemTouchHelper = new ItemTouchHelper2(callback);
         //关联recyclerView，一个helper对象只能对应一个recyclerView
@@ -398,6 +420,9 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     @Override
     public void restoreSeat() {
         initRecyclerView(mColumn, mLine);
+        if (restoreListener!=null){
+            restoreListener.OnRestore(OnRestoreListener.RESTORE);
+        }
     }
 
     /**
@@ -416,6 +441,13 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.addCorridor(mSeatMap);
         mapToListData(map);
         seatTypeAdapter.setData(mList);
+    }
+
+    /**
+     * 删除过道
+     */
+    public void removeCorridor() {
+
     }
 
     /**
@@ -443,6 +475,13 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
                 addLastClass();
                 break;
         }
+    }
+
+    /**
+     * 移除调课位
+     */
+    public void removeTypeClass() {
+        removePreClass();
     }
 
     /**
@@ -518,4 +557,9 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         }
     }
 
+    private OnRestoreListener restoreListener;
+
+    public void setRestoreListener(OnRestoreListener restoreListener) {
+        this.restoreListener = restoreListener;
+    }
 }

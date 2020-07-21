@@ -139,6 +139,10 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         }
         int column = NumberUtils.parse(textColumn.toString());
         int line = NumberUtils.parse(textLine.toString());
+        if (column<1 || line<1){
+            Toast.makeText(this,"行数和列数都要大于1",Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (type==1){
             //Vertical方向recyclerView
             Intent intent = new Intent(this, SeatInfoVerticalActivity.class);
