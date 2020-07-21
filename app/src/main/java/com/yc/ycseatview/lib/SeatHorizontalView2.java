@@ -242,6 +242,20 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         return SeatDataHelper.isHaveClass(mList);
     }
 
+    /**
+     * 判断调课位中是否有学生
+     * @return
+     */
+    public boolean getIsClassHaveStudent(){
+        boolean haveClass = SeatDataHelper.isHaveClass(mList);
+        if (haveClass){
+            boolean haveStudentClass = SeatDataHelper.isHaveStudentClass(mList,mSeatMap);
+            return haveStudentClass;
+        } else {
+            return false;
+        }
+    }
+
     private void setCache() {
         //屏幕外缓存
         //当列表滑动出了屏幕时，ViewHolder会被缓存在 mCachedViews ，其大小由mViewCacheMax决定，
@@ -452,15 +466,15 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             return;
         }
         switch (type) {
-            case SeatConstant.Type.TYPE_1:
+            case SeatConstant.Type.TYPE_LEFT:
                 //左侧增加一列
                 addLeftClass();
                 break;
-            case SeatConstant.Type.TYPE_2:
+            case SeatConstant.Type.TYPE_RIGHT:
                 //右侧增加一列
                 addRightClass();
                 break;
-            case SeatConstant.Type.TYPE_3:
+            case SeatConstant.Type.TYPE_LAST:
                 //后方增加一列
                 addLastClass();
                 break;
@@ -518,6 +532,11 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      * 删除之前的调课位
      */
     private void removePreClass() {
+        //判断是否有调课位
+        boolean haveClass = SeatDataHelper.isHaveClass(mList);
+        if (!haveClass){
+            return;
+        }
         SeatLogUtils.i("SeatRecyclerView------添加座位----删除之前的调课位-");
         boolean isChange = false;
         Set<Integer> integers = mSeatMap.keySet();

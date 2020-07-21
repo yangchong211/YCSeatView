@@ -33,7 +33,7 @@ public class SeatDataHelper {
             int type = bean.getType();
             //过道
             if (type == SeatConstant.SeatType.TYPE_3) {
-                num++;
+                num = num +1;
             }
         }
         return num;
@@ -196,12 +196,13 @@ public class SeatDataHelper {
                 //不是过道。则添加调课位
                 SeatBean seatBean = new SeatBean();
                 seatBean.setType(SeatConstant.SeatType.TYPE_2);
+                seatBean.setClassType(SeatConstant.Type.TYPE_LAST);
                 seatBeans.add(seatBean);
             }
             map.put(next,seatBeans);
             SeatLogUtils.i("SeatRecyclerView------后方增加一列----" + next + "------" + seatBeans.size());
         }
-        return map;
+        return setMap(map);
     }
 
     /**
@@ -218,6 +219,11 @@ public class SeatDataHelper {
         for (int i=0 ; i<mLine ; i++){
             SeatBean seatBean = new SeatBean();
             seatBean.setType(SeatConstant.SeatType.TYPE_2);
+            if (isLeft){
+                seatBean.setClassType(SeatConstant.Type.TYPE_LEFT);
+            } else {
+                seatBean.setClassType(SeatConstant.Type.TYPE_RIGHT);
+            }
             mList.add(seatBean);
         }
         if (isLeft){
@@ -248,6 +254,70 @@ public class SeatDataHelper {
             index++;
         }
         return newMap;
+    }
+
+    /**
+     * 判断调课位中是否有学生
+     *
+     * @param mList
+     * @param mSeatMap                                      map集合
+     * @return
+     */
+    public static boolean isHaveStudentClass(ArrayList<SeatBean> mList, LinkedHashMap<Integer, ArrayList<SeatBean>> mSeatMap) {
+        int corridorNum = getCorridorNum(mList);
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        int dataNum = 1;
+        //记录最后一排调课位的数量
+        int classNum = 0;
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            ArrayList<SeatBean> seatBeans = mSeatMap.get(next);
+            //直接看集合中的最后一个数据，是否是调课位类型
+            if (seatBeans!=null && seatBeans.size()>1 && seatBeans.get(seatBeans.size()-1).getType()==SeatConstant.SeatType.TYPE_2){
+                //有调课位数据
+                SeatBean bean = seatBeans.get(seatBeans.size() - 1);
+                int classType = bean.getClassType();
+                if (classType == SeatConstant.Type.TYPE_LEFT || classType == SeatConstant.Type.TYPE_RIGHT){
+                    //左边一列是调课位
+                    //右边一列是调课位
+                    return haveStudent(seatBeans);
+                } else {
+                    //最后一排是调课位
+                    classNum = classNum+1;
+                    //所有遍历完成
+                    if (dataNum == mSeatMap.size()){
+                        if (classNum+corridorNum == mSeatMap.size()){
+                            //没有学生
+                            SeatLogUtils.i("-----isHaveStudentClass----最后一排是调课位------没有学生--");
+                            return false;
+                        } else {
+                            //有学生
+                            SeatLogUtils.i("-----isHaveStudentClass----最后一排是调课位------有学生--");
+                            return true;
+                        }
+                    }
+                }
+            }
+            dataNum++;
+        }
+        return false;
+    }
+
+    /**
+     * 判断左边一列，右边一列调课位是否有学生
+     * @param seatBeans                                     list集合
+     * @return
+     */
+    private static boolean haveStudent(ArrayList<SeatBean> seatBeans){
+        for (int i=0 ; i<seatBeans.size() ; i++){
+            if (seatBeans.get(i).getType() == SeatConstant.SeatType.TYPE_1){
+                SeatLogUtils.i("-----isHaveStudentClass----左边/右边一列是调课位------有学生--");
+                return true;
+            }
+        }
+        SeatLogUtils.i("-----isHaveStudentClass----左边/右边一列是调课位------没有有学生--");
+        return false;
     }
 
 }

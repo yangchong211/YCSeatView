@@ -39,6 +39,10 @@ public class SeatBean implements Serializable {
      * 默认都是可以坐的
      */
     private boolean select;
+    /**
+     * 设置调课位类型
+     */
+    private int classType;
 
     public String getName() {
         return name;
@@ -86,6 +90,14 @@ public class SeatBean implements Serializable {
 
     public void setSelect(boolean select) {
         this.select = select;
+    }
+
+    public int getClassType() {
+        return classType;
+    }
+
+    public void setClassType(int classType) {
+        this.classType = classType;
     }
 
     @Override

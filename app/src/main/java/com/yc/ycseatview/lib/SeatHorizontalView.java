@@ -261,15 +261,15 @@ public class SeatHorizontalView extends LinearLayout implements InterSeatView {
             return;
         }
         switch (type) {
-            case SeatConstant.Type.TYPE_1:
+            case SeatConstant.Type.TYPE_LEFT:
                 //左侧增加一列
                 addLeftClass();
                 break;
-            case SeatConstant.Type.TYPE_2:
+            case SeatConstant.Type.TYPE_RIGHT:
                 //右侧增加一列
                 addRightClass();
                 break;
-            case SeatConstant.Type.TYPE_3:
+            case SeatConstant.Type.TYPE_LAST:
                 //后方增加一列
                 addLastClass();
                 break;

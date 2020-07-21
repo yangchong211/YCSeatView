@@ -147,15 +147,15 @@ public class SeatInfoVerticalActivity extends AppCompatActivity implements View.
                 switch (type){
                     case SelectClassDialog.Type.TYPE_1:
                         //左侧增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_1);
+                        addTypeClass(SeatConstant.Type.TYPE_LEFT);
                         break;
                     case SelectClassDialog.Type.TYPE_2:
                         //右侧增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_2);
+                        addTypeClass(SeatConstant.Type.TYPE_RIGHT);
                         break;
                     case SelectClassDialog.Type.TYPE_3:
                         //后方增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_3);
+                        addTypeClass(SeatConstant.Type.TYPE_LAST);
                         break;
                     case SelectClassDialog.Type.TYPE_4:
                         Toast.makeText(SeatInfoVerticalActivity.this,"取消",Toast.LENGTH_SHORT).show();

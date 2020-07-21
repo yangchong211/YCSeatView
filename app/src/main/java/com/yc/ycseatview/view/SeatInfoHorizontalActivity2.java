@@ -187,7 +187,6 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                 SeatLogUtils.i("layoutView---------mSeatView--"+width+"----------"+height);
             }
         });
-
     }
 
     @Override
@@ -266,9 +265,23 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         boolean isHaveClass = mSeatView.getIsHaveClass();
         if (isHaveClass){
             //有调课位
-            mSeatView.removeTypeClass();
-            mTvAddClass.setText("+调课位");
-            mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+            boolean isClassHaveStudent = mSeatView.getIsClassHaveStudent();
+            if (isClassHaveStudent){
+                //有学生
+                DeleteClassDialog deleteClassDialog = new DeleteClassDialog(this);
+                deleteClassDialog.setFinishListener(new DeleteClassDialog.onFinishListener() {
+                    @Override
+                    public void listener() {
+                        //关闭弹窗
+                    }
+                });
+                deleteClassDialog.show();
+            } else {
+                //没有学生
+                mSeatView.removeTypeClass();
+                mTvAddClass.setText("+调课位");
+                mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+            }
         } else {
             //没有调课位
             showAddClassDialog();
@@ -283,19 +296,19 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                 switch (type){
                     case SelectClassDialog.Type.TYPE_1:
                         //左侧增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_1);
+                        addTypeClass(SeatConstant.Type.TYPE_LEFT);
                         mTvAddClass.setText("删除调课位");
                         mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;
                     case SelectClassDialog.Type.TYPE_2:
                         //右侧增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_2);
+                        addTypeClass(SeatConstant.Type.TYPE_RIGHT);
                         mTvAddClass.setText("删除调课位");
                         mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;
                     case SelectClassDialog.Type.TYPE_3:
                         //后方增加一列
-                        addTypeClass(SeatConstant.Type.TYPE_3);
+                        addTypeClass(SeatConstant.Type.TYPE_LAST);
                         mTvAddClass.setText("删除调课位");
                         mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
                         break;

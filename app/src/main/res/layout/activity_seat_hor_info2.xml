@@ -65,7 +65,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:background="@color/e1">
+            android:background="#F9F9F9">
 
             <TextView
                 android:id="@+id/tv_seat"

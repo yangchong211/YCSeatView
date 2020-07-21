@@ -20,11 +20,11 @@ public final class SeatConstant {
     @Retention(RetentionPolicy.SOURCE)
     public @interface Type {
         //左侧增加一列
-        int TYPE_1 = 1;
+        int TYPE_LEFT = 1;
         //右侧增加一列
-        int TYPE_2 = 2;
+        int TYPE_RIGHT = 2;
         //后方增加一列
-        int TYPE_3 = 3;
+        int TYPE_LAST = 3;
     }
 
     /**
