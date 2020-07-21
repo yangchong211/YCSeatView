@@ -281,6 +281,10 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             mTargetPosition = targetPosition;
         }
         // 更换map集合中
+        setChangePosition(srcPosition,mTargetPosition);
+    }
+
+    private void setChangePosition(int srcPosition, int mTargetPosition) {
         SeatBean srcBean = mList.get(srcPosition);
         SeatBean targetBean = mList.get(mTargetPosition);
         int srcColumn = srcBean.getColumn();
@@ -328,30 +332,69 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      */
     private void doCorridorData(int srcPosition, int targetPosition) {
         int mTargetPosition = 0;
+        int targetColumn = mList.get(targetPosition).getColumn();
         //是过道
-        int column = mList.get(targetPosition).getColumn();
         if (srcPosition < targetPosition) {
             //往后移
-            ArrayList<SeatBean> list = mSeatMap.get(column-1);
-            if (list!=null && list.size()>1){
+            ArrayList<SeatBean> list = mSeatMap.get(targetColumn);
+            if (list!=null && list.size()>=1){
                 mTargetPosition = list.get(list.size()-1).getIndex();
             }
         } else {
             //往前移动
-            if (column>2){
-                ArrayList<SeatBean> list = mSeatMap.get(column-2);
-                if (list!=null && list.size()>1){
+            if (targetColumn>1){
+                ArrayList<SeatBean> list = mSeatMap.get(targetColumn-1);
+                if (list!=null && list.size()>=1){
                     mTargetPosition = list.get(list.size()-1).getIndex();
                 }
             } else {
                 mTargetPosition = 0;
             }
         }
-        SeatLogUtils.i("SeatRecyclerView------doCorridorData----处理过道拖动-" + mTargetPosition);
-        // 更换数据源中的数据Item的位置
-        Collections.swap(mList, srcPosition, mTargetPosition);
-        // 更新UI中的Item的位置，主要是给用户看到交互效果
-        seatTypeAdapter.notifyItemMoved(srcPosition, mTargetPosition);
+        setChangeCorridor(srcPosition,mTargetPosition);
+        SeatLogUtils.i("SeatRecyclerView------doCorridorData----处理过道拖动-"+srcPosition+ "----" + mTargetPosition);
+    }
+
+    private void setChangeCorridor(int srcPosition, int mTargetPosition) {
+        SeatBean srcBean = mList.get(srcPosition);
+        SeatBean targetBean = mList.get(mTargetPosition);
+        int srcColumn = srcBean.getColumn();
+        int srcLine = srcBean.getLine();
+        int targetColumn = targetBean.getColumn();
+        int targetLine = targetBean.getLine();
+
+
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        boolean isTarget = false;
+        boolean isSrc = false;
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == srcColumn){
+                //开始。将目标位置的数据，设置到当前位置上
+                ArrayList<SeatBean> list = mSeatMap.get(targetColumn);
+                if (list==null || isTarget){
+                    continue;
+                }
+                list.set(targetLine-1,srcBean);
+                isTarget = true;
+                SeatLogUtils.i("doNormalData------将目标位置的数据，设置到当前位置上----" + (srcLine-1) + "------" + targetColumn + "----"+targetBean.toString());
+            } else if (next == targetColumn){
+                //目标。将开始拖动的数据，设置到目标位置上
+                ArrayList<SeatBean> list = mSeatMap.get(srcColumn);
+                if (list==null || isSrc){
+                    continue;
+                }
+                list.set(srcLine-1,targetBean);
+                isSrc = true;
+                SeatLogUtils.i("doNormalData------将开始拖动的数据，设置到目标位置上----" + (targetLine-1) + "------" + srcColumn + "----"+srcBean.toString());
+            }
+        }
+        ArrayList<SeatBean> listToMap = SeatDataHelper.getListToMap(mSeatMap);
+        mList.clear();
+        mList.addAll(listToMap);
+        SeatDataHelper.sortList(mList);
+        seatTypeAdapter.setData(mList);
     }
 
     /**

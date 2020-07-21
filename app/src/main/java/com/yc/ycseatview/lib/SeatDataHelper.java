@@ -124,14 +124,15 @@ public class SeatDataHelper {
      */
     public static ArrayList<SeatBean> getListToMap(LinkedHashMap<Integer , ArrayList<SeatBean>> mSeatMap){
         ArrayList<SeatBean> mList = new ArrayList<>();
-        Set<Integer> integers = mSeatMap.keySet();
+        LinkedHashMap<Integer, ArrayList<SeatBean>> newMap = setMap(mSeatMap);
+        Set<Integer> integers = newMap.keySet();
         Iterator<Integer> iterator = integers.iterator();
         //设置坐标
         int seatColumn = 1;
         int seatLine = 1;
         while (iterator.hasNext()){
             Integer next = iterator.next();
-            ArrayList<SeatBean> seatBeans = mSeatMap.get(next);
+            ArrayList<SeatBean> seatBeans = newMap.get(next);
             if (seatBeans!=null && seatBeans.size()>0){
                 for (int i=0 ; i<seatBeans.size() ; i++){
                     SeatBean bean = seatBeans.get(i);
@@ -239,21 +240,22 @@ public class SeatDataHelper {
         } else {
             //在右侧加一列
             map.putAll(mSeatMap);
-            map.put(mSeatMap.size()+2,mList);
+            map.put(mSeatMap.size()+3,mList);
         }
-        //setMap(map);
-        return map;
+        return setMap(map);
     }
 
-    private static void setMap(LinkedHashMap<Integer, ArrayList<SeatBean>> map){
+    private static LinkedHashMap<Integer, ArrayList<SeatBean>> setMap(LinkedHashMap<Integer, ArrayList<SeatBean>> map){
+        LinkedHashMap<Integer, ArrayList<SeatBean>> newMap = new LinkedHashMap<>();
         Set<Integer> integers = map.keySet();
         Iterator<Integer> iterator = integers.iterator();
         int index = 1;
         while (iterator.hasNext()){
             Integer next = iterator.next();
-            map.put(index,map.get(next));
+            newMap.put(index,map.get(next));
             index++;
         }
+        return newMap;
     }
 
 }
