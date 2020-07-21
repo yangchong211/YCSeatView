@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      * 行数
      */
     private int mLine;
+    private RelativeLayout mRlParent;
 
     public SeatHorizontalView2(Context context) {
         super(context);
@@ -95,13 +97,14 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     }
 
     private void initFindViewById(View view) {
+        mRlParent = findViewById(R.id.rl_parent);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerPicView = findViewById(R.id.recycler_pic_view);
-        mRecyclerView.post(new Runnable() {
+        mRlParent.post(new Runnable() {
             @Override
             public void run() {
-                int width = mRecyclerView.getWidth();
-                int height = mRecyclerView.getHeight();
+                int width = mRlParent.getWidth();
+                int height = mRlParent.getHeight();
                 SeatLogUtils.i("layoutView---------mRecyclerView--"+width+"----------"+height);
             }
         });
@@ -144,21 +147,24 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     }
 
     private void setPicRecyclerViewParams() {
-        mRecyclerPicView.post(new Runnable() {
+        mRecyclerPicView.setVisibility(GONE);
+        mRecyclerPicView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerPicView);
-                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerPicView);
-                int totalHeight = mLine * recyclerViewItemHeight + mLine * SeatPictureUtils.dip2px(mContext,10);
-                int totalWidth = mColumn * recyclerViewItemWidth;
+                int recyclerViewItemHeight = SeatPictureUtils.getRecyclerViewItemHeight(mRecyclerView);
+                int recyclerViewItemWidth = SeatPictureUtils.getRecyclerViewItemWidth(mRecyclerView);
+                SeatLogUtils.i("layoutView---------mRecyclerView计算--"+recyclerViewItemHeight+"----------"+recyclerViewItemWidth);
+                int totalHeight = mLine * recyclerViewItemHeight + 2 * mLine * SeatPictureUtils.dip2px(mContext,10);
+                int totalWidth = mColumn * recyclerViewItemWidth + 2 * mColumn * SeatPictureUtils.dip2px(mContext,10);
                 SeatLogUtils.i("layoutView---------mRecyclerView计算--"+totalWidth+"----------"+totalHeight);
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mRecyclerPicView.getLayoutParams();
                 layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
                 layoutParams.height = totalHeight ;
+                layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
                 mRecyclerPicView.setLayoutParams(layoutParams);
-                mRecyclerPicView.setVisibility(GONE);
+                //mRecyclerPicView.setVisibility(GONE);
             }
-        });
+        }, 200);
     }
 
     /**
