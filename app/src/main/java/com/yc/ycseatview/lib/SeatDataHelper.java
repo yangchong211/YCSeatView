@@ -158,27 +158,19 @@ public class SeatDataHelper {
      * @return
      */
     public static LinkedHashMap<Integer, ArrayList<SeatBean>> addCorridor(LinkedHashMap<Integer, ArrayList<SeatBean>> mSeatMap) {
-        int size = mSeatMap.size();
         ArrayList<SeatBean> list = new ArrayList<>();
         SeatBean seatBean = new SeatBean();
         seatBean.setType(SeatConstant.SeatType.TYPE_3);
         list.add(seatBean);
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
-        int corridor = 1;
-        for (int i=0 ; i<size+1 ; i++){
-            //key从1开始
-            int index = i+1;
-            if (i < corridor){
-                map.put(index,mSeatMap.get(i));
-            } else if (i == corridor){
-                //插入过道
-                map.put(index,list);
-                //插入正常数据
-                map.put(index+1,mSeatMap.get(i));
-            } else {
-                //插入正常数据
-                map.put(index+1,mSeatMap.get(i));
-            }
+        //在左侧加一列
+        map.put(1,list);
+        //后面依次往后挪动
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            map.put(next+1,mSeatMap.get(next));
         }
         return map;
     }
