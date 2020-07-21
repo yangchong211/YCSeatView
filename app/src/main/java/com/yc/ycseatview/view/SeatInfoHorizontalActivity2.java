@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,6 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
 
     private ImageView mIvBack;
     private TextView mTvTitle;
-    private LinearLayout mLlClass;
     private TextView mTvAddClass;
     private TextView mTvAddCorridor;
     private TextView mTvRestore;
@@ -45,6 +45,9 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     private NestedScrollView scrollView;
     private SeatHorizontalView2 mSeatView;
     private LinearLayout mLlContentView;
+    private RelativeLayout mRlSetClass;
+    private TextView mTvStartSeat;
+    private LinearLayout mLlChangeClass;
     /**
      * 行数
      */
@@ -64,11 +67,6 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seat_hor_info2);
-        //判断是否是横屏，如果不是则调整为横屏
-        /*if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            //横屏
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }*/
         //横屏
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         findViewById();
@@ -79,7 +77,6 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     private void findViewById() {
         mIvBack = findViewById(R.id.iv_back);
         mTvTitle = findViewById(R.id.tv_title);
-        mLlClass = findViewById(R.id.ll_class);
         mTvAddClass = findViewById(R.id.tv_add_class);
         mTvAddCorridor = findViewById(R.id.tv_add_corridor);
         mTvRestore = findViewById(R.id.tv_restore);
@@ -90,7 +87,14 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         mLlSeatView = findViewById(R.id.ll_seat_view);
         scrollView = findViewById(R.id.scrollView);
         mLlContentView = findViewById(R.id.ll_content_view);
+        mRlSetClass = findViewById(R.id.rl_set_class);
+        mTvStartSeat = findViewById(R.id.tv_start_seat);
+        mLlChangeClass = findViewById(R.id.ll_change_class);
 
+        mRlSetClass.setVisibility(View.VISIBLE);
+        mLlChangeClass.setVisibility(View.GONE);
+        mTvCommit.setVisibility(View.GONE);
+        mTvPicture.setVisibility(View.GONE);
     }
 
     private void setListener() {
@@ -101,6 +105,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         mTvChange.setOnClickListener(this);
         mTvPicture.setOnClickListener(this);
         mTvCommit.setOnClickListener(this);
+        mTvStartSeat.setOnClickListener(this);
     }
 
     private int height ;
@@ -124,12 +129,16 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                 SeatLogUtils.i("layoutView---------mSeatView--"+width+"----------"+height);
             }
         });
+
     }
 
     @Override
     public void onClick(View v) {
         if (v == mIvBack){
             finish();
+        } else if (v == mTvStartSeat){
+            //开始调课
+            setSeatClass();
         } else if (v == mTvAddClass){
             //添加调课位
             addClass();
@@ -161,6 +170,14 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         }
     }
 
+    private void setSeatClass() {
+        mSeatView.removeItemListener();
+        mRlSetClass.setVisibility(View.GONE);
+        mLlChangeClass.setVisibility(View.VISIBLE);
+        mTvCommit.setVisibility(View.VISIBLE);
+        mTvPicture.setVisibility(View.VISIBLE);
+    }
+
     @SuppressLint("SetTextI18n")
     private void initIntentData() {
         if (getIntent()==null){
@@ -174,6 +191,12 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
 
     private void initRecyclerView() {
         mSeatView.setColumnAndLine(column,line);
+        mSeatView.post(new Runnable() {
+            @Override
+            public void run() {
+                mSeatView.addItemListener();
+            }
+        });
     }
 
     /**

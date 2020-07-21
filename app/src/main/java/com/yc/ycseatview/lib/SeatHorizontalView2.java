@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.yc.ycseatview.R;
 
@@ -139,6 +140,10 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         final SeatLayoutManager layoutManagerPic = new SeatLayoutManager(mContext, line,seatTypeAdapter);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerPicView.setLayoutManager(layoutManagerPic);
+        setPicRecyclerViewParams();
+    }
+
+    private void setPicRecyclerViewParams() {
         mRecyclerPicView.post(new Runnable() {
             @Override
             public void run() {
@@ -156,7 +161,9 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         });
     }
 
-
+    /**
+     * 设置正常RecyclerView隐藏，显示图片RecyclerView。主要是用于截图
+     */
     public void setPicRecyclerViewVisible() {
         if (mRecyclerView.getVisibility() == VISIBLE){
             mRecyclerView.setVisibility(GONE);
@@ -164,11 +171,46 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         }
     }
 
+    /**
+     * 设置正常RecyclerView显示，隐藏图片RecyclerView
+     */
     public void setRecyclerViewVisible() {
         if (mRecyclerView.getVisibility() == GONE){
             mRecyclerView.setVisibility(VISIBLE);
             mRecyclerPicView.setVisibility(GONE);
         }
+    }
+
+    /**
+     * 添加item点击事件
+     */
+    public void addItemListener() {
+        if (seatTypeAdapter!=null){
+            seatTypeAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (mList!=null && mList.size()>position && position>=0){
+                        SeatBean bean = mList.get(position);
+                        bean.setSelect(!bean.isSelect());
+                        seatTypeAdapter.notifyItemChanged(position);
+                    }
+                }
+            });
+            seatTypeAdapter.setClassTag(true);
+            seatTypeAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 移除item点击事件
+     */
+    public void removeItemListener() {
+        if (seatTypeAdapter!=null){
+            seatTypeAdapter.setOnItemClickListener(null);
+            seatTypeAdapter.setClassTag(false);
+            seatTypeAdapter.notifyDataSetChanged();
+        }
+        //todo 给座位安排学生
     }
 
     private void setCache() {
@@ -228,6 +270,11 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             @Override
             public boolean onMove(int srcPosition, int targetPosition) {
                 if (mList != null && mList.size()>1) {
+                    //如果有一个是不可坐的座位，则不可以交换位置
+                    if (mList.get(srcPosition).isSelect() || mList.get(targetPosition).isSelect()){
+                        Toast.makeText(mContext,"不可坐不可挪动",Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     int type = mList.get(srcPosition).getType();
                     if (type == SeatConstant.SeatType.TYPE_3){
                         doCorridorData(srcPosition,targetPosition);
