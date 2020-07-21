@@ -44,6 +44,8 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         findViewById();
         setListener();
+        changeSureButtonStates();
+        mTvTitle.setText("调课位demo");
     }
 
 
@@ -96,10 +98,30 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
                         mTvLineNum.setText(select);
                     }
                 }
+                changeSureButtonStates();
             }
         });
         selectSeatDialog.show();
     }
+
+    private void changeSureButtonStates() {
+        CharSequence textColumn = mTvColumnNum.getText();
+        CharSequence textLine = mTvLineNum.getText();
+        if (textColumn==null || textColumn.length()==0 || textColumn.equals("0")){
+            mTvSure.setBackgroundResource(R.drawable.shape_rect_stroke_cecece_r20);
+            return;
+        }
+        if (textLine==null || textLine.length()==0 || textLine.equals("0")){
+            mTvSure.setBackgroundResource(R.drawable.shape_rect_stroke_cecece_r20);
+            return;
+        }
+        int column = NumberUtils.parse(textColumn.toString());
+        int line = NumberUtils.parse(textLine.toString());
+        if (column>0 && line>0){
+            mTvSure.setBackgroundResource(R.drawable.shape_rect_stroke_00a5a8_r20);
+        }
+    }
+
 
     /**
      * 点击确定创建座位布局

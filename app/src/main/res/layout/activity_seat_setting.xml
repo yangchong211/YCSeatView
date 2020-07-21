@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:background="@drawable/title_bar_bg">
         <ImageView
             android:id="@+id/iv_back"
@@ -36,37 +36,37 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/black"
-        android:textSize="22sp"
+        android:textColor="#3D3D3D"
+        android:textSize="16sp"
         android:text="设置座位布局"/>
 
     <TextView
         android:id="@+id/tv_total_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         android:layout_gravity="center_horizontal"
         android:textColor="@color/color_333333"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:text="当前学员数量：24"/>
 
 
     <LinearLayout
         android:id="@+id/ll_column"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="14dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@drawable/shape_rect_stroke_999_r9"
+        android:background="@drawable/shape_rect_stroke_999_r20"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textColor="@color/color_333333"
+            android:textSize="14sp"
             android:text="列数"/>
         <TextView
             android:id="@+id/tv_column_num"
@@ -75,32 +75,32 @@
             android:layout_weight="1"
             android:gravity="right"
             android:layout_marginRight="10dp"
-            android:textColor="@color/color_333333"
-            android:textSize="20sp"
+            android:textColor="@color/color_999999"
+            android:textSize="14sp"
             android:text="请选择"/>
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:background="@drawable/to_right"/>
     </LinearLayout>
 
 
     <LinearLayout
         android:id="@+id/ll_line"
-        android:layout_width="240dp"
-        android:layout_height="50dp"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:background="@drawable/shape_rect_stroke_999_r9"
+        android:background="@drawable/shape_rect_stroke_999_r20"
         android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textColor="@color/color_333333"
+            android:textSize="14sp"
             android:text="行数"/>
         <TextView
             android:id="@+id/tv_line_num"
@@ -109,25 +109,25 @@
             android:layout_weight="1"
             android:gravity="right"
             android:layout_marginRight="10dp"
-            android:textColor="@color/color_333333"
-            android:textSize="20sp"
+            android:textColor="@color/color_999999"
+            android:textSize="14sp"
             android:text="请选择"/>
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:background="@drawable/to_right"/>
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_sure"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:textColor="@color/white"
-        android:text="确定"
-        android:textSize="18sp"
-        android:background="@drawable/shape_seat_info_r10"/>
+        android:text="自动生成座位表"
+        android:textSize="14sp"
+        android:background="@drawable/shape_rect_stroke_cecece_r20"/>
 
 </LinearLayout>

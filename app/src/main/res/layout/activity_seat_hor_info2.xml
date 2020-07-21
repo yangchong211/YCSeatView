@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="44dp"
         android:background="@drawable/title_bar_bg">
         <ImageView
             android:id="@+id/iv_back"
@@ -27,7 +27,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
         <TextView
             android:id="@+id/tv_picture"
             android:layout_width="80dp"
@@ -60,62 +60,6 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/ll_class"
-            android:layout_width="150dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_add_class"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="+调课位"
-                android:textSize="14sp"
-                android:background="@drawable/shape_seat_info_r10"/>
-            <TextView
-                android:id="@+id/tv_add_corridor"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="+过道"
-                android:textSize="14sp"
-                android:background="@drawable/shape_seat_info_r10"/>
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-            <TextView
-                android:id="@+id/tv_restore"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="恢复自动排座"
-                android:textSize="14sp"
-                android:background="@drawable/shape_seat_info_r10"/>
-            <TextView
-                android:id="@+id/tv_change"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:text="更改座位布局"
-                android:textSize="14sp"
-                android:background="@drawable/shape_seat_info_r10"/>
-        </LinearLayout>
-
-        <LinearLayout
             android:id="@+id/ll_seat_view"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -125,15 +69,16 @@
 
             <TextView
                 android:id="@+id/tv_seat"
-                android:layout_width="180dp"
-                android:layout_height="50dp"
+                android:layout_width="260dp"
+                android:layout_height="31dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/color_00A5A8"
                 android:text="讲台"
-                android:textSize="18sp"
-                android:background="@drawable/shape_seat_info_r10"/>
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:background="@drawable/shape_seat_line_00a5a8_r130"/>
 
             <android.support.v4.widget.NestedScrollView
                 android:id="@+id/scrollView"
@@ -154,6 +99,62 @@
                         android:layout_height="match_parent"/>
                 </LinearLayout>
             </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_class"
+            android:layout_width="187dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_add_class"
+                android:layout_width="130dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="+调课位"
+                android:textSize="14sp"
+                android:background="@drawable/shape_seat_solid_00a5a8_r14"/>
+            <TextView
+                android:id="@+id/tv_add_corridor"
+                android:layout_width="130dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="+过道"
+                android:textSize="13sp"
+                android:background="@drawable/shape_seat_solid_00a5a8_r14"/>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:id="@+id/tv_restore"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@color/color_00A5A8"
+                android:text="恢复自动排座"
+                android:textSize="13sp"
+                android:background="@drawable/shape_seat_line_00a5a8_r14"/>
+            <TextView
+                android:id="@+id/tv_change"
+                android:layout_width="130dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:textColor="@color/color_00A5A8"
+                android:text="更改座位布局"
+                android:textSize="13sp"
+                android:background="@drawable/shape_seat_line_00a5a8_r14"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.yc.ycseatview.R;
@@ -58,20 +59,48 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
             if (seatBean.isSelect()){
                 tvStudentName.setText("不可坐"+seatBean.getIndex());
             }
+            /*if (type == SeatConstant.SeatType.TYPE_3){
+                //过道
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) tvStudentName.getLayoutParams();
+                layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
+                layoutParams.width = SeatPictureUtils.dip2px(context,50);
+                layoutParams.topMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.bottomMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.leftMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.rightMargin = SeatPictureUtils.dip2px(context,4);
+                tvStudentName.setLayoutParams(layoutParams);
+            } else {
+                //非过道
+                FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) tvStudentName.getLayoutParams();
+                layoutParams.height = SeatPictureUtils.dip2px(context,34);
+                layoutParams.width = SeatPictureUtils.dip2px(context,104);
+                layoutParams.topMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.bottomMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.leftMargin = SeatPictureUtils.dip2px(context,4);
+                layoutParams.rightMargin = SeatPictureUtils.dip2px(context,4);
+                tvStudentName.setLayoutParams(layoutParams);
+            }*/
+
             if (type == SeatConstant.SeatType.TYPE_3){
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
                 layoutParams.height = WindowManager.LayoutParams.MATCH_PARENT;
-                layoutParams.width = 150;
-                //holder.itemView.setBackgroundResource(R.color.colorAccent);
+                layoutParams.width = SeatPictureUtils.dip2px(context,50);
                 holder.itemView.setLayoutParams(layoutParams);
             } else {
                 ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-                layoutParams.width = 250;
-                //holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
+                layoutParams.height = SeatPictureUtils.dip2px(context,34);
+                layoutParams.width = SeatPictureUtils.dip2px(context,112);
                 holder.itemView.setLayoutParams(layoutParams);
             }
-            holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_null_r5);
+
+            if (seatBean.isSelect()){
+                //不可坐
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_not_set_r6);
+            } else {
+                //其他
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
+            }
+
         }
     }
 

@@ -12,4 +12,7 @@
     <color name="black">#ff000000</color>
     <color name="color_f00101">#f00101</color>
     <color name="color_999999">#999999</color>
+    <color name="color_666666">#666666</color>
+    <color name="color_f8fefe">#F8FEFE</color>
+    <color name="color_00A5A8">#00A5A8</color>
 </resources>

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHolder>  {
 
-    private Context context;
+    public Context context;
     private int layoutId;
     private List<T> data;
     public MultiTypeSupport<T> multiTypeSupport;

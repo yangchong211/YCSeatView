@@ -1,20 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/shape_seat_view_null_r5">
-
-
-    <TextView
-        android:id="@+id/tv_student_name"
-        android:layout_width="80dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:text=""/>
-
-</LinearLayout>
+    android:id="@+id/tv_student_name"
+    android:layout_width="104dp"
+    android:layout_height="34dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:textColor="@color/color_666666"
+    android:textSize="11sp"
+    android:text=""/>

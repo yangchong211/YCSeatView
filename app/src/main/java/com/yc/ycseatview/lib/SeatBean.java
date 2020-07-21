@@ -35,6 +35,8 @@ public class SeatBean implements Serializable {
     private int index;
     /**
      * 是否选中
+     * 选中，即表示不可坐
+     * 默认都是可以坐的
      */
     private boolean select;
 
