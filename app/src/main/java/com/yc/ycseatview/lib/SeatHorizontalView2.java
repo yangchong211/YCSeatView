@@ -97,9 +97,9 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     }
 
     private void initFindViewById(View view) {
-        mRlParent = findViewById(R.id.rl_parent);
+        mRlParent = view.findViewById(R.id.rl_parent);
         mRecyclerView = view.findViewById(R.id.recycler_view);
-        mRecyclerPicView = findViewById(R.id.recycler_pic_view);
+        mRecyclerPicView = view.findViewById(R.id.recycler_pic_view);
         mRlParent.post(new Runnable() {
             @Override
             public void run() {

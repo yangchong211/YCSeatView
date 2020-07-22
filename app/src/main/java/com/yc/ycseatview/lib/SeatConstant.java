@@ -42,4 +42,19 @@ public final class SeatConstant {
         int TYPE_4 = 4;
     }
 
+    /**
+     * 视图类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ViewType {
+        //删除学员视图
+        int TYPE_1 = 1;
+        //调课位，添加调课位学员和标记不可坐视图
+        int TYPE_2 = 2;
+        //标记请假【和取消请假】视图
+        int TYPE_3 = 3;
+        //删除过道视图
+        int TYPE_4 = 4;
+    }
+
 }

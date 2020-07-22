@@ -24,6 +24,7 @@ import com.yc.ycseatview.lib.SeatHorizontalView;
 import com.yc.ycseatview.lib.SeatHorizontalView2;
 import com.yc.ycseatview.lib.SeatLogUtils;
 import com.yc.ycseatview.lib.SeatPictureUtils;
+import com.yc.ycseatview.lib.SeatStatesView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -41,19 +42,13 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
 
     private ImageView mIvBack;
     private TextView mTvTitle;
-    private TextView mTvAddClass;
-    private TextView mTvAddCorridor;
-    private TextView mTvRestore;
-    private TextView mTvChange;
     private TextView mTvPicture;
     private TextView mTvCommit;
     private LinearLayout mLlSeatView;
     private NestedScrollView scrollView;
     private SeatHorizontalView2 mSeatView;
     private LinearLayout mLlContentView;
-    private RelativeLayout mRlSetClass;
-    private TextView mTvStartSeat;
-    private LinearLayout mLlChangeClass;
+    private SeatStatesView mFlStatesView;
     /**
      * 行数
      */
@@ -117,54 +112,77 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         findViewById();
         setListener();
+        setInitStateView();
         initData();
     }
 
     private void findViewById() {
         mIvBack = findViewById(R.id.iv_back);
         mTvTitle = findViewById(R.id.tv_title);
-        mTvAddClass = findViewById(R.id.tv_add_class);
-        mTvAddCorridor = findViewById(R.id.tv_add_corridor);
-        mTvRestore = findViewById(R.id.tv_restore);
-        mTvChange = findViewById(R.id.tv_change);
         mSeatView = findViewById(R.id.seat_view);
         mTvPicture = findViewById(R.id.tv_picture);
         mTvCommit = findViewById(R.id.tv_commit);
         mLlSeatView = findViewById(R.id.ll_seat_view);
         scrollView = findViewById(R.id.scrollView);
         mLlContentView = findViewById(R.id.ll_content_view);
-        mRlSetClass = findViewById(R.id.rl_set_class);
-        mTvStartSeat = findViewById(R.id.tv_start_seat);
-        mLlChangeClass = findViewById(R.id.ll_change_class);
-
-        mRlSetClass.setVisibility(View.VISIBLE);
-        mLlChangeClass.setVisibility(View.GONE);
-        mTvCommit.setVisibility(View.GONE);
-        mTvPicture.setVisibility(View.GONE);
+        mFlStatesView = findViewById(R.id.fl_states_view);
     }
 
     private void setListener() {
         mIvBack.setOnClickListener(this);
-        mTvAddClass.setOnClickListener(this);
-        mTvAddCorridor.setOnClickListener(this);
-        mTvRestore.setOnClickListener(this);
-        mTvChange.setOnClickListener(this);
         mTvPicture.setOnClickListener(this);
         mTvCommit.setOnClickListener(this);
-        mTvStartSeat.setOnClickListener(this);
         mSeatView.setRestoreListener(new OnRestoreListener() {
             @Override
             public void OnRestore(int type) {
                 switch (type){
                     //恢复自动排座
                     case OnRestoreListener.RESTORE:
-                        mTvAddClass.setText("+调课位");
-                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+                        mFlStatesView.setStatesView(1);
+                        mFlStatesView.setAddClassText(true);
+                        break;
+                }
+            }
+        });
+        mFlStatesView.setClickListener(new SeatStatesView.OnClickListener() {
+            @Override
+            public void listener(int type) {
+                switch (type){
+                    case SeatStatesView.ClickType.CLICK_1:
+                        //开始调课
+                        setSeatClass();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_2:
+                        //添加调课位
+                        addClass();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_3:
+                        //添加过道
+                        addCorridor();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_4:
+                        //恢复自动排座
+                        restoreSeat();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_5:
+                        //更改座位布局
+                        changeSeat();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_6:
+
                         break;
                 }
             }
         });
     }
+
+
+    private void setInitStateView() {
+        mFlStatesView.setStatesView(0);
+        mTvCommit.setVisibility(View.GONE);
+        mTvPicture.setVisibility(View.GONE);
+    }
+
 
     private int height ;
     private int width;
@@ -195,21 +213,6 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
             //finish();
             //onBackPressed();
             showSaveDialog();
-        } else if (v == mTvStartSeat){
-            //开始调课
-            setSeatClass();
-        } else if (v == mTvAddClass){
-            //添加调课位
-            addClass();
-        } else if (v == mTvAddCorridor){
-            //添加过道
-            addCorridor();
-        } else if (v == mTvRestore){
-            //恢复自动排座
-            restoreSeat();
-        } else if (v == mTvChange){
-            //更改座位布局
-            changeSeat();
         } else if (v == mTvCommit){
             //提交数据
         } else if (v == mTvPicture){
@@ -231,8 +234,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
 
     private void setSeatClass() {
         mSeatView.removeItemListener();
-        mRlSetClass.setVisibility(View.GONE);
-        mLlChangeClass.setVisibility(View.VISIBLE);
+        mFlStatesView.setStatesView(1);
         mTvCommit.setVisibility(View.VISIBLE);
         mTvPicture.setVisibility(View.VISIBLE);
     }
@@ -279,8 +281,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
             } else {
                 //没有学生
                 mSeatView.removeTypeClass();
-                mTvAddClass.setText("+调课位");
-                mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_00a5a8_r14);
+                mFlStatesView.setAddClassText(true);
             }
         } else {
             //没有调课位
@@ -297,20 +298,17 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                     case SelectClassDialog.Type.TYPE_1:
                         //左侧增加一列
                         addTypeClass(SeatConstant.Type.TYPE_LEFT);
-                        mTvAddClass.setText("删除调课位");
-                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
+                        mFlStatesView.setAddClassText(false);
                         break;
                     case SelectClassDialog.Type.TYPE_2:
                         //右侧增加一列
                         addTypeClass(SeatConstant.Type.TYPE_RIGHT);
-                        mTvAddClass.setText("删除调课位");
-                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
+                        mFlStatesView.setAddClassText(false);
                         break;
                     case SelectClassDialog.Type.TYPE_3:
                         //后方增加一列
                         addTypeClass(SeatConstant.Type.TYPE_LAST);
-                        mTvAddClass.setText("删除调课位");
-                        mTvAddClass.setBackgroundResource(R.drawable.shape_seat_solid_ff8c8c_r14);
+                        mFlStatesView.setAddClassText(false);
                         break;
                     case SelectClassDialog.Type.TYPE_4:
                         Toast.makeText(SeatInfoHorizontalActivity2.this,"取消",Toast.LENGTH_SHORT).show();
