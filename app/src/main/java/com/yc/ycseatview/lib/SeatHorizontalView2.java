@@ -359,28 +359,47 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
 
         Set<Integer> integers = mSeatMap.keySet();
         Iterator<Integer> iterator = integers.iterator();
+        //如果是同一列数据交换
         boolean isTarget = false;
-        boolean isSrc = false;
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == srcColumn){
-                //开始。将目标位置的数据，设置到当前位置上
-                ArrayList<SeatBean> list = mSeatMap.get(targetColumn);
-                if (list==null || isTarget){
-                    continue;
+        if (srcColumn == targetColumn){
+            while (iterator.hasNext()){
+                Integer next = iterator.next();
+                if (next == srcColumn){
+                    //开始。将目标位置的数据，设置到当前位置上
+                    ArrayList<SeatBean> list = mSeatMap.get(targetColumn);
+                    if (list==null || isTarget){
+                        continue;
+                    }
+                    list.set(targetLine-1,srcBean);
+                    list.set(srcLine-1,targetBean);
+                    isTarget = true;
+                    SeatLogUtils.i("doNormalData--如果是同一列数据交换----将目标位置的数据，设置到当前位置上----" + (srcLine-1) + "------" + targetColumn + "----"+targetBean.toString());
                 }
-                list.set(targetLine-1,srcBean);
-                isTarget = true;
-                SeatLogUtils.i("doNormalData------将目标位置的数据，设置到当前位置上----" + (srcLine-1) + "------" + targetColumn + "----"+targetBean.toString());
-            } else if (next == targetColumn){
-                //目标。将开始拖动的数据，设置到目标位置上
-                ArrayList<SeatBean> list = mSeatMap.get(srcColumn);
-                if (list==null || isSrc){
-                    continue;
+            }
+        } else {
+            //不是同一列交换数据
+            boolean isSrc = false;
+            while (iterator.hasNext()){
+                Integer next = iterator.next();
+                if (next == srcColumn){
+                    //开始。将目标位置的数据，设置到当前位置上
+                    ArrayList<SeatBean> list = mSeatMap.get(targetColumn);
+                    if (list==null || isTarget){
+                        continue;
+                    }
+                    list.set(targetLine-1,srcBean);
+                    isTarget = true;
+                    SeatLogUtils.i("doNormalData--不是同一列交换数据----将目标位置的数据，设置到当前位置上----" + (srcLine-1) + "------" + targetColumn + "----"+targetBean.toString());
+                } else if (next == targetColumn){
+                    //目标。将开始拖动的数据，设置到目标位置上
+                    ArrayList<SeatBean> list = mSeatMap.get(srcColumn);
+                    if (list==null || isSrc){
+                        continue;
+                    }
+                    list.set(srcLine-1,targetBean);
+                    isSrc = true;
+                    SeatLogUtils.i("doNormalData--不是同一列交换数据----将开始拖动的数据，设置到目标位置上----" + (targetLine-1) + "------" + srcColumn + "----"+srcBean.toString());
                 }
-                list.set(srcLine-1,targetBean);
-                isSrc = true;
-                SeatLogUtils.i("doNormalData------将开始拖动的数据，设置到目标位置上----" + (targetLine-1) + "------" + srcColumn + "----"+srcBean.toString());
             }
         }
         ArrayList<SeatBean> listToMap = SeatDataHelper.getListToMap(mSeatMap);
