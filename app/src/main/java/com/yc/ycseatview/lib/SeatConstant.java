@@ -55,6 +55,8 @@ public final class SeatConstant {
         int TYPE_3 = 3;
         //删除过道视图
         int TYPE_4 = 4;
+        //回到原视图
+        int TYPE_5 = 5;
     }
 
 }

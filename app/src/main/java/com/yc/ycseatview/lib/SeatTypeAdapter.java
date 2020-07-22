@@ -95,17 +95,22 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
             if (seatBean.isSelect()){
                 holder.itemView.setBackgroundResource(R.drawable.shape_seat_not_set_r6);
             } else {
-                //其他
-                int type = seatBean.getType();
-                if (type == SeatConstant.SeatType.TYPE_2){
-                    tvStudentName.setTextColor(Color.parseColor("#44A3F2"));
-                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_class_data_r6);
+                if (seatBean.isLongSelect()){
+                    //长按
+                    tvStudentName.setTextColor(Color.parseColor("#FFAB57"));
+                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_drag_r6);
                 } else {
-                    tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
-                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
+                    //其他
+                    int type = seatBean.getType();
+                    if (type == SeatConstant.SeatType.TYPE_2){
+                        tvStudentName.setTextColor(Color.parseColor("#44A3F2"));
+                        holder.itemView.setBackgroundResource(R.drawable.shape_seat_class_data_r6);
+                    } else {
+                        tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                        holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
+                    }
                 }
             }
-
         }
     }
 

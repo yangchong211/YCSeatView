@@ -134,37 +134,47 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
      * @param viewType                  类型
      */
     public void setStatesTypeView(@SeatConstant.ViewType int viewType){
-        setStatesView(2);
         switch (viewType) {
             //删除学员视图
             case SeatConstant.ViewType.TYPE_1:
+                setStatesView(2);
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
+                mTvStatesStudentName.setText("删除");
                 mTvStatesStudent1.setText("删除学员");
                 break;
             //调课位，添加调课位学员和标记不可坐视图
             case SeatConstant.ViewType.TYPE_2:
+                setStatesView(2);
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(VISIBLE);
+                mTvStatesStudentName.setText("调课位");
                 mTvStatesStudent1.setText("添加调期学员");
                 mTvStatesStudent2.setText("标记不可坐");
                 break;
             //标记请假【和取消请假】视图
             case SeatConstant.ViewType.TYPE_3:
+                setStatesView(2);
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
+                mTvStatesStudentName.setText("请假");
                 mTvStatesStudent1.setText("标记请假");
                 break;
             //删除过道视图
             case SeatConstant.ViewType.TYPE_4:
+                setStatesView(2);
                 mTvStatesStudentName.setVisibility(VISIBLE);
-                mTvStatesStudentName.setText("过道");
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
+                mTvStatesStudentName.setText("过道");
                 mTvStatesStudent1.setText("删除过道");
+                break;
+            //回到原视图
+            case SeatConstant.ViewType.TYPE_5:
+                setStatesView(1);
                 break;
             default:
                 break;

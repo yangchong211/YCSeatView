@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.yc.ycseatview.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -212,9 +214,77 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      */
     public void removeItemListener() {
         if (seatTypeAdapter!=null){
+            //注意这里点击listener一定要先移除，后在添加。否则点击，不知道是选择设置不可坐，还是点击设置选中
             seatTypeAdapter.setOnItemClickListener(null);
             seatTypeAdapter.setClassTag(false);
             seatTypeAdapter.notifyDataSetChanged();
+            seatTypeAdapter.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    if (mList!=null && mList.size()>position && position>=0){
+                        SeatBean bean = mList.get(position);
+                        if (bean.isSelect()){
+                            Toast.makeText(mContext,"不可坐位置不能点击选中",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+
+                        boolean longSelect = bean.isLongSelect();
+                        if (longSelect){
+                            bean.setLongSelect(false);
+                            seatTypeAdapter.notifyItemChanged(position);
+                        } else {
+                            for (int i=0 ; i<mList.size() ; i++){
+                                if (i==position){
+                                    mList.get(i).setLongSelect(true);
+                                } else {
+                                    mList.get(i).setLongSelect(false);
+                                }
+                            }
+                            seatTypeAdapter.notifyDataSetChanged();
+                        }
+
+                        longSelect = mList.get(position).isLongSelect();
+                        if (listener==null){
+                            return;
+                        }
+                        //然后根据选中的判断显示那种视图
+                        if (longSelect){
+                            int type = bean.getType();
+                            switch (type){
+                                //学生
+                                case SeatConstant.SeatType.TYPE_1:
+                                    //判断该学生所在位置是否在调课位的位置
+                                    int column = bean.getColumn();
+                                    int line = bean.getLine();
+                                    //获取该学生所在的列的集合数据
+                                    ArrayList<SeatBean> list = mSeatMap.get(column);
+                                    //判断该列是否有调课位
+                                    boolean haveClass = SeatDataHelper.isHaveClass(list);
+                                    if (haveClass){
+                                        //有调课位
+                                        listener.listener(SeatConstant.ViewType.TYPE_1);
+                                    } else {
+                                        //没有调课位
+                                        listener.listener(SeatConstant.ViewType.TYPE_3);
+                                    }
+                                    break;
+                                //调课位
+                                case SeatConstant.SeatType.TYPE_2:
+                                    listener.listener(SeatConstant.ViewType.TYPE_2);
+                                    break;
+                                //过道
+                                case SeatConstant.SeatType.TYPE_3:
+                                    listener.listener(SeatConstant.ViewType.TYPE_4);
+                                    break;
+                            }
+                        } else {
+                            //恢复愿视图
+                            listener.listener(SeatConstant.ViewType.TYPE_5);
+                        }
+                    }
+                }
+            });
         }
         //todo 给座位安排学生
     }
@@ -260,6 +330,19 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
             return false;
         }
     }
+
+    /**
+     * 收起
+     */
+    public void closeAllSelect() {
+        if (mList!=null && mList.size()>0){
+            for (int i=0 ; i<mList.size() ; i++){
+                mList.get(i).setLongSelect(false);
+            }
+            seatTypeAdapter.notifyDataSetChanged();
+        }
+    }
+
 
     private void setCache() {
         //屏幕外缓存
@@ -595,4 +678,18 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     public void setRestoreListener(OnRestoreListener restoreListener) {
         this.restoreListener = restoreListener;
     }
+
+    private OnClickListener listener;
+    public void setClickListener(OnClickListener listener){
+        this.listener = listener;
+    }
+
+    public interface OnClickListener{
+        /**
+         * 监听
+         */
+        void listener(@SeatConstant.ViewType int type);
+    }
+
+
 }

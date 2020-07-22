@@ -43,6 +43,10 @@ public class SeatBean implements Serializable {
      * 设置调课位类型
      */
     private int classType;
+    /**
+     * 长按选中
+     */
+    private boolean longSelect;
 
     public String getName() {
         return name;
@@ -98,6 +102,14 @@ public class SeatBean implements Serializable {
 
     public void setClassType(int classType) {
         this.classType = classType;
+    }
+
+    public boolean isLongSelect() {
+        return longSelect;
+    }
+
+    public void setLongSelect(boolean longSelect) {
+        this.longSelect = longSelect;
     }
 
     @Override
