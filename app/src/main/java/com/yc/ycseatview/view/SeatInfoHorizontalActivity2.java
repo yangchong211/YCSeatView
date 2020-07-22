@@ -12,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.OnRestoreListener;
 import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatConstant;
-import com.yc.ycseatview.lib.SeatHorizontalView;
 import com.yc.ycseatview.lib.SeatHorizontalView2;
 import com.yc.ycseatview.lib.SeatLogUtils;
 import com.yc.ycseatview.lib.SeatPictureUtils;
@@ -75,34 +73,11 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            showSaveDialog();
+            showTypeDialog(1);
             return true;
         }
         return false;
     }
-
-    private void showSaveDialog() {
-        final BackFinishDialog dialog = new BackFinishDialog(this);
-        dialog.shouldCancelOnBackKeyDown(false);
-        dialog.shouldCancelOnTouchOutside(false);
-        dialog.setClickListener(new BackFinishDialog.OnClickListener() {
-            @Override
-            public void listener(boolean type) {
-                if (type){
-                    //确定保存
-                    LinkedHashMap<Integer, ArrayList<SeatBean>> allData = mSeatView.getAllData();
-                    SeatLogUtils.i("保存后关闭页面"+allData);
-                    Toast.makeText(SeatInfoHorizontalActivity2.this,"保存后关闭页面",Toast.LENGTH_SHORT).show();
-                } else {
-                    //取消
-                    dialog.dismiss();
-                }
-                finish();
-            }
-        });
-        dialog.show();
-    }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -189,11 +164,11 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                         break;
                     case SeatStatesView.ClickType.CLICK_4:
                         //恢复自动排座
-                        restoreSeat();
+                        showTypeDialog(2);
                         break;
                     case SeatStatesView.ClickType.CLICK_5:
                         //更改座位布局
-                        changeSeat();
+                        showTypeDialog(3);
                         break;
                     case SeatStatesView.ClickType.CLICK_6:
                         //收起
@@ -202,7 +177,45 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                         break;
                 }
             }
+
         });
+    }
+
+    private void showTypeDialog(final int type) {
+        final BaseCustomDialog dialog = new BaseCustomDialog(this);
+        dialog.shouldCancelOnBackKeyDown(false);
+        dialog.shouldCancelOnTouchOutside(false);
+        dialog.setDataBean(type);
+        dialog.setClickListener(new BaseCustomDialog.OnClickListener() {
+            @Override
+            public void listener(boolean isSure) {
+                if (isSure){
+                    switch (type){
+                        case 1:
+                            //确定保存
+                            LinkedHashMap<Integer, ArrayList<SeatBean>> allData = mSeatView.getAllData();
+                            SeatLogUtils.i("保存后关闭页面"+allData);
+                            Toast.makeText(SeatInfoHorizontalActivity2.this,"保存后关闭页面",Toast.LENGTH_SHORT).show();
+                            break;
+                        case 2:
+                            //确定恢复
+                            restoreSeat();
+                            break;
+                        case 3:
+                            //更改座位布局
+                            changeSeat();
+                            break;
+                    }
+                } else {
+                    //取消
+                    dialog.dismiss();
+                }
+                if (type==1){
+                    finish();
+                }
+            }
+        });
+        dialog.show();
     }
 
 
@@ -241,7 +254,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         if (v == mIvBack){
             //finish();
             //onBackPressed();
-            showSaveDialog();
+            showTypeDialog(1);
         } else if (v == mTvCommit){
             //提交数据
         } else if (v == mTvPicture){
