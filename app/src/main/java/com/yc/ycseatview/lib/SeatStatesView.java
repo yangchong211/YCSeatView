@@ -42,6 +42,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
     private TextView mTvStatesStudent1;
     private TextView mTvStatesStudent2;
     private TextView mTvStatesClose;
+    private int viewType = 0;
 
     public SeatStatesView(@NonNull Context context) {
         super(context);
@@ -105,6 +106,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
      * @param type                      类型
      */
     public void setStatesView(int type){
+        this.viewType = 0;
         switch (type){
             //只显示设置座位可坐和不可坐视图
             case 0:
@@ -181,6 +183,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             default:
                 break;
         }
+        this.viewType = viewType;
     }
 
     public void setAddClassText(boolean isAdd){
@@ -228,9 +231,46 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             }
         } else if (v == mTvStatesStudent1){
             //区分状态
-
+            switch (viewType) {
+                //删除学员视图
+                case SeatConstant.ViewType.TYPE_1:
+                    if (mListener!=null){
+                        mListener.listener(ClickType.CLICK_7);
+                    }
+                    break;
+                //调课位，添加调课位学员和标记不可坐视图
+                case SeatConstant.ViewType.TYPE_2:
+                    if (mListener!=null){
+                        //添加调课位学员
+                        mListener.listener(ClickType.CLICK_8);
+                    }
+                    break;
+                //标记请假【和取消请假】视图
+                case SeatConstant.ViewType.TYPE_3:
+                    if (mListener!=null){
+                        //添加调课位学员
+                        mListener.listener(ClickType.CLICK_10);
+                    }
+                    break;
+                //删除过道视图
+                case SeatConstant.ViewType.TYPE_4:
+                    if (mListener!=null){
+                        //添加调课位学员
+                        mListener.listener(ClickType.CLICK_11);
+                    }
+                    break;
+            }
         } else if (v == mTvStatesStudent2){
             //区分状态
+            switch (viewType) {
+                //调课位，添加调课位学员和标记不可坐视图
+                case SeatConstant.ViewType.TYPE_2:
+                    if (mListener!=null){
+                        //标记不可坐视图
+                        mListener.listener(ClickType.CLICK_9);
+                    }
+                    break;
+            }
         }
     }
 
@@ -272,10 +312,20 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
         //只显示状态视图：删除学员视图，添加调课位学员和标记不可坐视图，标记请假【和取消请假】视图，删除过道视图
         //收起
         int CLICK_6 = 6;
+        //删除学员视图
         int CLICK_7 = 7;
+
+        //添加调课位学员和标记不可坐视图
+        //添加调课位学员
         int CLICK_8 = 8;
+        //标记不可坐视图
         int CLICK_9 = 9;
+
+        //标记请假【和取消请假】
         int CLICK_10 = 10;
+
+        //删除过道视图
+        int CLICK_11 = 11;
     }
 
 

@@ -73,7 +73,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            showTypeDialog(1);
+            showTypeDialog(BaseCustomDialog.DialogType.DIALOG_1);
             return true;
         }
         return false;
@@ -164,16 +164,40 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                         break;
                     case SeatStatesView.ClickType.CLICK_4:
                         //恢复自动排座
-                        showTypeDialog(2);
+                        showTypeDialog(BaseCustomDialog.DialogType.DIALOG_2);
                         break;
                     case SeatStatesView.ClickType.CLICK_5:
                         //更改座位布局
-                        showTypeDialog(3);
+                        showTypeDialog(BaseCustomDialog.DialogType.DIALOG_3);
                         break;
                     case SeatStatesView.ClickType.CLICK_6:
                         //收起
                         mSeatView.closeAllSelect();
                         mFlStatesView.setStatesView(1);
+                        break;
+                    case SeatStatesView.ClickType.CLICK_7:
+                        //删除学员视图
+                        showTypeDialog(BaseCustomDialog.DialogType.DIALOG_4);
+                        break;
+                    case SeatStatesView.ClickType.CLICK_8:
+                        //添加调课位学员
+                        Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                "添加调课位学员，稍后处理",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_9:
+                        //标记不可坐视图
+                        Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                "标记不可坐视图，稍后处理",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_10:
+                        //标记请假【和取消请假】
+                        Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                "标记请假【和取消请假】，稍后处理",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_11:
+                        //删除过道视图
+                        Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                "删除过道视图，稍后处理",Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -181,7 +205,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         });
     }
 
-    private void showTypeDialog(final int type) {
+    private void showTypeDialog(@BaseCustomDialog.DialogType final int type) {
         final BaseCustomDialog dialog = new BaseCustomDialog(this);
         dialog.shouldCancelOnBackKeyDown(false);
         dialog.shouldCancelOnTouchOutside(false);
@@ -191,19 +215,23 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
             public void listener(boolean isSure) {
                 if (isSure){
                     switch (type){
-                        case 1:
+                        case BaseCustomDialog.DialogType.DIALOG_1:
                             //确定保存
                             LinkedHashMap<Integer, ArrayList<SeatBean>> allData = mSeatView.getAllData();
                             SeatLogUtils.i("保存后关闭页面"+allData);
                             Toast.makeText(SeatInfoHorizontalActivity2.this,"保存后关闭页面",Toast.LENGTH_SHORT).show();
                             break;
-                        case 2:
+                        case BaseCustomDialog.DialogType.DIALOG_2:
                             //确定恢复
                             restoreSeat();
                             break;
-                        case 3:
+                        case BaseCustomDialog.DialogType.DIALOG_3:
                             //更改座位布局
                             changeSeat();
+                            break;
+                        case BaseCustomDialog.DialogType.DIALOG_4:
+                            //删除学员视图
+
                             break;
                     }
                 } else {
@@ -254,7 +282,7 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         if (v == mIvBack){
             //finish();
             //onBackPressed();
-            showTypeDialog(1);
+            showTypeDialog(BaseCustomDialog.DialogType.DIALOG_1);
         } else if (v == mTvCommit){
             //提交数据
         } else if (v == mTvPicture){

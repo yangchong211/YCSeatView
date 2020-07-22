@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 import com.yc.ycseatview.R;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * <pre>
  *     @author  yangchong
@@ -99,21 +102,27 @@ public class BaseCustomDialog extends Dialog {
 
     private void setData(int type) {
         switch (type){
-            case 1:
+            case BaseCustomDialog.DialogType.DIALOG_1:
                 //返回弹窗
                 mTvTitle.setText("保存当前更改吗？");
                 mTvNoSave.setText("不保存");
                 mTvSave.setText("保存");
                 break;
-            case 2:
+            case BaseCustomDialog.DialogType.DIALOG_2:
                 //恢复自动排位
                 mTvTitle.setText("确定恢复到自动排座？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
                 break;
-            case 3:
+            case BaseCustomDialog.DialogType.DIALOG_3:
                 //更改座位布局
                 mTvTitle.setText("确定要更改吗？");
+                mTvNoSave.setText("取消");
+                mTvSave.setText("确定");
+                break;
+            case BaseCustomDialog.DialogType.DIALOG_4:
+                //更改座位布局
+                mTvTitle.setText("确定要删除吗？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
                 break;
@@ -140,7 +149,7 @@ public class BaseCustomDialog extends Dialog {
     /**
      * 设置数据
      */
-    public BaseCustomDialog setDataBean(int type) {
+    public BaseCustomDialog setDataBean(@BaseCustomDialog.DialogType int type) {
         mConfig.type = type;
         return this;
     }
@@ -183,6 +192,21 @@ public class BaseCustomDialog extends Dialog {
          * 监听
          */
         void listener(boolean type);
+    }
+
+    /**
+     * 视图类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface DialogType {
+        //确定保存
+        int DIALOG_1 = 1;
+        //恢复自动排座
+        int DIALOG_2 = 2;
+        //更改座位布局
+        int DIALOG_3 = 3;
+        //删除学员视图
+        int DIALOG_4 = 4;
     }
 
 
