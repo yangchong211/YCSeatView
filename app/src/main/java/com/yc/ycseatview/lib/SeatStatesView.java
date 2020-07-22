@@ -134,6 +134,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
      * @param viewType                  类型
      */
     public void setStatesTypeView(@SeatConstant.ViewType int viewType){
+        setStatesView(2);
         switch (viewType) {
             //删除学员视图
             case SeatConstant.ViewType.TYPE_1:
