@@ -5,8 +5,9 @@
 - 02.座位控件实现
 - 03.座位拖拽实现
 - 04.座位控件截图
-- 05.如何使用lib
-
+- 05.使用Map集合
+- 06.如何使用lib
+- 07.可能遇到问题
 
 
 
@@ -160,11 +161,47 @@
         - b.将recyclerView控件截图填充到ImageView中。然后在针对当前activity的LinearLayout进行截图
         - c.新的截图应该就是座位图片。实际上这里分了两步操作
 - 存在问题
+    - 遍历recyclerView所有item，然后分别依次测量绘制item，然后绘制到bitmap上。这种截图有点难点，那就是如果item是瀑布流或者不过则的item，那么便会很困难
+    - recyclerView默认是有缓存机制，也就是说比如item有15列，15行，那么在一个屏幕展示不下。这个时候有部分不可见的item实际上是没有draw出来的。
+        - 此时获取控件的宽高，并不是所有item都显示的宽高。（因为有部分item存在复用）
+    - 设置recyclerView不缓存，所有item都绘制出来，存在问题。
+        ```
+        //设置默认不回收
+        viewHolder.setIsRecyclable(false);
+
+        //屏幕外缓存
+        //当列表滑动出了屏幕时，ViewHolder会被缓存在 mCachedViews ，其大小由mViewCacheMax决定，
+        //默认DEFAULT_CACHE_SIZE为2，可通过Recyclerview.setItemViewCacheSize()动态设置。
+        mRecyclerView.setItemViewCacheSize(225);
+
+
+        //缓存池
+        RecyclerView.RecycledViewPool recycledViewPool = new RecyclerView.RecycledViewPool();
+        recycledViewPool.clear();
+        recycledViewPool.setMaxRecycledViews(seatTypeAdapter.getItemViewType(0),225);
+        mRecyclerView.setRecycledViewPool(recycledViewPool);
+
+        //自定义缓存
+        mRecyclerView.setViewCacheExtension(new RecyclerView.ViewCacheExtension() {
+            @Nullable
+            @Override
+            public View getViewForPositionAndType(@NonNull RecyclerView.Recycler recycler, int i, int i1) {
+                return null;
+            }
+        });
+        ```
+- 解决办法
+    - 当RecyclerView界面绘制完成后，获取一个item的宽度和高度，然后知道几行几列。即可以计算出控件总的宽度和高度
+    - 然后给RecyclerView动态设置控件总的宽度，总的高度，这样可以让RecyclerView所有item绘制出来。然后截图！
+    - 最后注意一点：对RecyclerView的父控件进行测量获取宽高时，需要测量mode类型一定要设置成View.MeasureSpec.UNSPECIFIED
 
 
 
+### 05.使用Map集合
 
-### 05.如何使用lib
+
+
+### 06.如何使用lib
 - 这里首先定义一个接口。接口中有这些抽象方法……
     ```
     public interface InterSeatView {
@@ -260,9 +297,37 @@
     ```
 
 
+### 07.可能遇到问题
+- 截图太大如何避免OOM
+    - 对图片进行压缩，内存压缩，质量压缩，缩放压缩。发现压缩后可以将截图4，5MB大小的图片压缩到几百kb图片，这样极大节省了内存……
+    - BitmapFactory.Options.inSampleSize内存压缩，inJustDecodeBounds属性为true，可以在Bitmap不被加载到内存；然后计算缩放比，这样就会很大减少图片宽高呢，然后inJustDecodeBounds属性为false，加载出bitmap。
+    - Bitmap.compress()质量压缩，不会对内存产生影响，它是在保持像素的前提下改变图片的位深及透明度等，来达到压缩图片的目的，不会减少图片的像素。
+    - 图片占用的内存 = width * height * nTargetDensity/inDensity 一个像素所占的内存。具体压缩可以看demo
+- 如何避免传递大图导致intent传递数据崩溃
+    - 在Activity间使用Intent传递List含有大量序列化的对象的时候，或者传递较大bitmap等较大量数据的时候会引起页面卡顿。而且Android本身也限制了能够传递的数据大小在1MB左右。
+    - 通过创建对象的缓存区解决intent传递大对象，不过需要注意在不用大对象的时候需要把对象设置成null
+    ```
+    public class ModelStorage {
 
+        private Bitmap bitmap;
 
+        public static ModelStorage getInstance(){
+            return SingletonHolder.instance;
+        }
 
+        private static class SingletonHolder{
+            private static final ModelStorage instance = new ModelStorage();
+        }
+
+        public Bitmap getBitmap() {
+            return bitmap;
+        }
+
+        public void setBitmap(Bitmap bitmap) {
+            this.bitmap = bitmap;
+        }
+    }
+    ```
 
 
 

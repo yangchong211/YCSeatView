@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.yc.ycseatview.R;
 import com.yc.ycseatview.lib.OnRestoreListener;
 import com.yc.ycseatview.lib.SeatBean;
+import com.yc.ycseatview.lib.SeatCompressUtils;
 import com.yc.ycseatview.lib.SeatConstant;
 import com.yc.ycseatview.lib.SeatHorizontalView2;
 import com.yc.ycseatview.lib.SeatLogUtils;
@@ -293,7 +294,13 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                 @Override
                 public void run() {
                     Bitmap bitmap = SeatPictureUtils.measureSize(SeatInfoHorizontalActivity2.this,mLlContentView);
-                    ModelStorage.getInstance().setBitmap(bitmap);
+                    SeatLogUtils.i("--------获取图片的大小-------1--"+bitmap.getByteCount());
+                    int screenWidth = SeatCompressUtils.getScreenWidth(SeatInfoHorizontalActivity2.this);
+                    int screenHeight = SeatCompressUtils.getScreenHeight(SeatInfoHorizontalActivity2.this);
+                    SeatLogUtils.i("--------获取图片的大小----屏幕宽度-----"+screenWidth+"-----"+screenHeight);
+                    Bitmap bitmap1 = SeatCompressUtils.compressBitmapByBmp(bitmap, screenWidth, screenHeight);
+                    SeatLogUtils.i("--------获取图片的大小-------2--"+bitmap1.getByteCount());
+                    ModelStorage.getInstance().setBitmap(bitmap1);
                     Intent intent = new Intent(SeatInfoHorizontalActivity2.this, SeatImageActivity2.class);
                     intent.putExtra("type",1);
                     startActivity(intent);
