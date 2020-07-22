@@ -1,5 +1,6 @@
 package com.yc.ycseatview.lib;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -133,7 +134,8 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
      * 设置状态视图的细分
      * @param viewType                  类型
      */
-    public void setStatesTypeView(@SeatConstant.ViewType int viewType){
+    @SuppressLint("SetTextI18n")
+    public void setStatesTypeView(@SeatConstant.ViewType int viewType , SeatBean bean){
         switch (viewType) {
             //删除学员视图
             case SeatConstant.ViewType.TYPE_1:
@@ -141,7 +143,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
-                mTvStatesStudentName.setText("删除");
+                mTvStatesStudentName.setText("删除:"+bean.getName());
                 mTvStatesStudent1.setText("删除学员");
                 break;
             //调课位，添加调课位学员和标记不可坐视图
@@ -160,7 +162,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
-                mTvStatesStudentName.setText("请假");
+                mTvStatesStudentName.setText("请假:"+bean.getName());
                 mTvStatesStudent1.setText("标记请假");
                 break;
             //删除过道视图
@@ -226,6 +228,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             }
         } else if (v == mTvStatesStudent1){
             //区分状态
+
         } else if (v == mTvStatesStudent2){
             //区分状态
         }

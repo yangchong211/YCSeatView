@@ -146,27 +146,27 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         });
         mSeatView.setClickListener(new SeatHorizontalView2.OnClickListener() {
             @Override
-            public void listener(@SeatConstant.ViewType int type) {
+            public void listener(@SeatConstant.ViewType int type,SeatBean bean) {
                 switch (type){
                     //删除学员视图
                     case SeatConstant.ViewType.TYPE_1:
-                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_1);
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_1,bean);
                         break;
                     //调课位，添加调课位学员和标记不可坐视图
                     case SeatConstant.ViewType.TYPE_2:
-                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_2);
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_2,bean);
                         break;
                     //标记请假【和取消请假】视图
                     case SeatConstant.ViewType.TYPE_3:
-                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_3);
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_3,bean);
                         break;
                     //删除过道视图
                     case SeatConstant.ViewType.TYPE_4:
-                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_4);
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_4,bean);
                         break;
                     //回到原视图
                     case SeatConstant.ViewType.TYPE_5:
-                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_5);
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_5,bean);
                         break;
                 }
             }

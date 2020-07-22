@@ -263,24 +263,24 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
                                     boolean haveClass = SeatDataHelper.isHaveClass(list);
                                     if (haveClass){
                                         //有调课位
-                                        listener.listener(SeatConstant.ViewType.TYPE_1);
+                                        listener.listener(SeatConstant.ViewType.TYPE_1,bean);
                                     } else {
                                         //没有调课位
-                                        listener.listener(SeatConstant.ViewType.TYPE_3);
+                                        listener.listener(SeatConstant.ViewType.TYPE_3,bean);
                                     }
                                     break;
                                 //调课位
                                 case SeatConstant.SeatType.TYPE_2:
-                                    listener.listener(SeatConstant.ViewType.TYPE_2);
+                                    listener.listener(SeatConstant.ViewType.TYPE_2,bean);
                                     break;
                                 //过道
                                 case SeatConstant.SeatType.TYPE_3:
-                                    listener.listener(SeatConstant.ViewType.TYPE_4);
+                                    listener.listener(SeatConstant.ViewType.TYPE_4,bean);
                                     break;
                             }
                         } else {
                             //恢复愿视图
-                            listener.listener(SeatConstant.ViewType.TYPE_5);
+                            listener.listener(SeatConstant.ViewType.TYPE_5,bean);
                         }
                     }
                 }
@@ -688,7 +688,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         /**
          * 监听
          */
-        void listener(@SeatConstant.ViewType int type);
+        void listener(@SeatConstant.ViewType int type , SeatBean bean);
     }
 
 
