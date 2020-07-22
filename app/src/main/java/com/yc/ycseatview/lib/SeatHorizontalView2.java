@@ -255,8 +255,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     public boolean getIsClassHaveStudent(){
         boolean haveClass = SeatDataHelper.isHaveClass(mList);
         if (haveClass){
-            boolean haveStudentClass = SeatDataHelper.isHaveStudentClass(mList,mSeatMap);
-            return haveStudentClass;
+            return SeatDataHelper.isHaveStudentClass(mList,mSeatMap);
         } else {
             return false;
         }
