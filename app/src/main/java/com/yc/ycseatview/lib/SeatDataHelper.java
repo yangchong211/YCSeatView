@@ -243,7 +243,7 @@ public class SeatDataHelper {
         return setMap(map);
     }
 
-    private static LinkedHashMap<Integer, ArrayList<SeatBean>> setMap(LinkedHashMap<Integer, ArrayList<SeatBean>> map){
+    public static LinkedHashMap<Integer, ArrayList<SeatBean>> setMap(LinkedHashMap<Integer, ArrayList<SeatBean>> map){
         LinkedHashMap<Integer, ArrayList<SeatBean>> newMap = new LinkedHashMap<>();
         Set<Integer> integers = map.keySet();
         Iterator<Integer> iterator = integers.iterator();
@@ -264,7 +264,6 @@ public class SeatDataHelper {
      * @return
      */
     public static boolean isHaveStudentClass(ArrayList<SeatBean> mList, LinkedHashMap<Integer, ArrayList<SeatBean>> mSeatMap) {
-        int corridorNum = getCorridorNum(mList);
         Set<Integer> integers = mSeatMap.keySet();
         Iterator<Integer> iterator = integers.iterator();
         int dataNum = 1;

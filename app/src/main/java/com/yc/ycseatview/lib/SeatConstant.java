@@ -43,6 +43,20 @@ public final class SeatConstant {
     }
 
     /**
+     * 座位类型下正常类型
+     */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface StudentType {
+        //请假
+        int STUDENT_1 = 5;
+        //调课位学生
+        int STUDENT_2 = 6;
+        //
+        int STUDENT_3 = 7;
+    }
+
+
+    /**
      * 视图类型
      */
     @Retention(RetentionPolicy.SOURCE)

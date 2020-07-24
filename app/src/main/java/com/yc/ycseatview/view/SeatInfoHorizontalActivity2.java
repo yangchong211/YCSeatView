@@ -197,8 +197,15 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
                         break;
                     case SeatStatesView.ClickType.CLICK_11:
                         //删除过道视图
-                        Toast.makeText(SeatInfoHorizontalActivity2.this,
-                                "删除过道视图，稍后处理",Toast.LENGTH_SHORT).show();
+                        boolean isRemove = mSeatView.removeCorridor();
+                        if (isRemove){
+                            Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                    "删除过道视图成功",Toast.LENGTH_SHORT).show();
+                            mFlStatesView.setStatesView(1);
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity2.this,
+                                    "删除过道视图失败，有bug",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }

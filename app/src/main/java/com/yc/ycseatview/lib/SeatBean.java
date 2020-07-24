@@ -34,7 +34,7 @@ public class SeatBean implements Serializable {
      */
     private int index;
     /**
-     * 是否选中
+     * 是否选中【只是用于设置可坐和不可坐】
      * 选中，即表示不可坐
      * 默认都是可以坐的
      */
@@ -44,7 +44,7 @@ public class SeatBean implements Serializable {
      */
     private int classType;
     /**
-     * 长按选中
+     * 长按选中。
      */
     private boolean longSelect;
 
