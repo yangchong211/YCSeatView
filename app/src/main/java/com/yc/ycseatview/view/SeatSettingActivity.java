@@ -172,16 +172,9 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
             intent.putExtra("line",line);
             intent.putExtra("total",total);
             this.startActivity(intent);
-        } else if (type == 2){
-            //Horizontal方向recyclerView
-            Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
-            intent.putExtra("column",column);
-            intent.putExtra("line",line);
-            intent.putExtra("total",total);
-            this.startActivity(intent);
         } else if (type == 3){
             //Horizontal方向recyclerView
-            Intent intent = new Intent(this, SeatInfoHorizontalActivity2.class);
+            Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
             intent.putExtra("column",column);
             intent.putExtra("line",line);
             intent.putExtra("total",total);

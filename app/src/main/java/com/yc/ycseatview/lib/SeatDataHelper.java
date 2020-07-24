@@ -16,7 +16,7 @@ import java.util.Set;
  *     revise :
  * </pre>
  */
-public class SeatDataHelper {
+public final class SeatDataHelper {
 
     /**
      * 获取过道的数量

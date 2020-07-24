@@ -38,12 +38,6 @@ public class SeatBean implements Serializable {
      */
     private int index;
     /**
-     * 是否选中【只是用于设置可坐和不可坐】
-     * 选中，即表示不可坐
-     * 默认都是可以坐的
-     */
-    private boolean select;
-    /**
      * 设置调课位类型
      */
     private int classType;
@@ -100,14 +94,6 @@ public class SeatBean implements Serializable {
         this.index = index;
     }
 
-    public boolean isSelect() {
-        return select;
-    }
-
-    public void setSelect(boolean select) {
-        this.select = select;
-    }
-
     public int getClassType() {
         return classType;
     }
@@ -132,7 +118,6 @@ public class SeatBean implements Serializable {
                 ", column=" + column +
                 ", line=" + line +
                 ", index=" + index +
-                ", select=" + select +
                 '}';
     }
 }

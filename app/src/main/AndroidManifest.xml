@@ -20,8 +20,6 @@
             android:screenOrientation="landscape"/>
         <activity android:name=".view.SeatInfoHorizontalActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".view.SeatInfoHorizontalActivity2"
-            android:screenOrientation="landscape"/>
         <activity android:name=".view.SeatInfoVerticalActivity"
             android:screenOrientation="landscape"/>
         <activity android:name=".view.SeatImageActivity"

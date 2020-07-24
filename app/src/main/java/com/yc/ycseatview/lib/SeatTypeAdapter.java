@@ -7,13 +7,10 @@ import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yc.ycseatview.R;
-
-import java.util.List;
 
 /**
  * <pre>
@@ -57,24 +54,11 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 //设置座位
                 setClassNormalTypeData(holder,seatBean);
             }
-            if (seatBean.isSelect()){
-                holder.itemView.setBackgroundResource(R.drawable.shape_seat_not_set_r6);
-            } else {
-                if (seatBean.isLongSelect()){
-                    //长按
-                    tvStudentName.setTextColor(Color.parseColor("#FFAB57"));
-                    holder.itemView.setBackgroundResource(R.drawable.shape_seat_view_drag_r6);
-                } else {
-                    //其他
-                    int type = seatBean.getType();
-                    if (type == SeatConstant.SeatType.TYPE_2){
-                        tvStudentName.setTextColor(Color.parseColor("#44A3F2"));
-                        holder.itemView.setBackgroundResource(R.drawable.shape_seat_class_data_r6);
-                    } else {
-                        tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
-                        holder.itemView.setBackgroundResource(R.drawable.shape_seat_normal_data_r6);
-                    }
-                }
+
+            if (seatBean.isLongSelect()){
+                //长按
+                tvStudentName.setTextColor(Color.parseColor("#FFAB57"));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_drag_r6);
             }
         }
     }
@@ -92,6 +76,8 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
         ivClassIcon.setVisibility(View.GONE);
         int type = seatBean.getType();
         int studentType = seatBean.getStudentType();
+        SeatLogUtils.i("SeatTypeAdapter--------"+seatBean.getIndex()+"------座位类型座位类型-------"+type);
+        SeatLogUtils.i("SeatTypeAdapter--------"+seatBean.getIndex()+"------学生类型-------"+studentType);
         //座位类型
         switch (type){
             //正常座位
@@ -102,50 +88,79 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 } else {
                     tvStudentName.setText("");
                 }
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
+                setStudentType(holder,seatBean);
                 break;
             //调课位
             case SeatConstant.SeatType.TYPE_2:
                 tvStudentName.setText("调课位"+seatBean.getIndex()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_44a3f2));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_class_r6);
+                setStudentType(holder,seatBean);
                 break;
             //过道
             case SeatConstant.SeatType.TYPE_3:
                 tvStudentName.setText("过"+"\n"+"道"+"\n"+seatBean.getIndex()+"\n"+seatBean.getColumn()+ "列" +"\n/"+seatBean.getLine()+"行");
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_corridor_r6);
                 break;
             //不可坐
             case SeatConstant.SeatType.TYPE_4:
                 tvStudentName.setText("不可坐"+seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_999999));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_corridor_r6);
                 break;
         }
-        if (seatBean.isSelect()){
-            //不可坐
-            tvStudentName.setText("不可坐"+seatBean.getIndex());
-        }
+    }
 
+    @SuppressLint("SetTextI18n")
+    private void setStudentType(SeatViewHolder holder, SeatBean seatBean) {
+        TextView tvStudentName = holder.getView(R.id.tv_student_name);
+        ImageView ivClassIcon = holder.getView(R.id.iv_class_icon);
+        int studentType = seatBean.getStudentType();
         //学生类型
         switch (studentType){
             //未知状态
             case SeatConstant.StudentType.STUDENT_0:
                 tvStudentName.setText("未知"+seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
             //请假。学生请假
             case SeatConstant.StudentType.STUDENT_1:
                 tvStudentName.setText(seatBean.getName()+"\n"+ "请假" + seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_f00101));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
             //调课位学生。指的是在调课位位置的学生
             case SeatConstant.StudentType.STUDENT_2:
-
+                tvStudentName.setText("调课学生"+seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
             //调期学员。添加新的学员，类似插班生
             case SeatConstant.StudentType.STUDENT_3:
                 tvStudentName.setText("调期学员"+seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
             //空座位。指的是没有学生坐的座位，场景是删除学生后只是用于UI显示
             case SeatConstant.StudentType.STUDENT_4:
                 tvStudentName.setText("空座位"+seatBean.getIndex());
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_999999));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_empty_r6);
                 break;
             //正常学生
             case SeatConstant.StudentType.STUDENT_5:
-
+                if (seatBean.getName()!=null){
+                    tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                    //holder.tvName.setText(seatBean.getName());
+                } else {
+                    tvStudentName.setText("");
+                }
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
         }
     }
@@ -155,16 +170,20 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
      * @param holder                                holder
      * @param seatBean                              bean
      */
+    @SuppressLint("SetTextI18n")
     private void setClassTagTypeData(SeatViewHolder holder, SeatBean seatBean) {
         TextView tvStudentName = holder.getView(R.id.tv_student_name);
         ImageView ivClassIcon = holder.getView(R.id.iv_class_icon);
         tvStudentName.setVisibility(View.GONE);
         ivClassIcon.setVisibility(View.VISIBLE);
-        if (seatBean.isSelect()){
+        if (seatBean.getType() == SeatConstant.SeatType.TYPE_4){
             //不可坐
             ivClassIcon.setImageResource(R.drawable.icon_not_set_seat);
+            holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_empty_r6);
         } else {
+            //可坐
             ivClassIcon.setImageResource(R.drawable.icon_normal_class_seat);
+            holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
         }
     }
 
