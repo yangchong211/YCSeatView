@@ -33,6 +33,7 @@ public class BaseCustomDialog extends Dialog {
     private TextView mTvSave;
     private TextView mTvTitle;
     private int type;
+    private TextView mTvContent;
 
     public BaseCustomDialog(@NonNull Context context) {
         super(context, R.style.customDialog);
@@ -77,6 +78,7 @@ public class BaseCustomDialog extends Dialog {
 
     private void initFindViewById() {
         mTvTitle = findViewById(R.id.tv_title);
+        mTvContent = findViewById(R.id.tv_content);
         mTvNoSave = findViewById(R.id.tv_no_save);
         mTvSave = findViewById(R.id.tv_save);
     }
@@ -107,24 +109,28 @@ public class BaseCustomDialog extends Dialog {
                 mTvTitle.setText("保存当前更改吗？");
                 mTvNoSave.setText("不保存");
                 mTvSave.setText("保存");
+                mTvContent.setVisibility(View.GONE);
                 break;
             case BaseCustomDialog.DialogType.DIALOG_2:
                 //恢复自动排位
                 mTvTitle.setText("确定恢复到自动排座？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
+                mTvContent.setVisibility(View.GONE);
                 break;
             case BaseCustomDialog.DialogType.DIALOG_3:
                 //更改座位布局
                 mTvTitle.setText("确定要更改吗？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
+                mTvContent.setVisibility(View.GONE);
                 break;
             case BaseCustomDialog.DialogType.DIALOG_4:
                 //更改座位布局
                 mTvTitle.setText("确定要删除吗？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
+                mTvContent.setVisibility(View.VISIBLE);
                 break;
         }
     }

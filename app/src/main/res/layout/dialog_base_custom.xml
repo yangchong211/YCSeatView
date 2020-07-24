@@ -13,7 +13,6 @@
         android:layout_gravity="center"
         android:background="@drawable/shape_back_finish_r6">
 
-
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
@@ -23,6 +22,18 @@
             android:textSize="14sp"
             android:textColor="@color/color_333333"
             android:text="保存当前更改吗？"/>
+
+        <TextView
+            android:id="@+id/tv_content"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_title"
+            android:layout_marginTop="4dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="#FD5050"
+            android:textSize="11sp"
+            android:text="更改座位布局后，将重新为学生排座"/>
 
         <TextView
             android:id="@+id/tv_no_save"
