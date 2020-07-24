@@ -86,16 +86,10 @@ public class SeatDataHelper {
      */
     public static LinkedHashMap<Integer, ArrayList<SeatBean>> getInitSeatMap(int column , int line , int totalNum) {
         int totalNormal = column * line;
-        int total;
-        if (totalNum > totalNormal){
-            total = totalNum;
-        } else {
-            total = totalNormal;
-        }
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
         int xColumn = 1;
         ArrayList<SeatBean> newList = new ArrayList<>();
-        for (int i = 0; i < total; i++) {
+        for (int i = 0; i < totalNormal; i++) {
             SeatBean seatBean = new SeatBean();
             seatBean.setIndex(i);
             //设置第几行第几列中的 列
@@ -107,7 +101,7 @@ public class SeatDataHelper {
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
             seatBean.setName("学生" + i);
 
-            if (i >= totalNormal){
+            if (i >= totalNum){
                 //设置空座位
                 seatBean.setStudentType(SeatConstant.StudentType.STUDENT_4);
             } else {
@@ -119,7 +113,7 @@ public class SeatDataHelper {
             if (xColumn==beanColumn){
                 newList.add(seatBean);
                 //最后一列
-                if (i+1 == total){
+                if (i+1 == totalNormal){
                     map.put(xColumn,newList);
                 }
                 SeatLogUtils.i("SeatRecyclerView------initRecyclerView---第" +xColumn+ "列数据"  +newList.size());

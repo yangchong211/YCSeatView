@@ -161,8 +161,8 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(this,"行数和列数都要大于1",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (total < (column*line)){
-            Toast.makeText(this,"学员总数必须大于行x列数量",Toast.LENGTH_SHORT).show();
+        if (total > (column*line)){
+            Toast.makeText(this,"设置座位数必须大于学生总数",Toast.LENGTH_SHORT).show();
             return;
         }
         if (type==1){
