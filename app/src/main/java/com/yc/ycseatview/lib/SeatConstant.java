@@ -32,29 +32,34 @@ public final class SeatConstant {
      */
     @Retention(RetentionPolicy.SOURCE)
     public @interface SeatType {
-        //正常
+        //普通座位
         int TYPE_1 = 1;
         //调课位
         int TYPE_2 = 2;
         //过道
         int TYPE_3 = 3;
-        //不可坐
+        //不可坐。不能拖动交换
         int TYPE_4 = 4;
     }
 
     /**
-     * 座位类型下正常类型
+     * 学生类型
      */
     @Retention(RetentionPolicy.SOURCE)
     public @interface StudentType {
-        //请假
+        //未知状态
+        int STUDENT_0 = 0;
+        //请假。学生请假
         int STUDENT_1 = 5;
-        //调课位学生
+        //调课位学生。指的是在调课位位置的学生
         int STUDENT_2 = 6;
-        //
+        //调期学员。添加新的学员，类似插班生
         int STUDENT_3 = 7;
+        //空座位。指的是没有学生坐的座位，场景是删除学生后只是用于UI显示
+        int STUDENT_4 = 8;
+        //正常学生。
+        int STUDENT_5 = 9;
     }
-
 
     /**
      * 视图类型

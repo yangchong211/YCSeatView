@@ -97,6 +97,7 @@ public class SeatDataHelper {
             int beanLine = i % line + 1;
             seatBean.setLine(beanLine);
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
+            seatBean.setStudentType(SeatConstant.StudentType.STUDENT_5);
             seatBean.setName("学生" + i);
             if (xColumn==beanColumn){
                 newList.add(seatBean);

@@ -18,9 +18,13 @@ public class SeatBean implements Serializable {
      */
     private String name;
     /**
-     * 类型
+     * 座位类型
      */
     private int type;
+    /**
+     * 学生类型
+     */
+    private int studentType;
     /**
      * 位于第几列
      */
@@ -62,6 +66,14 @@ public class SeatBean implements Serializable {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public int getStudentType() {
+        return studentType;
+    }
+
+    public void setStudentType(int studentType) {
+        this.studentType = studentType;
     }
 
     public int getColumn() {
