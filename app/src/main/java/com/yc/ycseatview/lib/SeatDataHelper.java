@@ -80,10 +80,18 @@ public class SeatDataHelper {
 
     /**
      * 获取座位排好的map数据
-     * @param total                             总共数量
+     * @param column                                    列
+     * @param line                                      行
      * @return
      */
-    public static LinkedHashMap<Integer, ArrayList<SeatBean>> getSeatMap(int total , int line) {
+    public static LinkedHashMap<Integer, ArrayList<SeatBean>> getInitSeatMap(int column , int line , int totalNum) {
+        int totalNormal = column * line;
+        int total;
+        if (totalNum > totalNormal){
+            total = totalNum;
+        } else {
+            total = totalNormal;
+        }
         LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
         int xColumn = 1;
         ArrayList<SeatBean> newList = new ArrayList<>();
@@ -97,8 +105,17 @@ public class SeatDataHelper {
             int beanLine = i % line + 1;
             seatBean.setLine(beanLine);
             seatBean.setType(SeatConstant.SeatType.TYPE_1);
-            seatBean.setStudentType(SeatConstant.StudentType.STUDENT_5);
             seatBean.setName("学生" + i);
+
+            if (i >= totalNormal){
+                //设置空座位
+                seatBean.setStudentType(SeatConstant.StudentType.STUDENT_4);
+            } else {
+                //设置正常学生
+                seatBean.setStudentType(SeatConstant.StudentType.STUDENT_5);
+            }
+
+            //set数据到map集合，key是列，value是所在列的list集合
             if (xColumn==beanColumn){
                 newList.add(seatBean);
                 //最后一列

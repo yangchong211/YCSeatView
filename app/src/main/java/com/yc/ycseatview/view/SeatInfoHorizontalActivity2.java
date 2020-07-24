@@ -56,6 +56,10 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
      * 列数
      */
     private int line;
+    /**
+     * 总数量
+     */
+    private int total;
 
     @Override
     protected void onResume() {
@@ -331,11 +335,12 @@ public class SeatInfoHorizontalActivity2 extends AppCompatActivity implements Vi
         }
         column = getIntent().getIntExtra("column",0);
         line = getIntent().getIntExtra("line",0);
-        mTvTitle.setText("Horizontal方向recyclerView----" +column+"列"+line+"行");
+        total = getIntent().getIntExtra("total",0);
+        mTvTitle.setText("Horizontal方向recyclerView----" +column+"列"+line+"行"+"----"+total);
     }
 
     private void initRecyclerView() {
-        mSeatView.setColumnAndLine(column,line);
+        mSeatView.setColumnAndLine(column,line,total);
         mSeatView.post(new Runnable() {
             @Override
             public void run() {

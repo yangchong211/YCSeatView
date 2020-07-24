@@ -2,6 +2,7 @@ package com.yc.ycseatview.view;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
     private LinearLayout mLlLine;
     private TextView mTvLineNum;
     private TextView mTvSure;
+    private LinearLayout mLlSetTotalNum;
     private int type;
 
     @Override
@@ -58,6 +60,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         mLlLine = findViewById(R.id.ll_line);
         mTvLineNum = findViewById(R.id.tv_line_num);
         mTvSure = findViewById(R.id.tv_sure);
+        mLlSetTotalNum = findViewById(R.id.ll_set_total_num);
     }
 
     private void setListener() {
@@ -65,6 +68,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         mLlColumn.setOnClickListener(this);
         mLlLine.setOnClickListener(this);
         mTvSure.setOnClickListener(this);
+        mLlSetTotalNum.setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +84,9 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         } else if (v == mTvSure){
             //确定
             sureCreateSeat();
+        } else if (v == mLlSetTotalNum){
+            //设置学生总数量
+            showSelectDialog(3);
         }
     }
 
@@ -93,9 +100,14 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
                     if (select!=null){
                         mTvColumnNum.setText(select);
                     }
-                } else {
+                } else if (type == 2){
                     if (select!=null){
                         mTvLineNum.setText(select);
+                    }
+                } else {
+                    if (select!=null){
+                        mTvTotalNum.setText(select);
+                        mTvTotalNum.setTextColor(Color.RED);
                     }
                 }
                 changeSureButtonStates();
@@ -129,18 +141,28 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
     private void sureCreateSeat() {
         CharSequence textColumn = mTvColumnNum.getText();
         CharSequence textLine = mTvLineNum.getText();
-        if (textColumn==null || textColumn.length()==0 || textColumn.equals("0")){
+        CharSequence textTotal = mTvTotalNum.getText();
+        if (textTotal==null || textTotal.length()==0 || textTotal.equals("0") || textTotal.equals("请选择")){
+            Toast.makeText(this,"请设置学生总数",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (textColumn==null || textColumn.length()==0 || textColumn.equals("0")|| textColumn.equals("请选择")){
             Toast.makeText(this,"请选择列数",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (textLine==null || textLine.length()==0 || textLine.equals("0")){
+        if (textLine==null || textLine.length()==0 || textLine.equals("0")|| textLine.equals("请选择")){
             Toast.makeText(this,"请选择行数",Toast.LENGTH_SHORT).show();
             return;
         }
+        int total = NumberUtils.parse(textTotal.toString());
         int column = NumberUtils.parse(textColumn.toString());
         int line = NumberUtils.parse(textLine.toString());
         if (column<1 || line<1){
             Toast.makeText(this,"行数和列数都要大于1",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (total < (column*line)){
+            Toast.makeText(this,"学员总数必须大于行x列数量",Toast.LENGTH_SHORT).show();
             return;
         }
         if (type==1){
@@ -148,18 +170,21 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
             Intent intent = new Intent(this, SeatInfoVerticalActivity.class);
             intent.putExtra("column",column);
             intent.putExtra("line",line);
+            intent.putExtra("total",total);
             this.startActivity(intent);
         } else if (type == 2){
             //Horizontal方向recyclerView
             Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
             intent.putExtra("column",column);
             intent.putExtra("line",line);
+            intent.putExtra("total",total);
             this.startActivity(intent);
         } else if (type == 3){
             //Horizontal方向recyclerView
             Intent intent = new Intent(this, SeatInfoHorizontalActivity2.class);
             intent.putExtra("column",column);
             intent.putExtra("line",line);
+            intent.putExtra("total",total);
             this.startActivity(intent);
         }
     }

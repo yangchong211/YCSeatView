@@ -42,6 +42,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     private Context mContext;
     private RecyclerView mRecyclerPicView;
     private RecyclerView mRecyclerView;
+    private RelativeLayout mRlParent;
     private SeatTypeAdapter seatTypeAdapter;
     /**
      * 集合数据
@@ -61,7 +62,10 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      * 行数
      */
     private int mLine;
-    private RelativeLayout mRlParent;
+    /**
+     * 初始化时总数量
+     */
+    private int mTotal;
     /**
      * 选中的索引
      */
@@ -121,8 +125,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
     }
 
     private void initRecyclerView(int column, int line) {
-        int total = column * line;
-        LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.getSeatMap(total,line);
+        LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.getInitSeatMap(column,line,mTotal);
         mapToListData(map);
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView--2--初始化总学生座位数-" + mList.size());
         setRecyclerView(mLine);
@@ -375,7 +378,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
      * @param column 列
      * @param line   行
      */
-    public void setColumnAndLine(int column, int line) {
+    public void setColumnAndLine(int column, int line , int total) {
         if (column <= 0) {
             column = 5;
         }
@@ -384,6 +387,7 @@ public class SeatHorizontalView2 extends FrameLayout implements InterSeatView {
         }
         this.mColumn = column;
         this.mLine = line;
+        this.mTotal = total;
         SeatLogUtils.i("SeatRecyclerView------setColumnAndLine----mColumn-" + mColumn + "-----mLine-" + mLine);
         initRecyclerView(mColumn, mLine);
     }

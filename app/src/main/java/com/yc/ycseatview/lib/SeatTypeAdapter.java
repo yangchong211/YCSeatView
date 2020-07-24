@@ -52,45 +52,10 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
 
             if (isSetClassTag){
                 //标记课程
-                tvStudentName.setVisibility(View.GONE);
-                ivClassIcon.setVisibility(View.VISIBLE);
-                if (seatBean.isSelect()){
-                    //不可坐
-                    ivClassIcon.setImageResource(R.drawable.icon_not_set_seat);
-                } else {
-                    ivClassIcon.setImageResource(R.drawable.icon_normal_class_seat);
-                }
+                setClassTagTypeData(holder,seatBean);
             } else {
-                tvStudentName.setVisibility(View.VISIBLE);
-                ivClassIcon.setVisibility(View.GONE);
-                int type = seatBean.getType();
-                switch (type){
-                    //正常座位
-                    case SeatConstant.SeatType.TYPE_1:
-                        if (seatBean.getName()!=null){
-                            tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
-                            //holder.tvName.setText(seatBean.getName());
-                        } else {
-                            tvStudentName.setText("");
-                        }
-                        break;
-                    //调课位
-                    case SeatConstant.SeatType.TYPE_2:
-                        tvStudentName.setText("调课位"+seatBean.getIndex()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
-                        break;
-                    //过道
-                    case SeatConstant.SeatType.TYPE_3:
-                        tvStudentName.setText("过"+"\n"+"道"+"\n"+seatBean.getIndex()+"\n"+seatBean.getColumn()+ "列" +"\n/"+seatBean.getLine()+"行");
-                        break;
-                    //不可坐
-                    case SeatConstant.SeatType.TYPE_4:
-                        tvStudentName.setText("不可坐"+seatBean.getIndex());
-                        break;
-                }
-                if (seatBean.isSelect()){
-                    //不可坐
-                    tvStudentName.setText("不可坐"+seatBean.getIndex());
-                }
+                //设置座位
+                setClassNormalTypeData(holder,seatBean);
             }
             if (seatBean.isSelect()){
                 holder.itemView.setBackgroundResource(R.drawable.shape_seat_not_set_r6);
@@ -111,6 +76,95 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 设置座位
+     * @param holder                                holder
+     * @param seatBean                              bean
+     */
+    @SuppressLint("SetTextI18n")
+    private void setClassNormalTypeData(SeatViewHolder holder, SeatBean seatBean) {
+        TextView tvStudentName = holder.getView(R.id.tv_student_name);
+        ImageView ivClassIcon = holder.getView(R.id.iv_class_icon);
+        tvStudentName.setVisibility(View.VISIBLE);
+        ivClassIcon.setVisibility(View.GONE);
+        int type = seatBean.getType();
+        int studentType = seatBean.getStudentType();
+        //座位类型
+        switch (type){
+            //正常座位
+            case SeatConstant.SeatType.TYPE_1:
+                if (seatBean.getName()!=null){
+                    tvStudentName.setText(seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                    //holder.tvName.setText(seatBean.getName());
+                } else {
+                    tvStudentName.setText("");
+                }
+                break;
+            //调课位
+            case SeatConstant.SeatType.TYPE_2:
+                tvStudentName.setText("调课位"+seatBean.getIndex()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                break;
+            //过道
+            case SeatConstant.SeatType.TYPE_3:
+                tvStudentName.setText("过"+"\n"+"道"+"\n"+seatBean.getIndex()+"\n"+seatBean.getColumn()+ "列" +"\n/"+seatBean.getLine()+"行");
+                break;
+            //不可坐
+            case SeatConstant.SeatType.TYPE_4:
+                tvStudentName.setText("不可坐"+seatBean.getIndex());
+                break;
+        }
+        if (seatBean.isSelect()){
+            //不可坐
+            tvStudentName.setText("不可坐"+seatBean.getIndex());
+        }
+
+        //学生类型
+        switch (studentType){
+            //未知状态
+            case SeatConstant.StudentType.STUDENT_0:
+                tvStudentName.setText("未知"+seatBean.getIndex());
+                break;
+            //请假。学生请假
+            case SeatConstant.StudentType.STUDENT_1:
+                tvStudentName.setText(seatBean.getName()+"\n"+ "请假" + seatBean.getIndex());
+                break;
+            //调课位学生。指的是在调课位位置的学生
+            case SeatConstant.StudentType.STUDENT_2:
+
+                break;
+            //调期学员。添加新的学员，类似插班生
+            case SeatConstant.StudentType.STUDENT_3:
+                tvStudentName.setText("调期学员"+seatBean.getIndex());
+                break;
+            //空座位。指的是没有学生坐的座位，场景是删除学生后只是用于UI显示
+            case SeatConstant.StudentType.STUDENT_4:
+                tvStudentName.setText("空座位"+seatBean.getIndex());
+                break;
+            //正常学生
+            case SeatConstant.StudentType.STUDENT_5:
+
+                break;
+        }
+    }
+
+    /**
+     * 标记课程
+     * @param holder                                holder
+     * @param seatBean                              bean
+     */
+    private void setClassTagTypeData(SeatViewHolder holder, SeatBean seatBean) {
+        TextView tvStudentName = holder.getView(R.id.tv_student_name);
+        ImageView ivClassIcon = holder.getView(R.id.iv_class_icon);
+        tvStudentName.setVisibility(View.GONE);
+        ivClassIcon.setVisibility(View.VISIBLE);
+        if (seatBean.isSelect()){
+            //不可坐
+            ivClassIcon.setImageResource(R.drawable.icon_not_set_seat);
+        } else {
+            ivClassIcon.setImageResource(R.drawable.icon_normal_class_seat);
         }
     }
 

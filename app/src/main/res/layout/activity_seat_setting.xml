@@ -40,15 +40,30 @@
         android:textSize="16sp"
         android:text="设置座位布局"/>
 
-    <TextView
-        android:id="@+id/tv_total_num"
+
+    <LinearLayout
+        android:id="@+id/ll_set_total_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
         android:layout_gravity="center_horizontal"
-        android:textColor="@color/color_333333"
-        android:textSize="15sp"
-        android:text="当前学员数量：24"/>
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_333333"
+            android:textSize="15sp"
+            android:text="当前学员数量："/>
+        <TextView
+            android:id="@+id/tv_total_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/color_999999"
+            android:textSize="15sp"
+            android:text="请选择"/>
+    </LinearLayout>
+
 
 
     <LinearLayout

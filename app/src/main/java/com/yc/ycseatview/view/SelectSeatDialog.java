@@ -113,13 +113,20 @@ public class SelectSeatDialog extends Dialog {
     private void setData(int type) {
         mConfig.type = type;
         List<String> list = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            list.add((i+1) + "");
-        }
-        if (type==1){
-            mTvContent.setText("列数");
+        if (type == 3){
+            for (int i = 5; i < 225; i++) {
+                list.add(i + "");
+            }
+            mTvContent.setText("学生总数量");
         } else {
-            mTvContent.setText("行数");
+            for (int i = 0; i < 15; i++) {
+                list.add((i+1) + "");
+            }
+            if (type==1){
+                mTvContent.setText("列数");
+            } else {
+                mTvContent.setText("行数");
+            }
         }
         //默认取第一个
         select = list.get(0);
