@@ -197,7 +197,7 @@ public class ItemTouchCallback extends ItemTouchHelper2.Callback {
                 viewHolder.itemView.setBackgroundColor(viewHolder.itemView.getContext()
                         .getResources().getColor(android.R.color.darker_gray));
             }else {
-                viewHolder.itemView.setBackgroundColor(color);
+                viewHolder.itemView.setBackgroundResource(color);
             }
         }
     }
