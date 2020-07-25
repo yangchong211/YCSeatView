@@ -76,6 +76,8 @@ public final class SeatConstant {
         int TYPE_4 = 4;
         //回到原视图
         int TYPE_5 = 5;
+        //添加调期学员，类似插班生
+        int TYPE_6 = 6;
     }
 
 }

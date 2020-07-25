@@ -235,11 +235,13 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
 
     private void setOnItemClick(final ArrayList<SeatBean> mList ,final int position) {
         SeatBean bean = mList.get(position);
-        if (bean.getType() == SeatConstant.SeatType.TYPE_4){
+        int type = bean.getType();
+        int studentType = bean.getStudentType();
+        if (type == SeatConstant.SeatType.TYPE_4){
             Toast.makeText(mContext,"不可坐位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (bean.getStudentType() == SeatConstant.StudentType.STUDENT_4){
+        if (studentType == SeatConstant.StudentType.STUDENT_4){
             Toast.makeText(mContext,"空座位位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
         }
@@ -249,7 +251,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         } else {
             for (int i=0 ; i<mList.size() ; i++){
                 if (i==position){
-                    mList.get(i).setLongSelect(true);
+                    mList.get(position).setLongSelect(true);
                 } else {
                     mList.get(i).setLongSelect(false);
                 }
@@ -257,14 +259,13 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             seatTypeAdapter.notifyDataSetChanged();
         }
 
-        boolean longSelect = mList.get(position).isLongSelect();
+        boolean longSelect = bean.isLongSelect();
         selectPosition = position;
         if (listener==null){
             return;
         }
         //然后根据选中的判断显示那种视图
         if (longSelect){
-            int type = bean.getType();
             switch (type){
                 //学生
                 case SeatConstant.SeatType.TYPE_1:
@@ -301,6 +302,8 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             listener.listener(SeatConstant.ViewType.TYPE_5,bean);
         }
     }
+
+
 
     /**
      * 获取座位数据
