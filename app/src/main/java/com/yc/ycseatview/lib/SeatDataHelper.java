@@ -59,6 +59,46 @@ public final class SeatDataHelper {
     }
 
     /**
+     * 判断是否有请假的学生
+     * @param mList                             集合
+     * @return
+     */
+    public static boolean isHaveLeave(ArrayList<SeatBean> mList) {
+        if (mList==null || mList.size()==0){
+            return false;
+        }
+        for (int i=0 ; i<mList.size() ; i++){
+            SeatBean bean = mList.get(i);
+            //int type = bean.getType();
+            int studentType = bean.getStudentType();
+            if (studentType == SeatConstant.StudentType.STUDENT_1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否有调期学员。添加新的学员，类似插班生
+     * @param mList                             集合
+     * @return
+     */
+    public static boolean isHaveNewStudent(ArrayList<SeatBean> mList) {
+        if (mList==null || mList.size()==0){
+            return false;
+        }
+        for (int i=0 ; i<mList.size() ; i++){
+            SeatBean bean = mList.get(i);
+            //int type = bean.getType();
+            int studentType = bean.getStudentType();
+            if (studentType == SeatConstant.StudentType.STUDENT_3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 对集合数据进行排序
      * @param mList                             集合
      */
@@ -77,6 +117,12 @@ public final class SeatDataHelper {
             }
         });
     }
+
+
+    /*----------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------*/
+    /*----------------------------------------------------------------------------------------*/
+
 
     /**
      * 获取座位排好的map数据

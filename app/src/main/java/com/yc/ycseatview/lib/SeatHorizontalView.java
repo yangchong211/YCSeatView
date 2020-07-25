@@ -291,6 +291,10 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                 case SeatConstant.SeatType.TYPE_3:
                     listener.listener(SeatConstant.ViewType.TYPE_4,bean);
                     break;
+                //不可坐
+                case SeatConstant.SeatType.TYPE_4:
+
+                    break;
             }
         } else {
             //恢复愿视图
@@ -535,6 +539,14 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         SeatLogUtils.i("SeatRecyclerView------doCorridorData-----"+srcColumn+ "----" + targetColumn);
     }
 
+    /**
+     * 标记请假【和取消请假】
+     * @return
+     */
+    public boolean signLeaveStudent() {
+        boolean isHaveLeave = SeatDataHelper.isHaveLeave(mList);
+        return false;
+    }
 
     /**
      * 恢复自动排座

@@ -196,6 +196,8 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_10:
                         //标记请假【和取消请假】
+                        //判断是否有请假的
+                        mSeatView.signLeaveStudent();
                         Toast.makeText(SeatInfoHorizontalActivity.this,
                                 "标记请假【和取消请假】，稍后处理",Toast.LENGTH_SHORT).show();
                         break;
@@ -292,8 +294,6 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
     @Override
     public void onClick(View v) {
         if (v == mIvBack){
-            //finish();
-            //onBackPressed();
             showTypeDialog(BaseCustomDialog.DialogType.DIALOG_1);
         } else if (v == mTvCommit){
             //提交数据
