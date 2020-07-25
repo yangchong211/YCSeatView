@@ -136,7 +136,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                     case SeatConstant.ViewType.TYPE_2:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_2,bean);
                         break;
-                    //标记请假【和取消请假】视图
+                    //标记请假视图
                     case SeatConstant.ViewType.TYPE_3:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_3,bean);
                         break;
@@ -147,6 +147,10 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                     //回到原视图
                     case SeatConstant.ViewType.TYPE_5:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_5,bean);
+                        break;
+                    //取消请假视图
+                    case SeatConstant.ViewType.TYPE_7:
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_7,bean);
                         break;
                 }
             }

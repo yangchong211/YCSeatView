@@ -180,6 +180,15 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             case SeatConstant.ViewType.TYPE_5:
                 setStatesView(1);
                 break;
+            //取消请假视图
+            case SeatConstant.ViewType.TYPE_7:
+                setStatesView(2);
+                mTvStatesStudentName.setVisibility(VISIBLE);
+                mTvStatesStudent1.setVisibility(VISIBLE);
+                mTvStatesStudent2.setVisibility(GONE);
+                mTvStatesStudentName.setText("取消:"+bean.getName());
+                mTvStatesStudent1.setText("取消请假");
+                break;
             default:
                 break;
         }

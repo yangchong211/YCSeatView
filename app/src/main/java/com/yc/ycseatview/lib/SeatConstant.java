@@ -70,7 +70,7 @@ public final class SeatConstant {
         int TYPE_1 = 1;
         //调课位，添加调课位学员和标记不可坐视图
         int TYPE_2 = 2;
-        //标记请假【和取消请假】视图
+        //标记请假视图
         int TYPE_3 = 3;
         //删除过道视图
         int TYPE_4 = 4;
@@ -78,6 +78,8 @@ public final class SeatConstant {
         int TYPE_5 = 5;
         //添加调期学员，类似插班生
         int TYPE_6 = 6;
+        //取消请假视图
+        int TYPE_7 = 7;
     }
 
 }

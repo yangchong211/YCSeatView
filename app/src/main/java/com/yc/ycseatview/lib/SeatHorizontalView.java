@@ -245,6 +245,10 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             Toast.makeText(mContext,"空座位位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
         }
+        if (studentType == SeatConstant.StudentType.STUDENT_0){
+            Toast.makeText(mContext,"未知座位位置不能点击选中",Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (bean.isLongSelect()){
             bean.setLongSelect(false);
             seatTypeAdapter.notifyItemChanged(position);
@@ -266,48 +270,97 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         }
         //然后根据选中的判断显示那种视图
         if (longSelect){
-            switch (type){
-                //学生
-                case SeatConstant.SeatType.TYPE_1:
-                    //判断该学生所在位置是否在调课位的位置
-                    int column = bean.getColumn();
-                    int line = bean.getLine();
-                    //获取该学生所在的列的集合数据
-                    ArrayList<SeatBean> list = mSeatMap.get(column);
-                    //判断该列是否有调课位
-                    boolean haveClass = SeatDataHelper.isHaveClass(list);
-                    if (haveClass){
-                        //有调课位
-                        listener.listener(SeatConstant.ViewType.TYPE_1,bean);
-                    } else {
-                        //没有调课位
-                        listener.listener(SeatConstant.ViewType.TYPE_3,bean);
-                    }
-                    break;
-                //调课位
-                case SeatConstant.SeatType.TYPE_2:
-                    listener.listener(SeatConstant.ViewType.TYPE_2,bean);
-                    break;
-                //过道
-                case SeatConstant.SeatType.TYPE_3:
-                    listener.listener(SeatConstant.ViewType.TYPE_4,bean);
-                    break;
-                //不可坐
-                case SeatConstant.SeatType.TYPE_4:
-
-                    break;
-            }
+            setSeatType(type,bean);
         } else {
             //恢复愿视图
             listener.listener(SeatConstant.ViewType.TYPE_5,bean);
         }
     }
 
+    /**
+     * 设置座位类型
+     * @param type                          类型
+     * @param bean                          bean
+     */
+    private void setSeatType(int type, SeatBean bean) {
+        switch (type){
+            //学生
+            case SeatConstant.SeatType.TYPE_1:
+                //判断该学生所在位置是否在调课位的位置
+                int column = bean.getColumn();
+                int line = bean.getLine();
+                //获取该学生所在的列的集合数据
+                ArrayList<SeatBean> list = mSeatMap.get(column);
+                //判断该列是否有调课位
+                boolean haveClass = SeatDataHelper.isHaveClass(list);
+                if (haveClass){
+                    //有调课位
+                    listener.listener(SeatConstant.ViewType.TYPE_1,bean);
+                } else {
+                    //没有调课位
+                    listener.listener(SeatConstant.ViewType.TYPE_3,bean);
+                }
+                //setStudentType(bean.getStudentType(),bean);
+                break;
+            //调课位
+            case SeatConstant.SeatType.TYPE_2:
+                listener.listener(SeatConstant.ViewType.TYPE_2,bean);
+                //setStudentType(bean.getStudentType(),bean);
+                break;
+            //过道
+            case SeatConstant.SeatType.TYPE_3:
+                listener.listener(SeatConstant.ViewType.TYPE_4,bean);
+                break;
+            //不可坐
+            case SeatConstant.SeatType.TYPE_4:
 
+                break;
+        }
+    }
+
+    /**
+     * 设置学生类型
+     * @param studentType                       类型
+     * @param bean                              bean
+     */
+    private void setStudentType(int studentType, SeatBean bean){
+        //学生类型
+        switch (studentType){
+            //未知状态。指的是没有学生坐的座位，场景是删除学生后只是用于UI显示。填充格子
+            case SeatConstant.StudentType.STUDENT_0:
+                //不处理
+                break;
+            //请假。学生请假
+            case SeatConstant.StudentType.STUDENT_1:
+                //切换到取消请假
+                listener.listener(SeatConstant.ViewType.TYPE_7,bean);
+                break;
+            //调课位学生。指的是在调课位位置的学生
+            case SeatConstant.StudentType.STUDENT_2:
+                //切换到删除学员
+                listener.listener(SeatConstant.ViewType.TYPE_1,bean);
+                break;
+            //调期学员。添加新的学员，类似插班生
+            case SeatConstant.StudentType.STUDENT_3:
+                //切换到删除学员
+                listener.listener(SeatConstant.ViewType.TYPE_1,bean);
+                break;
+            //空座位。
+            case SeatConstant.StudentType.STUDENT_4:
+                //切换到添加调期位，用于插班生
+                listener.listener(SeatConstant.ViewType.TYPE_6,bean);
+                break;
+            //正常学生
+            case SeatConstant.StudentType.STUDENT_5:
+                //切换到标记请假
+                listener.listener(SeatConstant.ViewType.TYPE_3,bean);
+                break;
+        }
+    }
 
     /**
      * 获取座位数据
-     * @return                              二维数组
+     * @return                                  二维数组
      */
     public LinkedHashMap<Integer , ArrayList<SeatBean>> getAllData() {
         return mSeatMap;
