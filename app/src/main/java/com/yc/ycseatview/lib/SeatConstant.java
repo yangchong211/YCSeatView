@@ -57,7 +57,7 @@ public final class SeatConstant {
         int STUDENT_4 = 8;
         //正常学生。
         int STUDENT_5 = 9;
-        //未知状态
+        //未知状态。删除学生后的空数据
         int STUDENT_0 = 10;
     }
 

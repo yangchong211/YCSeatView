@@ -123,9 +123,9 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
         switch (studentType){
             //未知状态
             case SeatConstant.StudentType.STUDENT_0:
-                tvStudentName.setText("未知"+seatBean.getIndex());
-                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_666666));
-                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
+                tvStudentName.setText("未知"+seatBean.getIndex() +"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                tvStudentName.setTextColor(context.getResources().getColor(R.color.color_f00101));
+                holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_empty_r6);
                 break;
             //请假。学生请假
             case SeatConstant.StudentType.STUDENT_1:

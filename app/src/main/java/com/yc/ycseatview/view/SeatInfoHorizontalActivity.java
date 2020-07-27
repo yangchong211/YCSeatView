@@ -191,7 +191,15 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_7:
                         //删除学员视图
-
+                        boolean delStudentSeat = mSeatView.delStudentSeat();
+                        if (delStudentSeat){
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "删除学员视图成功",Toast.LENGTH_SHORT).show();
+                            mFlStatesView.setStatesView(1);
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "删除学员视图失败",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case SeatStatesView.ClickType.CLICK_8:
                         //添加调课位学员
