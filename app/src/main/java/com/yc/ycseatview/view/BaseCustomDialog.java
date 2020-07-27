@@ -123,14 +123,14 @@ public class BaseCustomDialog extends Dialog {
                 mTvTitle.setText("确定要更改吗？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
-                mTvContent.setVisibility(View.GONE);
+                mTvContent.setVisibility(View.VISIBLE);
                 break;
             case BaseCustomDialog.DialogType.DIALOG_4:
                 //更改座位布局
                 mTvTitle.setText("确定要删除吗？");
                 mTvNoSave.setText("取消");
                 mTvSave.setText("确定");
-                mTvContent.setVisibility(View.VISIBLE);
+                mTvContent.setVisibility(View.GONE);
                 break;
         }
     }

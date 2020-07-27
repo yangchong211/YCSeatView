@@ -186,7 +186,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_7:
                         //删除学员视图
-                        showTypeDialog(BaseCustomDialog.DialogType.DIALOG_4);
+
                         break;
                     case SeatStatesView.ClickType.CLICK_8:
                         //添加调课位学员
@@ -221,6 +221,10 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         //添加调期学员
                         Toast.makeText(SeatInfoHorizontalActivity.this,
                                 "添加调期学员",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_13:
+                        //回到原视图
+                        showTypeDialog(BaseCustomDialog.DialogType.DIALOG_4);
                         break;
                     case SeatStatesView.ClickType.CLICK_14:
                         //删除过道视图

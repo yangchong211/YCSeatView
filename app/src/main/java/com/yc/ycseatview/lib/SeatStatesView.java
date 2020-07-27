@@ -271,7 +271,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 //回到原视图
                 case SeatConstant.ViewType.TYPE_5:
                     if (mListener!=null){
-                        //添加调课位学员
+                        //回到原视图
                         mListener.listener(ClickType.CLICK_13);
                     }
                     break;
