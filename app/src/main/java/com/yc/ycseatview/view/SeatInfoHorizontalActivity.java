@@ -201,11 +201,28 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                     case SeatStatesView.ClickType.CLICK_10:
                         //标记请假【和取消请假】
                         //判断是否有请假的
-                        mSeatView.signLeaveStudent();
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "标记请假【和取消请假】，稍后处理",Toast.LENGTH_SHORT).show();
+                        boolean signLeaveStudent = mSeatView.signLeaveStudent();
+                        if (signLeaveStudent){
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "标记请假成功",Toast.LENGTH_SHORT).show();
+                            mFlStatesView.setStatesView(1);
+                        }
                         break;
                     case SeatStatesView.ClickType.CLICK_11:
+                        //取消请假
+                        boolean cancelLeaveStudent = mSeatView.cancelLeaveStudent();
+                        if (cancelLeaveStudent){
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "取消请假成功",Toast.LENGTH_SHORT).show();
+                            mFlStatesView.setStatesView(1);
+                        }
+                        break;
+                    case SeatStatesView.ClickType.CLICK_12:
+                        //添加调期学员
+                        Toast.makeText(SeatInfoHorizontalActivity.this,
+                                "添加调期学员",Toast.LENGTH_SHORT).show();
+                        break;
+                    case SeatStatesView.ClickType.CLICK_14:
                         //删除过道视图
                         boolean isRemove = mSeatView.removeCorridor();
                         if (isRemove){

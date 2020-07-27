@@ -286,26 +286,9 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         switch (type){
             //学生
             case SeatConstant.SeatType.TYPE_1:
-                //判断该学生所在位置是否在调课位的位置
-                int column = bean.getColumn();
-                int line = bean.getLine();
-                //获取该学生所在的列的集合数据
-                ArrayList<SeatBean> list = mSeatMap.get(column);
-                //判断该列是否有调课位
-                boolean haveClass = SeatDataHelper.isHaveClass(list);
-                if (haveClass){
-                    //有调课位
-                    listener.listener(SeatConstant.ViewType.TYPE_1,bean);
-                } else {
-                    //没有调课位
-                    listener.listener(SeatConstant.ViewType.TYPE_3,bean);
-                }
-                //setStudentType(bean.getStudentType(),bean);
-                break;
             //调课位
             case SeatConstant.SeatType.TYPE_2:
-                listener.listener(SeatConstant.ViewType.TYPE_2,bean);
-                //setStudentType(bean.getStudentType(),bean);
+                setStudentType(bean.getStudentType(),bean);
                 break;
             //过道
             case SeatConstant.SeatType.TYPE_3:
@@ -313,7 +296,6 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                 break;
             //不可坐
             case SeatConstant.SeatType.TYPE_4:
-
                 break;
         }
     }
@@ -482,6 +464,12 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                         Toast.makeText(mContext,"座位不可和过道交换",Toast.LENGTH_SHORT).show();
                         return false;
                     }
+                    //如果有请假的学生，则不可交换
+                    if (mList.get(targetPosition).getStudentType() == SeatConstant.StudentType.STUDENT_1
+                            || mList.get(srcPosition).getStudentType() == SeatConstant.StudentType.STUDENT_1){
+                        Toast.makeText(mContext,"请假学生不可交换",Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     int type = mList.get(srcPosition).getType();
                     if (type == SeatConstant.SeatType.TYPE_3){
                         doCorridorData(srcPosition,targetPosition);
@@ -596,13 +584,65 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
     }
 
     /**
-     * 标记请假【和取消请假】
+     * 标记请假
      * @return
      */
     public boolean signLeaveStudent() {
-        boolean isHaveLeave = SeatDataHelper.isHaveLeave(mList);
-        return false;
+        if (selectPosition<0 || selectPosition>mList.size()){
+            return false;
+        }
+        SeatBean bean = mList.get(selectPosition);
+        //标记学生请假
+        bean.setStudentType(SeatConstant.StudentType.STUDENT_1);
+        bean.setLongSelect(false);
+        //修改map数据
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == bean.getColumn()){
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null || list.size()==0){
+                    continue;
+                }
+                list.set(bean.getLine()-1,bean);
+                break;
+            }
+        }
+        seatTypeAdapter.setData(mList);
+        return true;
     }
+
+    /**
+     * 取消请假
+     * @return
+     */
+    public boolean cancelLeaveStudent() {
+        if (selectPosition<0 || selectPosition>mList.size()){
+            return false;
+        }
+        SeatBean bean = mList.get(selectPosition);
+        //标记学生取消请假
+        bean.setStudentType(SeatConstant.StudentType.STUDENT_5);
+        bean.setLongSelect(false);
+        //修改map数据
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == bean.getColumn()){
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null || list.size()==0){
+                    continue;
+                }
+                list.set(bean.getLine()-1,bean);
+                break;
+            }
+        }
+        seatTypeAdapter.setData(mList);
+        return true;
+    }
+
 
     /**
      * 恢复自动排座

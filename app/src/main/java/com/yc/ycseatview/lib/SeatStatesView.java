@@ -145,7 +145,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
-                mTvStatesStudentName.setText("删除:"+bean.getName());
+                mTvStatesStudentName.setText("删除:"+bean.getName() + "  " + bean.getColumn()+ "列" +"/"+bean.getLine()+"行");
                 mTvStatesStudent1.setText("删除学员");
                 break;
             //调课位，添加调课位学员和标记不可坐视图
@@ -164,7 +164,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
-                mTvStatesStudentName.setText("请假:"+bean.getName());
+                mTvStatesStudentName.setText("请假:"+bean.getName() + "  " + bean.getColumn()+ "列" +"/"+bean.getLine()+"行");
                 mTvStatesStudent1.setText("标记请假");
                 break;
             //删除过道视图
@@ -186,7 +186,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudentName.setVisibility(VISIBLE);
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(GONE);
-                mTvStatesStudentName.setText("取消:"+bean.getName());
+                mTvStatesStudentName.setText("取消:"+bean.getName() + "  " + bean.getColumn()+ "列" +"/"+bean.getLine()+"行");
                 mTvStatesStudent1.setText("取消请假");
                 break;
             default:
@@ -265,6 +265,27 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 case SeatConstant.ViewType.TYPE_4:
                     if (mListener!=null){
                         //添加调课位学员
+                        mListener.listener(ClickType.CLICK_14);
+                    }
+                    break;
+                //回到原视图
+                case SeatConstant.ViewType.TYPE_5:
+                    if (mListener!=null){
+                        //添加调课位学员
+                        mListener.listener(ClickType.CLICK_13);
+                    }
+                    break;
+                //添加调期学员，类似插班生
+                case SeatConstant.ViewType.TYPE_6:
+                    if (mListener!=null){
+                        //添加调课位学员
+                        mListener.listener(ClickType.CLICK_12);
+                    }
+                    break;
+                //取消请假视图
+                case SeatConstant.ViewType.TYPE_7:
+                    if (mListener!=null){
+                        //添加调课位学员
                         mListener.listener(ClickType.CLICK_11);
                     }
                     break;
@@ -330,11 +351,17 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
         //标记不可坐视图
         int CLICK_9 = 9;
 
-        //标记请假【和取消请假】
+        //标记请假
         int CLICK_10 = 10;
-
-        //删除过道视图
+        //取消请假
         int CLICK_11 = 11;
+        //添加调期学员
+        int CLICK_12 = 12;
+
+        //回到原视图
+        int CLICK_13 = 13;
+        //删除过道视图
+        int CLICK_14 = 14;
     }
 
 
