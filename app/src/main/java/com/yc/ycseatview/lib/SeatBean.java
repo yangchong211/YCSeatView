@@ -34,7 +34,9 @@ public class SeatBean implements Serializable {
      */
     private int line;
     /**
-     * 位置
+     * 位置【竖直方向】
+     * 作用：demo计算使用
+     * 这个是从上往下，然后从左往右的index
      */
     private int index;
     /**

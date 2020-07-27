@@ -116,7 +116,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
     }
 
     private void initRecyclerView(int column, int line) {
-        LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.getInitSeatMap(column,line,mTotal);
+        LinkedHashMap<Integer , ArrayList<SeatBean>> map = SeatDataHelper.getInitSeatMapHor(column,line,mTotal);
         mapToListData(map);
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView--2--初始化总学生座位数-" + mList.size());
         setRecyclerView(mLine);

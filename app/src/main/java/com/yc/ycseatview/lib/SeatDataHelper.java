@@ -125,7 +125,7 @@ public final class SeatDataHelper {
 
 
     /**
-     * 获取座位排好的map数据
+     * 获取座位排好的map数据。数据竖直方向展示，从上到下，然后从左到右
      * @param column                                    列
      * @param line                                      行
      * @return
@@ -174,6 +174,60 @@ public final class SeatDataHelper {
         SeatLogUtils.i("SeatRecyclerView------initRecyclerView--1--初始化总学生座位数-" + map.size());
         return map;
     }
+
+    /**
+     * 获取座位排好的map数据。数据横向方向展示，从左到右，然后从上到下
+     * @param column                                    列
+     * @param line                                      行
+     * @return
+     */
+    public static LinkedHashMap<Integer, ArrayList<SeatBean>> getInitSeatMapHor(int column , int line , int totalNum) {
+        int totalNormal = column * line;
+        LinkedHashMap<Integer , ArrayList<SeatBean>> map = new LinkedHashMap<>();
+        int xColumn = 1;
+        ArrayList<SeatBean> newList = new ArrayList<>();
+        for (int i = 0; i < totalNormal; i++) {
+            SeatBean seatBean = new SeatBean();
+            seatBean.setIndex(i);
+            //设置第几行第几列中的 列
+            int beanColumn = i / line +1;
+            seatBean.setColumn(beanColumn);
+            //设置第几行第几列中的 行
+            int beanLine = i % line + 1;
+            seatBean.setLine(beanLine);
+            seatBean.setType(SeatConstant.SeatType.TYPE_1);
+
+            int index = beanColumn  - 1 + (beanLine-1) * column;
+            seatBean.setName("学生" + index);
+
+            if (index >= totalNum){
+                //设置空座位
+                seatBean.setStudentType(SeatConstant.StudentType.STUDENT_4);
+            } else {
+                //设置正常学生
+                seatBean.setStudentType(SeatConstant.StudentType.STUDENT_5);
+            }
+
+            //set数据到map集合，key是列，value是所在列的list集合
+            if (xColumn==beanColumn){
+                newList.add(seatBean);
+                //最后一列
+                if (i+1 == totalNormal){
+                    map.put(xColumn,newList);
+                }
+                SeatLogUtils.i("SeatRecyclerView------initRecyclerView---第" +xColumn+ "列数据"  +newList.size());
+            } else {
+                map.put(xColumn,newList);
+                SeatLogUtils.i("SeatRecyclerView------initRecyclerView-插入--第" +xColumn+ "列数据"  +newList.size());
+                xColumn++;
+                newList = new ArrayList<>();
+                newList.add(seatBean);
+            }
+        }
+        SeatLogUtils.i("SeatRecyclerView------initRecyclerView--1--初始化总学生座位数-" + map.size());
+        return map;
+    }
+
 
     /**
      * 将map数据添加到list集合中
