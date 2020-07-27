@@ -480,6 +480,14 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                         Toast.makeText(mContext,"未知学生不可交换",Toast.LENGTH_SHORT).show();
                         return false;
                     }
+
+                    //拖动的时候，取消点击选中的。并且恢复之前的状态
+                    SeatBean bean = mList.get(selectPosition);
+                    bean.setLongSelect(false);
+                    if (restoreListener!=null){
+                        restoreListener.OnRestore(OnRestoreListener.NORAML);
+                    }
+
                     int type = mList.get(srcPosition).getType();
                     if (type == SeatConstant.SeatType.TYPE_3){
                         doCorridorData(srcPosition,targetPosition);

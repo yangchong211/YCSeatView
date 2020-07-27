@@ -99,6 +99,24 @@ public final class SeatDataHelper {
     }
 
     /**
+     * 是否有选中的学生
+     * @param mList                             集合
+     * @return
+     */
+    public static boolean isHaveSelectStudent(ArrayList<SeatBean> mList) {
+        if (mList==null || mList.size()==0){
+            return false;
+        }
+        for (int i=0 ; i<mList.size() ; i++){
+            SeatBean bean = mList.get(i);
+            boolean longSelect = bean.isLongSelect();
+            return longSelect;
+        }
+        return false;
+    }
+
+
+    /**
      * 对集合数据进行排序
      * @param mList                             集合
      */

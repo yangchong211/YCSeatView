@@ -32,6 +32,8 @@ public interface OnRestoreListener {
 
     //恢复自动排座
     int RESTORE = 1;
+    //恢复之前的视图
+    int NORAML = 2;
 
     void OnRestore(int type);
 }

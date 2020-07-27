@@ -121,6 +121,9 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         mFlStatesView.setStatesView(1);
                         mFlStatesView.setAddClassText(true);
                         break;
+                    case OnRestoreListener.NORAML:
+                        mFlStatesView.setStatesView(1);
+                        break;
                 }
             }
         });
