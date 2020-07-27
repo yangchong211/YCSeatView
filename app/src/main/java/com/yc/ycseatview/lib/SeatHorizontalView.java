@@ -669,6 +669,38 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
     }
 
     /**
+     * 添加调期学生
+     * @param name
+     */
+    public boolean setAddNewStudent(String name) {
+        if (selectPosition<0 || selectPosition>mList.size()){
+            return false;
+        }
+        SeatBean bean = mList.get(selectPosition);
+        //添加调期学生
+        bean.setType(SeatConstant.SeatType.TYPE_1);
+        bean.setStudentType(SeatConstant.StudentType.STUDENT_3);
+        bean.setLongSelect(false);
+        bean.setName(name);
+        //修改map数据
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == bean.getColumn()){
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null || list.size()==0){
+                    continue;
+                }
+                list.set(bean.getLine()-1,bean);
+                break;
+            }
+        }
+        seatTypeAdapter.setData(mList);
+        return true;
+    }
+
+    /**
      * 恢复自动排座
      */
     @Override

@@ -236,8 +236,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_12:
                         //添加调期学员
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "添加调期学员",Toast.LENGTH_SHORT).show();
+                        showAddNewStudentDialog();
                         break;
                     case SeatStatesView.ClickType.CLICK_13:
                         //回到原视图
@@ -259,6 +258,32 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
             }
 
         });
+    }
+
+    /**
+     * 添加调期学员
+     */
+    private void showAddNewStudentDialog() {
+        AddNewStuDialog newStuDialog = new AddNewStuDialog(this);
+        newStuDialog.shouldCancelOnBackKeyDown(false);
+        newStuDialog.shouldCancelOnTouchOutside(false);
+        newStuDialog.setFinishListener(new AddNewStuDialog.onFinishListener() {
+            @Override
+            public void listener(String name) {
+                if (name!=null && name.length()>0){
+                    boolean addNewStudent = mSeatView.setAddNewStudent(name);
+                    if (addNewStudent){
+                        Toast.makeText(SeatInfoHorizontalActivity.this,
+                                "添加调期学员"+ name +"成功",Toast.LENGTH_SHORT).show();
+                        mFlStatesView.setStatesView(1);
+                    } else {
+                        Toast.makeText(SeatInfoHorizontalActivity.this,
+                                "添加调期学员失败",Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+        newStuDialog.show();
     }
 
     private void showTypeDialog(@BaseCustomDialog.DialogType final int type) {
