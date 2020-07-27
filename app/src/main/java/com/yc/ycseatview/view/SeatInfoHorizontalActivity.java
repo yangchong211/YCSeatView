@@ -217,6 +217,9 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                             Toast.makeText(SeatInfoHorizontalActivity.this,
                                     "标记请假成功",Toast.LENGTH_SHORT).show();
                             mFlStatesView.setStatesView(1);
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "标记请假失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case SeatStatesView.ClickType.CLICK_11:
@@ -226,6 +229,9 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                             Toast.makeText(SeatInfoHorizontalActivity.this,
                                     "取消请假成功",Toast.LENGTH_SHORT).show();
                             mFlStatesView.setStatesView(1);
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "取消请假失败",Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case SeatStatesView.ClickType.CLICK_12:
