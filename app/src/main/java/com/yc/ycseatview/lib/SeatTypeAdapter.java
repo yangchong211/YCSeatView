@@ -135,13 +135,13 @@ public class SeatTypeAdapter extends AbsSeatAdapter<SeatBean> {
                 break;
             //调课位学生。指的是在调课位位置的学生
             case SeatConstant.StudentType.STUDENT_2:
-                tvStudentName.setText("调课学生"+seatBean.getIndex()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                tvStudentName.setText("调课:"+seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
                 tvStudentName.setTextColor(context.getResources().getColor(R.color.color_00A5A8));
                 holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
             //调期学员。添加新的学员，类似插班生
             case SeatConstant.StudentType.STUDENT_3:
-                tvStudentName.setText("调期学员"+seatBean.getIndex()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
+                tvStudentName.setText("调期:"+seatBean.getName()+"\n"+ seatBean.getColumn()+ "列" +"/"+seatBean.getLine()+"行");
                 tvStudentName.setTextColor(context.getResources().getColor(R.color.color_00A5A8));
                 holder.itemView.setBackgroundResource(R.drawable.shape_seat_type_normal_r6);
                 break;
