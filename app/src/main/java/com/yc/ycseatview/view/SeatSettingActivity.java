@@ -165,21 +165,12 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
             Toast.makeText(this,"设置座位数必须大于学生总数",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (type==1){
-            //Vertical方向recyclerView
-            Intent intent = new Intent(this, SeatInfoVerticalActivity.class);
-            intent.putExtra("column",column);
-            intent.putExtra("line",line);
-            intent.putExtra("total",total);
-            this.startActivity(intent);
-        } else if (type == 3){
-            //Horizontal方向recyclerView
-            Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
-            intent.putExtra("column",column);
-            intent.putExtra("line",line);
-            intent.putExtra("total",total);
-            this.startActivity(intent);
-        }
+        //Horizontal方向recyclerView
+        Intent intent = new Intent(this, SeatInfoHorizontalActivity.class);
+        intent.putExtra("column",column);
+        intent.putExtra("line",line);
+        intent.putExtra("total",total);
+        this.startActivity(intent);
     }
 
 
