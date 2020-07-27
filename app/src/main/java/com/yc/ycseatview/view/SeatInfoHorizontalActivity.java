@@ -207,8 +207,6 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                     case SeatStatesView.ClickType.CLICK_8:
                         //添加调课位学员
                         showAddNewStudentDialog(1);
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "添加调课位学员，稍后处理",Toast.LENGTH_SHORT).show();
                         break;
                     case SeatStatesView.ClickType.CLICK_9:
                         //标记不可坐视图
