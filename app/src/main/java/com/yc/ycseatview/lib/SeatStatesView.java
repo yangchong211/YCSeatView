@@ -180,6 +180,16 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             case SeatConstant.ViewType.TYPE_5:
                 setStatesView(1);
                 break;
+            //添加调期学员，类似插班生
+            case SeatConstant.ViewType.TYPE_6:
+                setStatesView(2);
+                mTvStatesStudentName.setVisibility(VISIBLE);
+                mTvStatesStudent1.setVisibility(VISIBLE);
+                mTvStatesStudent2.setVisibility(VISIBLE);
+                mTvStatesStudentName.setText("调期位");
+                mTvStatesStudent1.setText("添加调期位");
+                mTvStatesStudent2.setText("标记不可坐");
+                break;
             //取消请假视图
             case SeatConstant.ViewType.TYPE_7:
                 setStatesView(2);
@@ -295,6 +305,13 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
             switch (viewType) {
                 //调课位，添加调课位学员和标记不可坐视图
                 case SeatConstant.ViewType.TYPE_2:
+                    if (mListener!=null){
+                        //标记不可坐视图
+                        mListener.listener(ClickType.CLICK_9);
+                    }
+                    break;
+                //添加调期学员，类似插班生
+                case SeatConstant.ViewType.TYPE_6:
                     if (mListener!=null){
                         //标记不可坐视图
                         mListener.listener(ClickType.CLICK_9);

@@ -241,10 +241,6 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             Toast.makeText(mContext,"不可坐位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
         }
-        if (studentType == SeatConstant.StudentType.STUDENT_4){
-            Toast.makeText(mContext,"空座位位置不能点击选中",Toast.LENGTH_SHORT).show();
-            return;
-        }
         if (studentType == SeatConstant.StudentType.STUDENT_0){
             Toast.makeText(mContext,"未知座位位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
@@ -643,6 +639,34 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         return true;
     }
 
+    /**
+     * 标记不可坐视图
+     */
+    public boolean setSeatNotSit() {
+        if (selectPosition<0 || selectPosition>mList.size()){
+            return false;
+        }
+        SeatBean bean = mList.get(selectPosition);
+        //标记不可坐视图
+        bean.setType(SeatConstant.SeatType.TYPE_4);
+        bean.setLongSelect(false);
+        //修改map数据
+        Set<Integer> integers = mSeatMap.keySet();
+        Iterator<Integer> iterator = integers.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == bean.getColumn()){
+                ArrayList<SeatBean> list = mSeatMap.get(next);
+                if (list==null || list.size()==0){
+                    continue;
+                }
+                list.set(bean.getLine()-1,bean);
+                break;
+            }
+        }
+        seatTypeAdapter.setData(mList);
+        return true;
+    }
 
     /**
      * 恢复自动排座

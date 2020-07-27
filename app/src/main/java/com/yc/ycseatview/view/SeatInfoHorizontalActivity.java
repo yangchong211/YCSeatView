@@ -148,6 +148,10 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                     case SeatConstant.ViewType.TYPE_5:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_5,bean);
                         break;
+                    //添加调期学员，类似插班生
+                    case SeatConstant.ViewType.TYPE_6:
+                        mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_6,bean);
+                        break;
                     //取消请假视图
                     case SeatConstant.ViewType.TYPE_7:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_7,bean);
@@ -195,8 +199,15 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_9:
                         //标记不可坐视图
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "标记不可坐视图，稍后处理",Toast.LENGTH_SHORT).show();
+                        boolean setSeatNotSit = mSeatView.setSeatNotSit();
+                        if (setSeatNotSit){
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "标记不可坐成功",Toast.LENGTH_SHORT).show();
+                            mFlStatesView.setStatesView(1);
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "标记不可坐失败",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case SeatStatesView.ClickType.CLICK_10:
                         //标记请假【和取消请假】
