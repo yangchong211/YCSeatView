@@ -337,6 +337,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
 
                             break;
                     }
+                    dialog.dismiss();
                 } else {
                     //取消
                     dialog.dismiss();
