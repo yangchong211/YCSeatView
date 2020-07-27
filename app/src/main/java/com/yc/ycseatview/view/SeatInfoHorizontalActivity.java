@@ -149,6 +149,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_5,bean);
                         break;
                     //添加调期学员，类似插班生
+                    //调课学员UI也是这个
                     case SeatConstant.ViewType.TYPE_6:
                         mFlStatesView.setStatesTypeView(SeatConstant.ViewType.TYPE_6,bean);
                         break;
@@ -194,6 +195,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_8:
                         //添加调课位学员
+                        showAddNewStudentDialog(1);
                         Toast.makeText(SeatInfoHorizontalActivity.this,
                                 "添加调课位学员，稍后处理",Toast.LENGTH_SHORT).show();
                         break;
@@ -236,7 +238,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         break;
                     case SeatStatesView.ClickType.CLICK_12:
                         //添加调期学员
-                        showAddNewStudentDialog();
+                        showAddNewStudentDialog(2);
                         break;
                     case SeatStatesView.ClickType.CLICK_13:
                         //回到原视图
@@ -263,7 +265,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
     /**
      * 添加调期学员
      */
-    private void showAddNewStudentDialog() {
+    private void showAddNewStudentDialog(final int type) {
         AddNewStuDialog newStuDialog = new AddNewStuDialog(this);
         newStuDialog.shouldCancelOnBackKeyDown(false);
         newStuDialog.shouldCancelOnTouchOutside(false);
@@ -271,14 +273,26 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
             @Override
             public void listener(String name) {
                 if (name!=null && name.length()>0){
-                    boolean addNewStudent = mSeatView.setAddNewStudent(name);
+                    boolean addNewStudent = mSeatView.setAddNewStudent(name,type);
                     if (addNewStudent){
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "添加调期学员"+ name +"成功",Toast.LENGTH_SHORT).show();
+                        if (type==1){
+                            //调课位学员
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "添加调课位学员"+ name +"成功",Toast.LENGTH_SHORT).show();
+                        } else {
+                            //调期学员
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "添加调期学员"+ name +"成功",Toast.LENGTH_SHORT).show();
+                        }
                         mFlStatesView.setStatesView(1);
                     } else {
-                        Toast.makeText(SeatInfoHorizontalActivity.this,
-                                "添加调期学员失败",Toast.LENGTH_SHORT).show();
+                        if (type==1){
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "添加调课位学员失败",Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(SeatInfoHorizontalActivity.this,
+                                    "添加调期学员失败",Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             }

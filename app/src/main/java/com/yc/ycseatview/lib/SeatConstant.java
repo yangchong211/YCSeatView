@@ -76,7 +76,7 @@ public final class SeatConstant {
         int TYPE_4 = 4;
         //回到原视图
         int TYPE_5 = 5;
-        //添加调期学员，类似插班生
+        //添加调期学员，类似插班生【调课学员UI也是这个】
         int TYPE_6 = 6;
         //取消请假视图
         int TYPE_7 = 7;

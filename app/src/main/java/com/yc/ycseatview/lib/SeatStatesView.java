@@ -155,7 +155,7 @@ public class SeatStatesView extends FrameLayout implements View.OnClickListener 
                 mTvStatesStudent1.setVisibility(VISIBLE);
                 mTvStatesStudent2.setVisibility(VISIBLE);
                 mTvStatesStudentName.setText("调课位");
-                mTvStatesStudent1.setText("添加调期学员");
+                mTvStatesStudent1.setText("添加调课学员");
                 mTvStatesStudent2.setText("标记不可坐");
                 break;
             //标记请假【和取消请假】视图

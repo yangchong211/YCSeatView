@@ -245,6 +245,9 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             Toast.makeText(mContext,"未知座位位置不能点击选中",Toast.LENGTH_SHORT).show();
             return;
         }
+        if (type == SeatConstant.SeatType.TYPE_2){
+            bean.setStudentType(SeatConstant.StudentType.STUDENT_2);
+        }
         if (bean.isLongSelect()){
             bean.setLongSelect(false);
             seatTypeAdapter.notifyItemChanged(position);
@@ -315,8 +318,13 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                 break;
             //调课位学生。指的是在调课位位置的学生
             case SeatConstant.StudentType.STUDENT_2:
-                //切换到删除学员
-                listener.listener(SeatConstant.ViewType.TYPE_1,bean);
+                if (bean.getName()!=null && bean.getName().length()>0){
+                    //切换到删除学员
+                    listener.listener(SeatConstant.ViewType.TYPE_1,bean);
+                } else {
+                    //切换到添加调课位学生
+                    listener.listener(SeatConstant.ViewType.TYPE_2,bean);
+                }
                 break;
             //调期学员。添加新的学员，类似插班生
             case SeatConstant.StudentType.STUDENT_3:
@@ -325,7 +333,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                 break;
             //空座位。
             case SeatConstant.StudentType.STUDENT_4:
-                //切换到添加调期位，用于插班生
+                //切换到添加调期位学生，用于插班生
                 listener.listener(SeatConstant.ViewType.TYPE_6,bean);
                 break;
             //正常学生
@@ -672,14 +680,20 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
      * 添加调期学生
      * @param name
      */
-    public boolean setAddNewStudent(String name) {
+    public boolean setAddNewStudent(String name , int type) {
         if (selectPosition<0 || selectPosition>mList.size()){
             return false;
         }
         SeatBean bean = mList.get(selectPosition);
         //添加调期学生
         bean.setType(SeatConstant.SeatType.TYPE_1);
-        bean.setStudentType(SeatConstant.StudentType.STUDENT_3);
+        if (type==1){
+            //调课位学员
+            bean.setStudentType(SeatConstant.StudentType.STUDENT_2);
+        } else {
+            //调期学员
+            bean.setStudentType(SeatConstant.StudentType.STUDENT_3);
+        }
         bean.setLongSelect(false);
         bean.setName(name);
         //修改map数据
