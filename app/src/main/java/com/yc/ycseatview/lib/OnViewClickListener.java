@@ -17,8 +17,6 @@ limitations under the License.
 package com.yc.ycseatview.lib;
 
 
-import android.view.View;
-
 /**
  * <pre>
  *     @author 杨充
@@ -28,12 +26,21 @@ import android.view.View;
  *     revise:
  * </pre>
  */
-public interface OnRestoreListener {
+public interface OnViewClickListener {
 
     //恢复自动排座
     int RESTORE = 1;
     //恢复之前的视图
-    int NORAML = 2;
+    int NORMAL = 2;
 
+    /**
+     * 监听重制
+     */
     void OnRestore(int type);
+
+    /**
+     * 监听点击
+     */
+    void listener(@SeatConstant.ViewType int type , SeatBean bean);
+
 }

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
-import com.yc.ycseatview.lib.OnRestoreListener;
+import com.yc.ycseatview.lib.OnViewClickListener;
 import com.yc.ycseatview.lib.SeatBean;
 import com.yc.ycseatview.lib.SeatCompressUtils;
 import com.yc.ycseatview.lib.SeatConstant;
@@ -112,22 +112,21 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
         mIvBack.setOnClickListener(this);
         mTvPicture.setOnClickListener(this);
         mTvCommit.setOnClickListener(this);
-        mSeatView.setRestoreListener(new OnRestoreListener() {
+        mSeatView.setClickListener(new OnViewClickListener() {
             @Override
             public void OnRestore(int type) {
                 switch (type){
                     //恢复自动排座
-                    case OnRestoreListener.RESTORE:
+                    case OnViewClickListener.RESTORE:
                         mFlStatesView.setStatesView(1);
                         mFlStatesView.setAddClassText(true);
                         break;
-                    case OnRestoreListener.NORAML:
+                    case OnViewClickListener.NORMAL:
                         mFlStatesView.setStatesView(1);
                         break;
                 }
             }
-        });
-        mSeatView.setClickListener(new SeatHorizontalView.OnClickListener() {
+
             @Override
             public void listener(@SeatConstant.ViewType int type,SeatBean bean) {
                 switch (type){

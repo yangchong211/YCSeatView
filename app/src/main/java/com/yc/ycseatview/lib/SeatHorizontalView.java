@@ -484,8 +484,8 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                     //拖动的时候，取消点击选中的。并且恢复之前的状态
                     SeatBean bean = mList.get(selectPosition);
                     bean.setLongSelect(false);
-                    if (restoreListener!=null){
-                        restoreListener.OnRestore(OnRestoreListener.NORAML);
+                    if (listener!=null){
+                        listener.OnRestore(OnViewClickListener.NORMAL);
                     }
 
                     int type = mList.get(srcPosition).getType();
@@ -613,6 +613,11 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         //标记学生请假
         bean.setStudentType(SeatConstant.StudentType.STUDENT_1);
         bean.setLongSelect(false);
+        setStudentMapData(bean);
+        return true;
+    }
+
+    private void setStudentMapData(SeatBean bean) {
         //修改map数据
         Set<Integer> integers = mSeatMap.keySet();
         Iterator<Integer> iterator = integers.iterator();
@@ -628,7 +633,6 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
             }
         }
         seatTypeAdapter.setData(mList);
-        return true;
     }
 
     /**
@@ -643,21 +647,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         //标记学生取消请假
         bean.setStudentType(SeatConstant.StudentType.STUDENT_5);
         bean.setLongSelect(false);
-        //修改map数据
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == bean.getColumn()){
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null || list.size()==0){
-                    continue;
-                }
-                list.set(bean.getLine()-1,bean);
-                break;
-            }
-        }
-        seatTypeAdapter.setData(mList);
+        setStudentMapData(bean);
         return true;
     }
 
@@ -672,21 +662,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         //标记不可坐视图
         bean.setType(SeatConstant.SeatType.TYPE_4);
         bean.setLongSelect(false);
-        //修改map数据
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == bean.getColumn()){
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null || list.size()==0){
-                    continue;
-                }
-                list.set(bean.getLine()-1,bean);
-                break;
-            }
-        }
-        seatTypeAdapter.setData(mList);
+        setStudentMapData(bean);
         return true;
     }
 
@@ -710,21 +686,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         }
         bean.setLongSelect(false);
         bean.setName(name);
-        //修改map数据
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == bean.getColumn()){
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null || list.size()==0){
-                    continue;
-                }
-                list.set(bean.getLine()-1,bean);
-                break;
-            }
-        }
-        seatTypeAdapter.setData(mList);
+        setStudentMapData(bean);
         return true;
     }
 
@@ -746,20 +708,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         bean.setStudentType(SeatConstant.StudentType.STUDENT_0);
         bean.setLongSelect(false);
         //修改map数据
-        Set<Integer> integers = mSeatMap.keySet();
-        Iterator<Integer> iterator = integers.iterator();
-        while (iterator.hasNext()){
-            Integer next = iterator.next();
-            if (next == bean.getColumn()){
-                ArrayList<SeatBean> list = mSeatMap.get(next);
-                if (list==null || list.size()==0){
-                    continue;
-                }
-                list.set(bean.getLine()-1,bean);
-                break;
-            }
-        }
-        seatTypeAdapter.setData(mList);
+        setStudentMapData(bean);
         return true;
     }
 
@@ -770,8 +719,8 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
     @Override
     public void restoreSeat() {
         initRecyclerView(mColumn, mLine);
-        if (restoreListener!=null){
-            restoreListener.OnRestore(OnRestoreListener.RESTORE);
+        if (listener!=null){
+            listener.OnRestore(OnViewClickListener.RESTORE);
         }
     }
 
@@ -912,6 +861,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                     list.remove(list.size()-1);
                 }
                 isChange = true;
+                break;
             }
         }
         //将map集合转化为list数据
@@ -924,23 +874,10 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         }
     }
 
-    private OnRestoreListener restoreListener;
+    private OnViewClickListener listener;
 
-    public void setRestoreListener(OnRestoreListener restoreListener) {
-        this.restoreListener = restoreListener;
-    }
-
-    private OnClickListener listener;
-    public void setClickListener(OnClickListener listener){
+    public void setClickListener(OnViewClickListener listener) {
         this.listener = listener;
     }
-
-    public interface OnClickListener{
-        /**
-         * 监听
-         */
-        void listener(@SeatConstant.ViewType int type , SeatBean bean);
-    }
-
 
 }
