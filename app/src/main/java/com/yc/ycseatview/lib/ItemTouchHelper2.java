@@ -26,6 +26,15 @@ import com.yc.ycseatview.R;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <pre>
+ *     @author  yangchong
+ *     email  : yangchong211@163.com
+ *     time   : 2020/07/15
+ *     desc   : 自定义ItemTouchHelper
+ *     revise:
+ * </pre>
+ */
 public class ItemTouchHelper2 extends RecyclerView.ItemDecoration implements RecyclerView.OnChildAttachStateChangeListener {
     public static final int UP = 1;
     public static final int DOWN = 2;
@@ -92,6 +101,7 @@ public class ItemTouchHelper2 extends RecyclerView.ItemDecoration implements Rec
             ItemTouchHelper2.this.mGestureDetector.onTouchEvent(event);
             int action = event.getActionMasked();
             if (action == 0) {
+                //手指按下去的时候，调用该方法
                 ItemTouchHelper2.this.mActivePointerId = event.getPointerId(0);
                 ItemTouchHelper2.this.mInitialTouchX = event.getX();
                 ItemTouchHelper2.this.mInitialTouchY = event.getY();
@@ -147,15 +157,21 @@ public class ItemTouchHelper2 extends RecyclerView.ItemDecoration implements Rec
                 RecyclerView.ViewHolder viewHolder = ItemTouchHelper2.this.mSelected;
                 if (viewHolder != null) {
                     switch (action) {
+                        //ACTION_MOVE   移动过程会调用这个方法
                         case 2:
+                            //拖动过程中，不断改变x，y值
+                            //然后调用invalidate方法去刷新
                             ItemTouchHelper2.this.updateDxDy(event, ItemTouchHelper2.this.mSelectedFlags, activePointerIndex);
                             ItemTouchHelper2.this.mRecyclerView.invalidate();
                             break;
+                        //ACTION_CANCEL     滑动结束
                         case 3:
                             if (ItemTouchHelper2.this.mVelocityTracker != null) {
                                 ItemTouchHelper2.this.mVelocityTracker.clear();
                             }
+                        //ACTION_UP       手指抬起的时候会调用这个
                         case 1:
+                            //松开手后，开始执行mScrollRunnable的代码，刷新一下。这个主要是
                             if (activePointerIndex >= 0) {
                                 ItemTouchHelper2.this.moveIfNecessary(viewHolder);
                                 ItemTouchHelper2.this.mRecyclerView.removeCallbacks(ItemTouchHelper2.this.mScrollRunnable);
@@ -164,6 +180,7 @@ public class ItemTouchHelper2 extends RecyclerView.ItemDecoration implements Rec
                             }
                             ItemTouchHelper2.this.select((RecyclerView.ViewHolder) null, 0);
                             ItemTouchHelper2.this.mActivePointerId = -1;
+                        //ACTION_OUTSIDE    屏幕外
                         case 4:
                         case 5:
                         default:

@@ -9,6 +9,15 @@ import android.view.View;
 
 import com.yc.ycseatview.R;
 
+/**
+ * <pre>
+ *     @author  yangchong
+ *     email  : yangchong211@163.com
+ *     time   : 2020/07/15
+ *     desc   : 自定义ItemTouchUIUtil
+ *     revise:
+ * </pre>
+ */
 public class ItemTouchUIUtilImpl implements ItemTouchUIUtil {
     static final ItemTouchUIUtil INSTANCE = new ItemTouchUIUtilImpl();
 
@@ -25,7 +34,7 @@ public class ItemTouchUIUtilImpl implements ItemTouchUIUtil {
                 view.setTag(R.id.item_touch_helper_previous_elevation, originalElevation);
             }
         }
-
+        //这个方法是不断设置view的x和y轴的偏移量
         view.setTranslationX(dX);
         view.setTranslationY(dY);
     }
