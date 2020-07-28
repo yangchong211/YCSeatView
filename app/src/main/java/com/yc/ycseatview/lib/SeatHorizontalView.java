@@ -861,7 +861,6 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                     list.remove(list.size()-1);
                 }
                 isChange = true;
-                break;
             }
         }
         //将map集合转化为list数据
