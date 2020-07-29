@@ -35,6 +35,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
     private TextView mTvLineNum;
     private TextView mTvSure;
     private LinearLayout mLlSetTotalNum;
+    private TextView mTvConditions;
     private int type;
 
     @Override
@@ -61,6 +62,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         mTvLineNum = findViewById(R.id.tv_line_num);
         mTvSure = findViewById(R.id.tv_sure);
         mLlSetTotalNum = findViewById(R.id.ll_set_total_num);
+        mTvConditions = findViewById(R.id.tv_conditions);
     }
 
     private void setListener() {
@@ -117,6 +119,7 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void changeSureButtonStates() {
+        mTvConditions.setVisibility(View.GONE);
         CharSequence textColumn = mTvColumnNum.getText();
         CharSequence textLine = mTvLineNum.getText();
         if (textColumn==null || textColumn.length()==0 || textColumn.equals("0")){
@@ -132,11 +135,25 @@ public class SeatSettingActivity extends AppCompatActivity implements View.OnCli
         if (column>0 && line>0){
             mTvSure.setBackgroundResource(R.drawable.shape_rect_stroke_00a5a8_r20);
         }
+        int setTotal = column * line;
+
+        CharSequence textTotal = mTvTotalNum.getText();
+        if (textTotal!=null && textTotal.length()>0){
+            int total = NumberUtils.parse(textTotal.toString());
+            if (setTotal>total || total==0 || setTotal==0){
+                mTvConditions.setVisibility(View.GONE);
+            } else {
+                mTvConditions.setVisibility(View.VISIBLE);
+            }
+        } else {
+            mTvConditions.setVisibility(View.GONE);
+        }
     }
 
 
     /**
      * 点击确定创建座位布局
+     * 列数/行数皆已设置&座位数量>该班级学员数
      */
     private void sureCreateSeat() {
         CharSequence textColumn = mTvColumnNum.getText();
