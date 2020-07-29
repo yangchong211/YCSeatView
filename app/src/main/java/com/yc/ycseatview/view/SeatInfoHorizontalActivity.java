@@ -121,6 +121,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         mFlStatesView.setStatesView(1);
                         mFlStatesView.setAddClassText(true);
                         break;
+                    //恢复之前的视图
                     case OnViewClickListener.NORMAL:
                         mFlStatesView.setStatesView(1);
                         break;

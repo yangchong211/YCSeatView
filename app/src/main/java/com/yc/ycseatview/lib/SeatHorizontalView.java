@@ -124,7 +124,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
 
     private void setRecyclerView(final int line) {
         if (seatTypeAdapter == null) {
-            initCallBack();
+            //initCallBack();
             seatTypeAdapter = new SeatTypeAdapter(mContext);
             seatTypeAdapter.setData(mList);
             mRecyclerView.setAdapter(seatTypeAdapter);
@@ -230,6 +230,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                     }
                 }
             });
+            initCallBack();
         }
     }
 
@@ -504,8 +505,12 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         callback.setColor(R.drawable.shape_seat_type_drag_r6);
         //创建helper对象，callback监听recyclerView item 的各种状态
         ItemTouchHelper2 itemTouchHelper = new ItemTouchHelper2(callback);
-        //关联recyclerView，一个helper对象只能对应一个recyclerView
-        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        try{
+            //关联recyclerView，一个helper对象只能对应一个recyclerView
+            itemTouchHelper.attachToRecyclerView(mRecyclerView);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setChangePosition(int srcPosition, int mTargetPosition) {
