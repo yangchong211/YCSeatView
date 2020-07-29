@@ -28,6 +28,7 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
     public MultiTypeSupport<T> multiTypeSupport;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
+    private final Object mLock = new Object();
     //默认可以回收
     private boolean isRecycle;
     private int position;
@@ -169,9 +170,11 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if(list==null || list.size()==0){
             return;
         }
-        data.addAll(list);
-        notifyItemRangeChanged(data.size()-list.size(),data.size());
-        notifyDataSetChanged();
+        synchronized (mLock) {
+            data.addAll(list);
+            notifyItemRangeChanged(data.size()-list.size(),data.size());
+            notifyDataSetChanged();
+        }
     }
 
     /**
@@ -184,9 +187,11 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if (data.contains(t)) {
             return false;
         }
-        boolean b = data.add(t);
-        notifyItemInserted(data.size() - 1);
-        return b;
+        synchronized (mLock) {
+            boolean b = data.add(t);
+            notifyItemInserted(data.size() - 1);
+            return b;
+        }
     }
 
     /**
@@ -205,8 +210,10 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if (data.contains(t)){
             return false;
         }
-        data.add(position, t);
-        notifyItemInserted(position);
+        synchronized (mLock) {
+            data.add(position, t);
+            notifyItemInserted(position);
+        }
         return true;
     }
 
@@ -223,8 +230,10 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if (data.contains(list)){
             return false;
         }
-        data.addAll(position, list);
-        notifyItemRangeInserted(position, list.size());
+        synchronized (mLock) {
+            data.addAll(position, list);
+            notifyItemRangeInserted(position, list.size());
+        }
         return true;
     }
 
@@ -252,9 +261,11 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if(data.size()==0){
             return;
         }
-        int index = data.indexOf(t);
-        remove(index);
-        notifyItemRemoved(index);
+        synchronized (mLock) {
+            int index = data.indexOf(t);
+            remove(index);
+            notifyItemRemoved(index);
+        }
     }
 
 
@@ -265,8 +276,10 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if (position < 0 || position >= data.size()) {
             return ;
         }
-        data.remove(position);
-        notifyItemRemoved(position);
+        synchronized (mLock) {
+            data.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     /**
@@ -279,8 +292,10 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if((start +count) > data.size()){
             return;
         }
-        data.subList(start,start+count).clear();
-        notifyItemRangeRemoved(start,count);
+        synchronized (mLock) {
+            data.subList(start,start+count).clear();
+            notifyItemRangeRemoved(start,count);
+        }
     }
 
 
@@ -306,11 +321,13 @@ public abstract class AbsSeatAdapter<T> extends RecyclerView.Adapter<SeatViewHol
         if (t == null) {
             return false;
         }
-        int index = data.indexOf(t);
-        if (index >= 0) {
-            data.set(index, t);
-            notifyItemChanged(index);
-            return true;
+        synchronized (mLock) {
+            int index = data.indexOf(t);
+            if (index >= 0) {
+                data.set(index, t);
+                notifyItemChanged(index);
+                return true;
+            }
         }
         return false;
     }
