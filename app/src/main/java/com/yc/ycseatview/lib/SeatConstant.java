@@ -53,7 +53,7 @@ public final class SeatConstant {
         int STUDENT_2 = 6;
         //调期学员。添加新的学员，类似插班生
         int STUDENT_3 = 7;
-        //空座位。指的是没有学生坐的座位，场景是删除学生后只是用于UI显示
+        //空座位。指的是没有学生坐的座位
         int STUDENT_4 = 8;
         //正常学生。
         int STUDENT_5 = 9;
