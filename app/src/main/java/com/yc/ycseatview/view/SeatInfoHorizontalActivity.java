@@ -59,7 +59,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
     /**
      * 总数量
      */
-    private int total;
+    private int studentNum;
 
     @Override
     protected void onResume() {
@@ -168,7 +168,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
             public void listener(int type) {
                 switch (type){
                     case SeatStatesView.ClickType.CLICK_1:
-                        //开始调课
+                        //自动排座，开始安排学生
                         setSeatClass();
                         break;
                     case SeatStatesView.ClickType.CLICK_2:
@@ -411,11 +411,25 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
         }
     }
 
+    /**
+     * 自动排座，开始安排学生
+     */
     private void setSeatClass() {
-        mSeatView.removeItemListener();
-        mFlStatesView.setStatesView(1);
-        mTvCommit.setVisibility(View.VISIBLE);
-        mTvPicture.setVisibility(View.VISIBLE);
+        //todo 请求接口获取学生，这里先用一个假的数量。
+        //获取可坐的数量。然后跟学生人数做一个对比
+        int total = mSeatView.getCanSeatNumber();
+        if (total>=studentNum){
+            mSeatView.removeItemListener();
+            //mSeatView.setStudentData();
+            mFlStatesView.setStatesView(1);
+            mTvCommit.setVisibility(View.VISIBLE);
+            mTvPicture.setVisibility(View.VISIBLE);
+        } else {
+            //若当前座位数未大于该班级学员数
+            //弹出 Toast：座位数不足，请重新设置
+            Toast.makeText(SeatInfoHorizontalActivity.this,
+                    "座位数不足，请减少空座位数量",Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -426,12 +440,12 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
         }
         column = getIntent().getIntExtra("column",0);
         line = getIntent().getIntExtra("line",0);
-        total = getIntent().getIntExtra("total",0);
-        mTvTitle.setText("Horizontal方向recyclerView----" +column+"列"+line+"行"+"----"+total);
+        studentNum = getIntent().getIntExtra("total",0);
+        mTvTitle.setText("Horizontal方向recyclerView----" +column+"列"+line+"行"+"--学生数量"+studentNum);
     }
 
     private void initRecyclerView() {
-        mSeatView.setColumnAndLine(column,line,total);
+        mSeatView.setColumnAndLine(column,line,studentNum);
         mSeatView.post(new Runnable() {
             @Override
             public void run() {

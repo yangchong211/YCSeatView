@@ -59,6 +59,40 @@ public final class SeatDataHelper {
     }
 
     /**
+     * 获取获取可坐的数量
+     * @param mList                             集合
+     * @return
+     */
+    public static int getCanSeatNumber(ArrayList<SeatBean> mList){
+        if (mList==null || mList.size()==0){
+            return 0;
+        }
+        int total = mList.size();
+        return total - getNotSeatNumber(mList);
+    }
+
+    /**
+     * 获取获取不可坐的数量
+     * @param mList                             集合
+     * @return
+     */
+    public static int getNotSeatNumber(ArrayList<SeatBean> mList){
+        if (mList==null || mList.size()==0){
+            return 0;
+        }
+        int num = 0;
+        for (int i=0 ; i<mList.size() ; i++){
+            SeatBean bean = mList.get(i);
+            int type = bean.getType();
+            if (type == SeatConstant.SeatType.TYPE_4) {
+                num = num + 1;
+            }
+        }
+        return num;
+    }
+
+
+    /**
      * 判断是否有请假的学生
      * @param mList                             集合
      * @return
@@ -111,6 +145,21 @@ public final class SeatDataHelper {
             SeatBean bean = mList.get(i);
             boolean longSelect = bean.isLongSelect();
             return longSelect;
+        }
+        return false;
+    }
+
+    /**
+     * 判断可以坐的数量是否满足学生
+     * @param mList                             集合
+     * @param totalNormalStudent                学生数量
+     * @return
+     */
+    public static boolean isMoreThan(ArrayList<SeatBean> mList, int totalNormalStudent) {
+        //获取可坐的数量
+        int canSeatNumber = getCanSeatNumber(mList);
+        if (canSeatNumber > totalNormalStudent){
+            return true;
         }
         return false;
     }

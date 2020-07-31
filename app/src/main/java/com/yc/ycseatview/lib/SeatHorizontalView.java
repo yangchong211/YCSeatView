@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.yc.ycseatview.R;
+import com.yc.ycseatview.view.SeatInfoHorizontalActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,7 +55,7 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
      */
     private int mLine;
     /**
-     * 初始化时总数量
+     * 初始化时总数量[学生的数量]
      */
     private int mTotal;
     /**
@@ -196,15 +197,26 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
                 @Override
                 public void onItemClick(View view, int position) {
                     if (mList!=null && mList.size()>position && position>=0){
+                        boolean isMoreThan = SeatDataHelper.isMoreThan(mList,mTotal);
                         SeatBean bean = mList.get(position);
-                        //首次只有普通座位和不可坐两种类型
                         int type = bean.getType();
-                        if (type == SeatConstant.SeatType.TYPE_1){
-                            bean.setType(SeatConstant.SeatType.TYPE_4);
+                        if (isMoreThan){
+                            //首次只有普通座位和不可坐两种类型
+                            if (type == SeatConstant.SeatType.TYPE_1){
+                                bean.setType(SeatConstant.SeatType.TYPE_4);
+                            } else {
+                                bean.setType(SeatConstant.SeatType.TYPE_1);
+                            }
+                            seatTypeAdapter.notifyItemChanged(position);
                         } else {
-                            bean.setType(SeatConstant.SeatType.TYPE_1);
+                            if (type == SeatConstant.SeatType.TYPE_4){
+                                bean.setType(SeatConstant.SeatType.TYPE_1);
+                                seatTypeAdapter.notifyItemChanged(position);
+                            } else {
+                                Toast.makeText(mContext,
+                                        "学生数量需要大于可坐座位数量",Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        seatTypeAdapter.notifyItemChanged(position);
                     }
                 }
             });
@@ -219,6 +231,27 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
     public void removeItemListener() {
         if (seatTypeAdapter!=null){
             //注意这里点击listener一定要先移除，后在添加。否则点击，不知道是选择设置不可坐，还是点击设置选中
+            //获取可坐的数量
+            int noCanSeatNumber = SeatDataHelper.getNotSeatNumber(mList);
+            int number = mTotal + noCanSeatNumber;
+            for (int i=0 ; i<mList.size() ; i++){
+                SeatBean bean = mList.get(i);
+                //设置第几行第几列中的 列
+                int beanColumn = i / mLine +1;
+                //设置第几行第几列中的 行
+                int beanLine = i % mLine + 1;
+                int index = beanColumn  - 1 + (beanLine-1) * mColumn;
+                //不可以坐
+                if (bean.getType() != SeatConstant.SeatType.TYPE_4){
+                    if (index>=number){
+                        //设置空座位
+                        bean.setStudentType(SeatConstant.StudentType.STUDENT_4);
+                    } else {
+                        //设置正常学生
+                        bean.setStudentType(SeatConstant.StudentType.STUDENT_5);
+                    }
+                }
+            }
             seatTypeAdapter.setOnItemClickListener(null);
             seatTypeAdapter.setClassTag(false);
             seatTypeAdapter.notifyDataSetChanged();
@@ -385,6 +418,14 @@ public class SeatHorizontalView extends FrameLayout implements InterSeatView {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取获取可坐的数量
+     * @return
+     */
+    public int getCanSeatNumber() {
+        return SeatDataHelper.getCanSeatNumber(mList);
     }
 
     /**
