@@ -317,6 +317,7 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
         dialog.setClickListener(new BaseCustomDialog.OnClickListener() {
             @Override
             public void listener(boolean isSure) {
+                dialog.dismiss();
                 if (isSure){
                     switch (type){
                         case BaseCustomDialog.DialogType.DIALOG_1:
@@ -332,18 +333,15 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
                         case BaseCustomDialog.DialogType.DIALOG_3:
                             //更改座位布局
                             changeSeat();
+                            finish();
                             break;
                         case BaseCustomDialog.DialogType.DIALOG_4:
                             //删除学员视图
 
                             break;
                     }
-                    dialog.dismiss();
-                } else {
-                    //取消
-                    dialog.dismiss();
                 }
-                if (type==1){
+                if (type==BaseCustomDialog.DialogType.DIALOG_1){
                     finish();
                 }
             }
@@ -541,7 +539,8 @@ public class SeatInfoHorizontalActivity extends AppCompatActivity implements Vie
      * 更改座位布局
      */
     private void changeSeat() {
-        mSeatView.changeSeat();
+        finish();
+        //mSeatView.changeSeat();
     }
 
 }
