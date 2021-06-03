@@ -1,0 +1,19 @@
+//--- taco inject start ---
+def flutterSourceCompile = true
+
+if (flutterSourceCompile) {
+    include(':app')
+    project(':app').projectDir = new File('./app')
+
+    setBinding(new Binding([gradle: this]))
+    evaluate(new File('../YCFlutterAndroid/flutterLib/flutter_lib/.android/include_flutter.groovy'))
+
+    include ':YCFlutterTool/yc_flutter_tool'
+    project(':YCFlutterTool/yc_flutter_tool').projectDir = new File('../YCFlutterTool/yc_flutter_tool')
+
+    //让IDE在Android界面找到Dart的EntryPoint，可以直接运行Flutter
+    include ':YCFlutterAndroid/flutterLib/flutter_lib'
+    project(':YCFlutterAndroid/flutterLib/flutter_lib').projectDir = new File('../YCFlutterAndroid/flutterLib/flutter_lib')
+}
+
+

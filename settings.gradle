@@ -1,2 +1,4 @@
 include ':app'
-rootProject.name = "YCSeatView"
+rootProject.name = "YCFlutterAndroid"
+
+apply from: file('settings-flutter.gradle')

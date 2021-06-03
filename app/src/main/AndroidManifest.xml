@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.yc.ycseatview">
 
     <application
@@ -16,18 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.SeatSettingActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".view.SeatInfoHorizontalActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".view.SeatImageActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".view.SeatImageActivity2"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".view.RecyclerViewActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".view.ScrollRecyclerViewActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".FirstActivity"/>
+        <activity android:name=".SecondActivity"/>
     </application>
 
 </manifest>
